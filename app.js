@@ -16,18 +16,8 @@ var app = express();
 //Create the HTTP server with the express app as an argument
 var server = http.createServer(app);
 
+var country = 'uk';
 
-// Twitter symbols array
-var watchSymbols = ['$msft', '$intc', '$hpq', '$goog', '$nok', '$nvda', '$bac', '$orcl', '$csco', '$aapl', '$ntap', '$emc', '$t', '$ibm', '$vz', '$xom', '$cvx', '$ge', '$ko', '$jnj'];
-
-//This structure will keep the total number of tweets received and a map of all the symbols and how many tweets received of that symbol
-var watchList = {
-    total: 0,
-    symbols: {}
-};
-
-//Set the watch symbols to zero.
-_.each(watchSymbols, function(v) { watchList.symbols[v] = 0; });
 
 //Generic Express setup
 app.set('port', process.env.PORT || 3000);
@@ -81,7 +71,7 @@ var t = new twitter({
 });
 
 // //Tell the twitter API to filter on the watchSymbols 
-t.stream('statuses/filter', { track: watchSymbols }, function(stream) {
+t.stream('statuses/filter', { follow: config.countries[country].accounts}, function(stream) {
 
   //We have a connection. Now watch the 'data' event for incomming tweets.
   stream.on('data', function(tweet) {
@@ -94,44 +84,32 @@ t.stream('statuses/filter', { track: watchSymbols }, function(stream) {
 
     //Make sure it was a valid tweet
     if (tweet.text !== undefined) {
-
-      //We're gunna do some indexOf comparisons and we want it to be case agnostic.
-      var text = tweet.text.toLowerCase();
-
-      //Go through every symbol and see if it was mentioned. If so, increment its counter and
-      //set the 'claimed' variable to true to indicate something was mentioned so we can increment
-      //the 'total' counter!
-      _.each(watchSymbols, function(v) {
-          if (text.indexOf(v.toLowerCase()) !== -1) {
-              watchList.symbols[v]++;
-              claimed = true;
-          }
-      });
+			console.log(tweet.text);
 
       //If something was mentioned, increment the total counter and send the update to all the clients
-      if (claimed) {
-          //Increment total
-          watchList.total++;
+      //if (claimed) {
+          ////Increment total
+          //watchList.total++;
 
-          //Send to all the clients
-          sockets.sockets.emit('data', watchList);
-      }
+          ////Send to all the clients
+          //sockets.sockets.emit('data', watchList);
+      //}
     }
   });
 });
 
 //Reset everything on a new day!
 //We don't want to keep data around from the previous day so reset everything.
-new cronJob('0 0 0 * * *', function(){
-    //Reset the total
-    watchList.total = 0;
+//new cronJob('0 0 0 * * *', function(){
+    ////Reset the total
+    //watchList.total = 0;
 
-    //Clear out everything in the map
-    _.each(watchSymbols, function(v) { watchList.symbols[v] = 0; });
+    ////Clear out everything in the map
+    //_.each(watchSymbols, function(v) { watchList.symbols[v] = 0; });
 
-    //Send the update to the clients
-    sockets.sockets.emit('data', watchList);
-}, null, true);
+    ////Send the update to the clients
+    //sockets.sockets.emit('data', watchList);
+//}, null, true);
 
 //Create the server
 server.listen(app.get('port'), function(){
