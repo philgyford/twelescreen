@@ -1,17 +1,18 @@
 {
-  "name": "twitter-cash-heatmap",
+  "name": "twelescreen",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
+	"config": "*",
+    "cron": "*",
     "express": "3.1.2",
     "jade": "*",
-    "stylus": "*",
+    "ntwitter": "*",
     "socket.io": "*",
-    "underscore": "*",
-    "cron": "*",
-    "ntwitter": "*"
+    "stylus": "*",
+    "underscore": "*"
   }
 }
