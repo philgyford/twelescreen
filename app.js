@@ -1,13 +1,14 @@
 /**
  * Module dependencies.
  */
-var express = require('express')
-  , io = require('socket.io')
-  , http = require('http')
-  , twitter = require('ntwitter')
-  , cronJob = require('cron').CronJob
-  , _ = require('underscore')
-  , path = require('path');
+var config = require('config'),
+		express = require('express'),
+		io = require('socket.io'),
+		http = require('http'),
+		twitter = require('ntwitter'),
+		cronJob = require('cron').CronJob,
+		_ = require('underscore'),
+		path = require('path');
 
 //Create an express app
 var app = express();
@@ -72,10 +73,10 @@ sockets.sockets.on('connection', function(socket) {
 //since it will instantiate a connection on my behalf and will drop all other streaming connections.
 //Check out: https://dev.twitter.com/
 var t = new twitter({
-    consumer_key: '',           // <--- FILL ME IN
-    consumer_secret: '',        // <--- FILL ME IN
-    access_token_key: '',       // <--- FILL ME IN
-    access_token_secret: ''     // <--- FILL ME IN
+    consumer_key: config.twitter.consumer_key,
+    consumer_secret: config.twitter.consumer_secret,
+    access_token_key: config.twitter.access_token_key,
+    access_token_secret: config.twitter.access_token_secret 
 });
 
 // //Tell the twitter API to filter on the watchSymbols 
