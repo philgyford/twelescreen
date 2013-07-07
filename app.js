@@ -53,17 +53,18 @@ app.get('/', function(req, res) {
 	res.render('index', { data: watchList });
 });
 
-//Start a Socket.IO listen
+// Start a Socket.IO listen
 var sockets = io.listen(server);
 
-//Set the sockets.io configuration.
-//THIS IS NECESSARY ONLY FOR HEROKU!
-//sockets.configure(function() {
-  //sockets.set('transports', ['xhr-polling']);
-  //sockets.set('polling duration', 10);
-//});
+// Set the sockets.io configuration.
+if (config.env.heroku == true) {
+	sockets.configure(function() {
+		sockets.set('transports', ['xhr-polling']);
+		sockets.set('polling duration', 10);
+	});
+};
 
-//If the client just connected, give them fresh data!
+// If the client just connected, give them fresh data!
 sockets.sockets.on('connection', function(socket) { 
     socket.emit('data', watchList);
 });
