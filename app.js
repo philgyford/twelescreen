@@ -31,18 +31,16 @@ var watched_accounts = _.uniq(
 // Will map Twitter account numbers (as strings) to all the countries they're in.
 // Like: {'138037459': ['uk'], '30313925': ['us']}
 var account_to_country = {};
-//__.each(config.countries, function(country_data, country, l) {
-	//__.each(country_data.accounts, function(account) {
-		//account = account.toString();
-		//if (account in account_to_country) {
-			//account_to_country[account.toString()].push(country);
-		//} else {
-			//account_to_country[account] = [country];	
-		//}
-	//})
-//});
-
-var watchList = '';
+_.each(config.countries, function(country_data, country, l) {
+	_.each(country_data.accounts, function(account) {
+		account = account.toString();
+		if (account in account_to_country) {
+			account_to_country[account.toString()].push(country);
+		} else {
+			account_to_country[account] = [country];	
+		}
+	})
+});
 
 
 //Generic Express setup
