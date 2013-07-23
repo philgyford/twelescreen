@@ -9,7 +9,7 @@ var config = require('config'),
 		twitter = require('ntwitter'),
 		cronJob = require('cron').CronJob,
 		_ = require('underscore'),
-		mustache = require('mustache')
+		handlebars = require('handlebars')
 		path = require('path');
 
 //Create an express app
@@ -42,11 +42,15 @@ _.each(config.countries, function(country_data, country, l) {
 	})
 });
 
+// Will be an array of valid country acronyms, like: ['uk', 'us'].
+var valid_countries = _.map(config.countries,
+														function(country_data, country, l) { return country; })
 
-//Generic Express setup
+
+// Express setup
 app.set('port', process.env.PORT || 3000);
-// Assign the mustache engine to .html files
-app.engine('html', consolidate.mustache);
+// Assign the handlebars template engine to .html files
+app.engine('html', consolidate.handlebars);
 // Set .html as the default extension 
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname, '/views'));
@@ -58,17 +62,24 @@ app.use(require('stylus').middleware(__dirname + '/public'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 //We're using bower components so add it to the path to make things easier
-app.use('/components', express.static(path.join(__dirname, 'components')));
+//app.use('/components', express.static(path.join(__dirname, 'components')));
 
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-//Our only route! Render it with the current tweets.
 app.get('/', function(req, res) {
-	res.render('index', {static_data: {test: 'hello'}});
+	res.render('index', {countries: valid_countries});
 });
+app.get(/^\/(\w\w)\/$/, function(req, res) {
+	if (valid_countries.indexOf(req.params[0]) > -1) {
+		res.render('screen', {static_data: {test: 'hello'}});
+	} else {
+		res.send(404, "'" + req.params[0] + "' is not a valid country. Go home or face arrest.");	
+	};
+});
+
 
 // Start a Socket.IO listen
 var sockets = io.listen(server);

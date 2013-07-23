@@ -7,10 +7,10 @@
   },
   "dependencies": {
     "config": "*",
-	"consolidate": "*","
+	"consolidate": "*",
     "cron": "*",
     "express": "3.1.2",
-    "mustache": "*",
+    "handlebars": "*",
     "js-yaml": "*",
     "ntwitter": "*",
     "socket.io": "*",
