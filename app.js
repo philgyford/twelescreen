@@ -61,8 +61,8 @@ app.use(app.router);
 app.use(require('stylus').middleware(__dirname + '/public'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-//We're using bower components so add it to the path to make things easier
-//app.use('/components', express.static(path.join(__dirname, 'components')));
+// We're using bower components so add it to the path to make things easier.
+app.use('/components', express.static(path.join(__dirname, 'bower_components')));
 
 // development only
 if ('development' == app.get('env')) {
