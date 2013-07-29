@@ -18,8 +18,6 @@ var app = express();
 //Create the HTTP server with the express app as an argument
 var server = http.createServer(app);
 
-var country = 'uk';
-
 // Will be an array of all the Twitter account numbers for all of the countries.
 // Like: [30313925, 138037459]
 var watched_accounts = _.uniq(
@@ -46,6 +44,18 @@ _.each(config.countries, function(country_data, country, l) {
 var valid_countries = _.map(config.countries,
 														function(country_data, country, l) { return country; })
 
+// So that we only send the required info to the front-end.
+// tweet is the full array of Tweet data fetched from Twitter.
+var shrink_tweet = function(tweet) {
+  var shrunk = {
+    text: tweet.text,
+    user: {
+      id: tweet.user.id,
+      profile_image_url: tweet.user.profile_image_url 
+    }
+  };
+  return shrunk;
+};
 
 // Express setup
 app.set('port', process.env.PORT || 3000);
@@ -69,12 +79,21 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+// A request for the front page of the site.
 app.get('/', function(req, res) {
 	res.render('index', {countries: valid_countries});
 });
+// A request for a screen for a particular country.
 app.get(/^\/(\w\w)\/$/, function(req, res) {
 	if (valid_countries.indexOf(req.params[0]) > -1) {
-		res.render('screen', {static_data: {test: 'hello'}});
+    var country_data = config.countries[req.params[0]];
+		res.render('screen', {static_data: {
+                            country: {
+                              code: req.params[0],
+                              name: country_data['name'],
+                              accounts: country_data['accounts']
+                            }
+                         }});
 	} else {
 		res.send(404, "'" + req.params[0] + "' is not a valid country. Go home or face arrest.");	
 	};
@@ -94,7 +113,7 @@ if (config.env.heroku == true) {
 
 // If the client just connected, give them fresh data!
 sockets.sockets.on('connection', function(socket) { 
-		socket.emit('tweets', [{text: 'a dummy first tweet'}]);
+		//socket.emit('tweets', [shrink_tweet(tweet)]);
 });
 
 //Instantiate the twitter component
@@ -119,10 +138,12 @@ t.stream('statuses/filter', { follow: watched_accounts}, function(stream) {
 			console.log("FOUND: "+tweet.text);
 
 			//Send to all the clients
-			sockets.sockets.emit('tweets', [{text: tweet.text}]);
+			sockets.sockets.emit('tweets', [shrink_tweet(tweet)]);
     }
   });
 });
+
+
 
 //Reset everything on a new day!
 //We don't want to keep data around from the previous day so reset everything.

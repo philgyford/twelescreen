@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Twelescreen</title>
+	<title>{{static_data.country.name}} Twelescreen</title>
 	<link rel="stylesheet" href="/stylesheets/style.css">
 	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<script src="/components/socket.io-client/dist/socket.io.min.js"></script>
+	<script>
+		// The Twitter accounts we'll show tweets for.
+		var country_accounts = [{{static_data.country.accounts}}];
+	</script>
 	<script src="/javascripts/script.js"></script>
 </head>
 <body>
-	<p>Test: {{static_data.test}}</p>
+	<p>Test: {{static_data.country.name}} ({{static_data.country.code}}) </p>
 
 	<ul id="tweets">
 

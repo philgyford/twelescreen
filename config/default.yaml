@@ -2,6 +2,7 @@ env:
   heroku: false
 countries:
   uk:
+    name: United Kingdom
     accounts:
       - 2030131 # philgyfordtest
       - 12552 # philgyford
