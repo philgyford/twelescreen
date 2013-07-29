@@ -5,16 +5,20 @@
   "scripts": {
     "start": "node app.js"
   },
+  "engine": {
+    "node": "0.10.x",
+    "npm": "1.2.x"
+  },
   "dependencies": {
-    "config": "*",
-	"consolidate": "*",
-    "cron": "*",
-    "express": "3.1.2",
-    "handlebars": "*",
-    "js-yaml": "*",
-    "ntwitter": "*",
-    "socket.io": "*",
-    "stylus": "*",
-    "underscore": "*"
+    "config": "0.4.x",
+    "consolidate": "0.9.x",
+    "cron": "1.0.x",
+    "express": "3.1.x",
+    "handlebars": "1.0.x",
+    "js-yaml": "2.1.x",
+    "ntwitter": "0.5.x",
+    "socket.io": "0.9.x",
+    "stylus": "0.33.x",
+    "underscore": "1.5.x"
   }
 }
