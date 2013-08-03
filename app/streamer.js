@@ -1,3 +1,11 @@
+/**
+ * Everything to do with fetching tweets from Twitter, doing things to the
+ * tweets, and sending them to the front end.
+ *
+ * Get it going with:
+ *  var streamer = require('./app/streamer')(settings, twitter, sockets);
+ *  streamer.start_streaming();
+ */
 module.exports = function(settings, twitter, sockets) {
 
   var streamer = this;
@@ -11,6 +19,11 @@ module.exports = function(settings, twitter, sockets) {
     }); 
   };
 
+
+  /**
+   * Starts listening for new tweets coming from Twitter.
+   * When one comes in, sends it to the front end.
+   */
   streamer.start_streaming = function() {
     streamer.connect();
 
@@ -30,8 +43,11 @@ module.exports = function(settings, twitter, sockets) {
     });
   };
 
-  // So that we only send the required info to the front-end.
-  // tweet is the full array of Tweet data fetched from Twitter.
+
+  /**
+   * So that we only send the required info to the front-end.
+   * tweet is the full array of Tweet data fetched from Twitter.
+   */
   streamer.shrink_tweet = function(tweet) {
     var shrunk = {
       text: tweet.text,
@@ -42,6 +58,7 @@ module.exports = function(settings, twitter, sockets) {
     };
     return shrunk;
   };
+
 
   return streamer;
 };

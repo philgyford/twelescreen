@@ -1,6 +1,8 @@
 /**
- * Module dependencies.
+ * The main script for Twelescreen server.
+ * Run with `node app.js`.
  */
+
 var express = require('express'),
 		consolidate = require('consolidate'),
 		io = require('socket.io'),
