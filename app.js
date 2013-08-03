@@ -1,8 +1,7 @@
 /**
  * Module dependencies.
  */
-var config = require('config'),
-		express = require('express'),
+var express = require('express'),
 		consolidate = require('consolidate'),
 		io = require('socket.io'),
 		http = require('http'),
@@ -12,52 +11,11 @@ var config = require('config'),
 		handlebars = require('handlebars')
 		path = require('path');
 
-//Create an express app
-var app = express();
-
-//Create the HTTP server with the express app as an argument
-var server = http.createServer(app);
-
-// Will be an array of all the Twitter account numbers for all of the countries.
-// Like: [30313925, 138037459]
-var watched_accounts = _.uniq(
-		_.flatten(
-			_.map(config.countries, function(v, k, l) { return v.accounts; })
-		)
-);
-
-// Will map Twitter account numbers (as strings) to all the countries they're in.
-// Like: {'138037459': ['uk'], '30313925': ['us']}
-var account_to_country = {};
-_.each(config.countries, function(country_data, country, l) {
-	_.each(country_data.accounts, function(account) {
-		account = account.toString();
-		if (account in account_to_country) {
-			account_to_country[account.toString()].push(country);
-		} else {
-			account_to_country[account] = [country];	
-		}
-	})
-});
-
-// Will be an array of valid country acronyms, like: ['uk', 'us'].
-var valid_countries = _.map(config.countries,
-														function(country_data, country, l) { return country; })
-
-// So that we only send the required info to the front-end.
-// tweet is the full array of Tweet data fetched from Twitter.
-var shrink_tweet = function(tweet) {
-  var shrunk = {
-    text: tweet.text,
-    user: {
-      id: tweet.user.id,
-      profile_image_url: tweet.user.profile_image_url 
-    }
-  };
-  return shrunk;
-};
+var settings = require('./app/settings')(_);
 
 // Express setup
+var app = express();
+var server = http.createServer(app);
 app.set('port', process.env.PORT || 3000);
 // Assign the handlebars template engine to .html files
 app.engine('html', consolidate.handlebars);
@@ -74,37 +32,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 // We're using bower components so add it to the path to make things easier.
 app.use('/components', express.static(path.join(__dirname, 'bower_components')));
 
-// development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-// A request for the front page of the site.
-app.get('/', function(req, res) {
-	res.render('index', {countries: valid_countries});
-});
-// A request for a screen for a particular country.
-app.get(/^\/(\w\w)\/$/, function(req, res) {
-	if (valid_countries.indexOf(req.params[0]) > -1) {
-    var country_data = config.countries[req.params[0]];
-		res.render('screen', {static_data: {
-                            country: {
-                              code: req.params[0],
-                              name: country_data['name'],
-                              accounts: country_data['accounts']
-                            }
-                         }});
-	} else {
-		res.send(404, "'" + req.params[0] + "' is not a valid country. Go home or face arrest.");	
-	};
-});
+require('./app/routes')(app, settings);
 
-
-// Start a Socket.IO listen
 var sockets = io.listen(server);
 
 // Set the sockets.io configuration.
-if (config.env.heroku == true) {
+if (settings.env.heroku == true) {
 	sockets.configure(function() {
 		sockets.set('transports', ['xhr-polling']);
 		sockets.set('polling duration', 10);
@@ -116,34 +53,10 @@ sockets.sockets.on('connection', function(socket) {
 		//socket.emit('tweets', [shrink_tweet(tweet)]);
 });
 
-//Instantiate the twitter component
-//You will need to get your own key. Don't worry, it's free. But I cannot provide you one
-//since it will instantiate a connection on my behalf and will drop all other streaming connections.
-//Check out: https://dev.twitter.com/
-var t = new twitter({
-    consumer_key: config.twitter.consumer_key,
-    consumer_secret: config.twitter.consumer_secret,
-    access_token_key: config.twitter.access_token_key,
-    access_token_secret: config.twitter.access_token_secret 
-});
 
-// Tell the twitter API to filter on the watched_accounts. 
-t.stream('statuses/filter', { follow: watched_accounts}, function(stream) {
+var streamer = require('./app/streamer')(settings, twitter, sockets);
 
-  // We have a connection. Now watch the 'tweets' event for incoming tweets.
-  stream.on('data', function(tweet) {
-
-    // Make sure it was a valid tweet
-    if (tweet.text !== undefined) {
-			console.log("FOUND: "+tweet.text);
-
-			//Send to all the clients
-			sockets.sockets.emit('tweets', [shrink_tweet(tweet)]);
-    }
-  });
-});
-
-
+streamer.start_streaming();
 
 //Reset everything on a new day!
 //We don't want to keep data around from the previous day so reset everything.
