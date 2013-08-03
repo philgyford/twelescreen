@@ -10,10 +10,16 @@ module.exports = function(settings, twitter, sockets) {
 
   var streamer = this;
 
+  streamer.number_of_tweets_to_cache = 3;
+
   /**
    * For each Twitter account, its most recent tweets.
+   * eg, '6253282': [{...}, {...}],
    */
-  streamer.tweet_cache = {};
+  //streamer.user_cache = {};
+
+
+  streamer.country_cache = {};
 
 
   /**
@@ -42,7 +48,8 @@ module.exports = function(settings, twitter, sockets) {
     settings.watched_accounts.forEach(function(id) {
       console.log('fetching tweets for '+id);
       streamer.twitter.getUserTimeline({
-        user_id: id, count: 3, trim_user: false, exclude_replies: false,
+        user_id: id, count: streamer.number_of_tweets_to_cache,
+        trim_user: false, exclude_replies: false,
         contributor_details: true, include_rts: false
       }, function(err, tweets) {
         if (err) {
@@ -51,6 +58,7 @@ module.exports = function(settings, twitter, sockets) {
           tweets.forEach(function(tweet){
             streamer.add_tweet_to_cache(tweet);
           });
+          console.log(streamer.country_cache);
         };
       })
     });
@@ -81,13 +89,35 @@ module.exports = function(settings, twitter, sockets) {
   };
 
 
+  /**
+   * Most recent tweets will be at the start of each user's tweets array.
+   * tweet is a full array of data about a tweet.
+   */
   streamer.add_tweet_to_cache = function(tweet) {
     var shrunk_tweet = streamer.shrink_tweet(tweet);  
-    if (tweet.user.id_str in streamer.tweet_cache) {
-      streamer.tweet_cache[tweet.user.id_str].push(shrunk_tweet); 
-    } else {
-      streamer.tweet_cache[tweet.user.id_str] = [shrunk_tweet];
-    };
+    var user_id = tweet.user.id_str;
+    //if (user_id in streamer.user_cache) {
+      //streamer.user_cache[user_id].push(shrunk_tweet); 
+    //} else {
+      //streamer.user_cache[user_id] = [shrunk_tweet];
+    //};
+    //if (streamer.user_cache[user_id].length
+    //> streamer.number_of_tweets_to_cache) {
+      //streamer.user_cache[user_id].pop();
+    //};
+    settings.account_to_country[user_id].forEach(function(country){
+      if (country in streamer.country_cache) {
+        streamer.country_cache[country].push(shrunk_tweet); 
+      } else {
+        streamer.country_cache[country] = [shrunk_tweet];
+      };
+      // Sort with newest items first.
+      streamer.country_cache[country].sort(function(a,b){
+        return b.time - a.time;
+      });
+      // Truncate cache to length.
+      streamer.country_cache[country].length = streamer.number_of_tweets_to_cache;
+    });
   };
 
 
@@ -97,11 +127,29 @@ module.exports = function(settings, twitter, sockets) {
    */
   streamer.shrink_tweet = function(tweet) {
     var shrunk = {
+      // A subset of the usual data, with the same keys and structure:
+      id: tweet.id,
       text: tweet.text,
       user: {
         id: tweet.user.id,
-        profile_image_url: tweet.user.profile_image_url 
-      }
+        name: tweet.user.name,
+        //profile_background_color: tweet.user.profile_background_color,
+        //profile_background_image_url:
+        //tweet.user.profile_background_image_url,
+        profile_image_url: tweet.user.profile_image_url,
+        screen_name: tweet.user.screen_name
+      },
+      // Custom keys:
+      // Unix timestamp for sorting.
+      time: (new Date(tweet.created_at).getTime()) / 1000
+    };
+    // Custom, optional keys.
+    if ('media' in tweet.entities && tweet.entities.media[0].type == 'photo') {
+      shrunk.image = {
+        url: tweet.entities.media[0].media_url + ':large',
+        width: tweet.entities.media[0].sizes.large.w,
+        height: tweet.entities.media[0].sizes.large.h
+      };
     };
     return shrunk;
   };
