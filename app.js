@@ -58,7 +58,7 @@ sockets.sockets.on('connection', function(socket) {
 
 var streamer = require('./app/streamer')(settings, twitter, sockets);
 
-streamer.start_streaming();
+streamer.start();
 
 //Reset everything on a new day!
 //We don't want to keep data around from the previous day so reset everything.
