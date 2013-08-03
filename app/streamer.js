@@ -50,7 +50,7 @@ module.exports = function(settings, twitter, sockets, _) {
       console.log('fetching tweets for '+id);
       streamer.twitter.getUserTimeline({
         user_id: id, count: streamer.number_of_tweets_to_cache,
-        trim_user: false, exclude_replies: false,
+        trim_user: false, exclude_replies: true,
         contributor_details: true, include_rts: false
       }, function(err, tweets) {
         if (err) {
@@ -90,8 +90,8 @@ module.exports = function(settings, twitter, sockets, _) {
       // We have a connection. Now watch the 'tweets' event for incoming tweets.
       stream.on('data', function(tweet) {
 
-        // Make sure it was a valid tweet
-        if (tweet.text !== undefined) {
+        // Make sure it was a valid tweet, and also not a reply.
+        if (tweet.text !== undefined && tweet.in_reply_to_user_id !== undefined) {
           // Send to all the clients - we don't know which client is in which
           // category, so they filter in the client.
           sockets.sockets.emit('tweets', [streamer.shrink_tweet(tweet)]);
