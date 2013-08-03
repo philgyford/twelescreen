@@ -13,13 +13,14 @@ module.exports = function(settings, twitter, sockets) {
   streamer.number_of_tweets_to_cache = 3;
 
   /**
-   * For each Twitter account, its most recent tweets.
-   * eg, '6253282': [{...}, {...}],
+   * For each country, its most recent tweets, newest first.
+   * eg
+   * {
+   *   'uk': [{...}, {...}, {...}],
+   *   'us': ...
+   * }
    */
-  //streamer.user_cache = {};
-
-
-  streamer.country_cache = {};
+  streamer.cache = {};
 
 
   /**
@@ -58,7 +59,7 @@ module.exports = function(settings, twitter, sockets) {
           tweets.forEach(function(tweet){
             streamer.add_tweet_to_cache(tweet);
           });
-          console.log(streamer.country_cache);
+          console.log(streamer.cache);
         };
       })
     });
@@ -90,33 +91,26 @@ module.exports = function(settings, twitter, sockets) {
 
 
   /**
-   * Most recent tweets will be at the start of each user's tweets array.
-   * tweet is a full array of data about a tweet.
+   * Most recent tweets will be at the start of each country's tweets array.
+   * `tweet` is a full array of data about a tweet.
    */
   streamer.add_tweet_to_cache = function(tweet) {
     var shrunk_tweet = streamer.shrink_tweet(tweet);  
     var user_id = tweet.user.id_str;
-    //if (user_id in streamer.user_cache) {
-      //streamer.user_cache[user_id].push(shrunk_tweet); 
-    //} else {
-      //streamer.user_cache[user_id] = [shrunk_tweet];
-    //};
-    //if (streamer.user_cache[user_id].length
-    //> streamer.number_of_tweets_to_cache) {
-      //streamer.user_cache[user_id].pop();
-    //};
+    // For each country this twitter account is associated with, add to its
+    // cache.
     settings.account_to_country[user_id].forEach(function(country){
-      if (country in streamer.country_cache) {
-        streamer.country_cache[country].push(shrunk_tweet); 
+      if (country in streamer.cache) {
+        streamer.cache[country].push(shrunk_tweet); 
       } else {
-        streamer.country_cache[country] = [shrunk_tweet];
+        streamer.cache[country] = [shrunk_tweet];
       };
-      // Sort with newest items first.
-      streamer.country_cache[country].sort(function(a,b){
+      // Sort with newest items first, in case things have got out of sync.
+      streamer.cache[country].sort(function(a,b){
         return b.time - a.time;
       });
       // Truncate cache to length.
-      streamer.country_cache[country].length = streamer.number_of_tweets_to_cache;
+      streamer.cache[country].length = streamer.number_of_tweets_to_cache;
     });
   };
 
