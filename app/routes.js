@@ -18,12 +18,13 @@ module.exports = function(app, settings) {
       var category_data = settings.categories[category_key];
       res.render('screen',
                   {
-                    static_data: {
+                    config: {
                         category: {
                           key: category_key,
                           name: category_data['name'],
                           accounts: category_data['accounts']
-                        }
+                        },
+                        number_of_tweets_to_display: settings.ui.number_of_tweets 
                      }
                   }
                 );

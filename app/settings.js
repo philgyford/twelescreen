@@ -12,7 +12,7 @@ module.exports = function(_) {
   var config = require('config');
 
   // Mirror all of our settings from config for slightly easier access.
-  _.each(['env', 'categories', 'twitter'], function(key) {
+  _.each(['env', 'categories', 'twitter', 'ui'], function(key) {
     settings[key] = config[key];
   });
 

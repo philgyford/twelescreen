@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>{{static_data.category.name}} Twelescreen</title>
+  <title>{{config.category.name}} Twelescreen</title>
   <link rel="stylesheet" href="/stylesheets/style.css">
   <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
   <script src="/components/socket.io-client/dist/socket.io.min.js"></script>
   <script src="/javascripts/script.js"></script>
 </head>
 <body>
-  <p>Test: {{static_data.category.name}} ({{static_data.category.key}}) </p>
+  <p>Test: {{config.category.name}} ({{config.category.key}}) </p>
 
   <ul id="tweets">
 
@@ -18,10 +18,11 @@
     $(document).ready(function() {
       twelescreen_client.init({
         category: {
-          key: '{{static_data.category.key}}',
-          name: "{{static_data.category.name}}",
-          accounts: [{{static_data.category.accounts}}]
-        }
+          key: '{{config.category.key}}',
+          name: "{{config.category.name}}",
+          accounts: [{{config.category.accounts}}]
+        },
+        number_of_tweets_to_display: {{config.number_of_tweets_to_display}}
       });
     });
   </script>

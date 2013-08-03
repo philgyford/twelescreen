@@ -10,8 +10,6 @@ module.exports = function(settings, twitter, sockets, _) {
 
   var streamer = this;
 
-  streamer.number_of_tweets_to_cache = 3;
-
   /**
    * For each category, its most recent tweets, newest first.
    * eg
@@ -49,7 +47,7 @@ module.exports = function(settings, twitter, sockets, _) {
     settings.watched_accounts.forEach(function(id) {
       console.log('fetching tweets for '+id);
       streamer.twitter.getUserTimeline({
-        user_id: id, count: streamer.number_of_tweets_to_cache,
+        user_id: id, count: settings.ui.number_of_tweets,
         trim_user: false, exclude_replies: true,
         contributor_details: true, include_rts: false
       }, function(err, tweets) {
@@ -91,7 +89,7 @@ module.exports = function(settings, twitter, sockets, _) {
       stream.on('data', function(tweet) {
 
         // Make sure it was a valid tweet, and also not a reply.
-        if (tweet.text !== undefined && tweet.in_reply_to_user_id !== undefined) {
+        if (tweet.text !== undefined && tweet.in_reply_to_user_id === null) {
           // Send to all the clients - we don't know which client is in which
           // category, so they filter in the client.
           sockets.sockets.emit('tweets', [streamer.shrink_tweet(tweet)]);
@@ -129,7 +127,7 @@ module.exports = function(settings, twitter, sockets, _) {
       // Sort with newest items first, in case things have got out of sync.
       streamer.cache[category].sort(streamer.cache_sorter);
       // Truncate cache to length.
-      streamer.cache[category].length = streamer.number_of_tweets_to_cache;
+      streamer.cache[category].length = settings.ui.number_of_tweets;
     });
   };
 

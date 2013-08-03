@@ -1,5 +1,8 @@
 env:
   heroku: false
+ui:
+  # How many tweets do we cycle through?
+  number_of_tweets: 3
 categories:
   uk:
     name: United Kingdom
