@@ -50,14 +50,8 @@ if (settings.env.heroku == true) {
 	});
 };
 
-// If the client just connected, give them fresh data!
-sockets.sockets.on('connection', function(socket) { 
-		//socket.emit('tweets', [shrink_tweet(tweet)]);
-});
-
-
-var streamer = require('./app/streamer')(settings, twitter, sockets);
-
+// Start fetching Tweets from Twitter.
+var streamer = require('./app/streamer')(settings, twitter, sockets, _);
 streamer.start();
 
 //Reset everything on a new day!

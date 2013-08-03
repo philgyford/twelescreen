@@ -1,7 +1,8 @@
 var twelescreen_client = {
 
   config: {
-    country: {}
+    country: {},
+    number_of_tweets_to_display: 3
   },
 
   socket: null,
@@ -15,10 +16,15 @@ var twelescreen_client = {
   listen_for_tweets: function() {
     var that = this;
     that.socket = io.connect(window.location.hostname);
+    // Tweets arrive as an array, with the newest first.
     that.socket.on('tweets', function(tweets) {
-      $.each(tweets, function(idx, tweet) {
+      $.each(tweets.reverse(), function(idx, tweet) {
         if (that.tweet_is_from_this_country(tweet)) {
-          $('#tweets').append('<li><img src="' + tweet.user.profile_image_url + '" /> '+ tweet.text + '</li>');
+          $('#tweets').prepend('<li><img src="' + tweet.user.profile_image_url + '" /> '+ tweet.text + '</li>');
+
+          if ($('#tweets li').length > that.config.number_of_tweets_to_display) {
+            $('#tweets li:last-child').remove();
+          };
         };
       });
     });

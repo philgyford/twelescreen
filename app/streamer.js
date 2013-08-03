@@ -6,7 +6,7 @@
  *  var streamer = require('./app/streamer')(settings, twitter, sockets);
  *  streamer.start();
  */
-module.exports = function(settings, twitter, sockets) {
+module.exports = function(settings, twitter, sockets, _) {
 
   var streamer = this;
 
@@ -59,10 +59,20 @@ module.exports = function(settings, twitter, sockets) {
           tweets.forEach(function(tweet){
             streamer.add_tweet_to_cache(tweet);
           });
-          console.log(streamer.cache);
         };
       })
     });
+  };
+
+
+  /**
+   * Returns an array of all the tweets in the cache, not split into countries,
+   * no duplicate tweets.
+   */
+  streamer.complete_cache = function() {
+    return _.uniq(_.flatten(streamer.cache), function(item, key, id){
+      return item.id;
+    }).sort(streamer.cache_sorter);
   };
 
 
@@ -82,13 +92,24 @@ module.exports = function(settings, twitter, sockets) {
 
         // Make sure it was a valid tweet
         if (tweet.text !== undefined) {
-          // Send to all the clients
+          // Send to all the clients - we don't know which client is in which
+          // country, so they filter in the client.
           sockets.sockets.emit('tweets', [streamer.shrink_tweet(tweet)]);
         }
       });
     });
+
+    // When a client connect, give them initial data.
+    // Here, we don't know which country they're in, so we send them
+    // everything. Not sure how to make that better.
+    sockets.sockets.on('connection', function(socket) { 
+        socket.emit('tweets', streamer.complete_cache());
+    });
   };
 
+  streamer.cache_sorter = function(a,b) {
+    return b.time - a.time;
+  };
 
   /**
    * Most recent tweets will be at the start of each country's tweets array.
@@ -106,9 +127,7 @@ module.exports = function(settings, twitter, sockets) {
         streamer.cache[country] = [shrunk_tweet];
       };
       // Sort with newest items first, in case things have got out of sync.
-      streamer.cache[country].sort(function(a,b){
-        return b.time - a.time;
-      });
+      streamer.cache[country].sort(streamer.cache_sorter);
       // Truncate cache to length.
       streamer.cache[country].length = streamer.number_of_tweets_to_cache;
     });

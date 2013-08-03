@@ -14,14 +14,19 @@ module.exports = function(app, settings) {
    */
   app.get(/^\/(\w\w)\/$/, function(req, res) {
     if (settings.valid_countries.indexOf(req.params[0]) > -1) {
-      var country_data = settings.countries[req.params[0]];
-      res.render('screen', {static_data: {
-                              country: {
-                                code: req.params[0],
-                                name: country_data['name'],
-                                accounts: country_data['accounts']
-                              }
-                           }});
+      var country_code = req.params[0];
+      var country_data = settings.countries[country_code];
+      res.render('screen',
+                  {
+                    static_data: {
+                        country: {
+                          code: country_code,
+                          name: country_data['name'],
+                          accounts: country_data['accounts']
+                        }
+                     }
+                  }
+                );
     } else {
       res.send(404, "'" + req.params[0] + "' is not a valid country. Go home or face arrest.");	
     };
