@@ -13,7 +13,7 @@ module.exports = function(settings, twitter, sockets, _) {
   streamer.number_of_tweets_to_cache = 3;
 
   /**
-   * For each country, its most recent tweets, newest first.
+   * For each category, its most recent tweets, newest first.
    * eg
    * {
    *   'uk': [{...}, {...}, {...}],
@@ -66,7 +66,7 @@ module.exports = function(settings, twitter, sockets, _) {
 
 
   /**
-   * Returns an array of all the tweets in the cache, not split into countries,
+   * Returns an array of all the tweets in the cache, not split into categories,
    * no duplicate tweets.
    */
   streamer.complete_cache = function() {
@@ -93,14 +93,14 @@ module.exports = function(settings, twitter, sockets, _) {
         // Make sure it was a valid tweet
         if (tweet.text !== undefined) {
           // Send to all the clients - we don't know which client is in which
-          // country, so they filter in the client.
+          // category, so they filter in the client.
           sockets.sockets.emit('tweets', [streamer.shrink_tweet(tweet)]);
         }
       });
     });
 
     // When a client connect, give them initial data.
-    // Here, we don't know which country they're in, so we send them
+    // Here, we don't know which category they're in, so we send them
     // everything. Not sure how to make that better.
     sockets.sockets.on('connection', function(socket) { 
         socket.emit('tweets', streamer.complete_cache());
@@ -112,24 +112,24 @@ module.exports = function(settings, twitter, sockets, _) {
   };
 
   /**
-   * Most recent tweets will be at the start of each country's tweets array.
+   * Most recent tweets will be at the start of each category's tweets array.
    * `tweet` is a full array of data about a tweet.
    */
   streamer.add_tweet_to_cache = function(tweet) {
     var shrunk_tweet = streamer.shrink_tweet(tweet);  
     var user_id = tweet.user.id_str;
-    // For each country this twitter account is associated with, add to its
+    // For each category this twitter account is associated with, add to its
     // cache.
-    settings.account_to_country[user_id].forEach(function(country){
-      if (country in streamer.cache) {
-        streamer.cache[country].push(shrunk_tweet); 
+    settings.account_to_category[user_id].forEach(function(category){
+      if (category in streamer.cache) {
+        streamer.cache[category].push(shrunk_tweet); 
       } else {
-        streamer.cache[country] = [shrunk_tweet];
+        streamer.cache[category] = [shrunk_tweet];
       };
       // Sort with newest items first, in case things have got out of sync.
-      streamer.cache[country].sort(streamer.cache_sorter);
+      streamer.cache[category].sort(streamer.cache_sorter);
       // Truncate cache to length.
-      streamer.cache[country].length = streamer.number_of_tweets_to_cache;
+      streamer.cache[category].length = streamer.number_of_tweets_to_cache;
     });
   };
 

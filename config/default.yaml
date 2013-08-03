@@ -1,9 +1,10 @@
 env:
   heroku: false
-countries:
+categories:
   uk:
     name: United Kingdom
     accounts:
       - 2030131 # philgyfordtest
       - 12552 # philgyford
+      - 12514 # tomcoates
 

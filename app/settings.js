@@ -12,44 +12,44 @@ module.exports = function(_) {
   var config = require('config');
 
   // Mirror all of our settings from config for slightly easier access.
-  _.each(['env', 'countries', 'twitter'], function(key) {
+  _.each(['env', 'categories', 'twitter'], function(key) {
     settings[key] = config[key];
   });
 
 
   /**
-   * Will be an array of all the Twitter account numbers for all of the countries.
-   * Like: [30313925, 138037459]
+   * Will be an array of all the Twitter account numbers for all of the
+   * categories. Like: [30313925, 138037459]
    */
   settings.watched_accounts = _.uniq(
       _.flatten(
-        _.map(settings.countries, function(v, k, l) { return v.accounts; })
+        _.map(settings.categories, function(v, k, l) { return v.accounts; })
       )
   );
 
 
   /**
-   * Will map Twitter account numbers (as strings) to all the countries they're in.
+   * Will map Twitter account numbers (as strings) to all the categoires they're in.
    * Like: {'138037459': ['uk'], '30313925': ['us']}
    */
-  settings.account_to_country = {};
-  _.each(settings.countries, function(country_data, country, l) {
-    _.each(country_data.accounts, function(account) {
+  settings.account_to_category = {};
+  _.each(settings.categories, function(category_data, category, l) {
+    _.each(category_data.accounts, function(account) {
       account = account.toString();
-      if (account in account_to_country) {
-        account_to_country[account.toString()].push(country);
+      if (account in account_to_category) {
+        account_to_category[account.toString()].push(category);
       } else {
-        account_to_country[account] = [country];  
+        account_to_category[account] = [category];  
       }
     })
   });
 
 
   /**
-   * Will be an array of valid country acronyms, like: ['uk', 'us'].
+   * Will be an array of valid category keys, like: ['uk', 'us'].
    */
-  settings.valid_countries = _.map(settings.countries,
-                            function(country_data, country, l) { return country; })
+  settings.valid_categories = _.map(settings.categories,
+                          function(category_data, category, l) { return category; })
 
   return settings;
 };

@@ -6,23 +6,23 @@ module.exports = function(app, settings) {
    * A request for the front page of the site.
    */
   app.get('/', function(req, res) {
-    res.render('index', {countries: settings.valid_countries});
+    res.render('index', {categories: settings.valid_categories});
   });
 
   /**
-   * A request for a screen for a particular country.
+   * A request for a screen for a particular category.
    */
   app.get(/^\/(\w\w)\/$/, function(req, res) {
-    if (settings.valid_countries.indexOf(req.params[0]) > -1) {
-      var country_code = req.params[0];
-      var country_data = settings.countries[country_code];
+    if (settings.valid_categories.indexOf(req.params[0]) > -1) {
+      var category_key = req.params[0];
+      var category_data = settings.categories[category_key];
       res.render('screen',
                   {
                     static_data: {
-                        country: {
-                          code: country_code,
-                          name: country_data['name'],
-                          accounts: country_data['accounts']
+                        category: {
+                          key: category_key,
+                          name: category_data['name'],
+                          accounts: category_data['accounts']
                         }
                      }
                   }

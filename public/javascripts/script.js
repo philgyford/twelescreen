@@ -1,7 +1,7 @@
 var twelescreen_client = {
 
   config: {
-    country: {},
+    category: {},
     number_of_tweets_to_display: 3
   },
 
@@ -19,7 +19,7 @@ var twelescreen_client = {
     // Tweets arrive as an array, with the newest first.
     that.socket.on('tweets', function(tweets) {
       $.each(tweets.reverse(), function(idx, tweet) {
-        if (that.tweet_is_from_this_country(tweet)) {
+        if (that.tweet_is_in_this_category(tweet)) {
           $('#tweets').prepend('<li><img src="' + tweet.user.profile_image_url + '" /> '+ tweet.text + '</li>');
 
           if ($('#tweets li').length > that.config.number_of_tweets_to_display) {
@@ -30,8 +30,8 @@ var twelescreen_client = {
     });
   },
 
-  tweet_is_from_this_country: function(tweet) {
-    if (this.config.country.accounts.indexOf(tweet.user.id) > -1) {
+  tweet_is_in_this_category: function(tweet) {
+    if (this.config.category.accounts.indexOf(tweet.user.id) > -1) {
       return true;
     } else {
       return false;
