@@ -38,10 +38,11 @@ module.exports = function(settings, twitter, sockets, _) {
     // the async module. So for now, we'll hope it won't be an issue.
     streamer.cache_previous_tweets();
     streamer.start_streaming();
+    streamer.prepare_for_clients();
   };
 
 
-  streamer.cache_previous_tweets = function(callback) {
+  streamer.cache_previous_tweets = function() {
     console.log('Caching previous tweets starting');
 
     settings.watched_accounts.forEach(function(id) {
@@ -64,21 +65,10 @@ module.exports = function(settings, twitter, sockets, _) {
 
 
   /**
-   * Returns an array of all the tweets in the cache, not split into categories,
-   * no duplicate tweets.
-   */
-  streamer.complete_cache = function() {
-    return _.uniq(_.flatten(streamer.cache), function(item, key, id){
-      return item.id;
-    }).sort(streamer.cache_sorter);
-  };
-
-
-  /**
    * Starts listening for new tweets coming from Twitter.
    * When one comes in, sends it to the front end.
    */
-  streamer.start_streaming = function(callback) {
+  streamer.start_streaming = function() {
     console.log('Streaming from Twitter starting');
 
     // Tell the twitter API to filter on the watched_accounts. 
@@ -96,7 +86,10 @@ module.exports = function(settings, twitter, sockets, _) {
         }
       });
     });
+  };
 
+
+  streamer.prepare_for_clients = function() {
     // When a client connect, give them initial data.
     // Here, we don't know which category they're in, so we send them
     // everything. Not sure how to make that better.
@@ -105,9 +98,22 @@ module.exports = function(settings, twitter, sockets, _) {
     });
   };
 
+
+  /**
+   * Returns an array of all the tweets in the cache, not split into categories,
+   * no duplicate tweets.
+   */
+  streamer.complete_cache = function() {
+    return _.uniq(_.flatten(streamer.cache), function(item, key, id){
+      return item.id;
+    }).sort(streamer.cache_sorter);
+  };
+
+
   streamer.cache_sorter = function(a,b) {
     return b.time - a.time;
   };
+
 
   /**
    * Most recent tweets will be at the start of each category's tweets array.
