@@ -11,7 +11,7 @@ module.exports = function(settings, twitter, sockets, _) {
   var streamer = this;
 
   /**
-   * For each category, its most recent tweets, newest first.
+   * For each category, its most recent tweets, newest last.
    * eg
    * {
    *   'uk': [{...}, {...}, {...}],
@@ -80,9 +80,12 @@ module.exports = function(settings, twitter, sockets, _) {
 
         // Make sure it was a valid tweet, and also not a reply.
         if (tweet.text !== undefined && tweet.in_reply_to_user_id === null) {
+          streamer.add_tweet_to_cache(tweet);
           // Send to all the clients - we don't know which client is in which
           // category, so they filter in the client.
-          sockets.sockets.emit('tweets', [streamer.shrink_tweet(tweet)]);
+          sockets.sockets.emit('messages',
+            {type: 'fresh', tweets: [streamer.shrink_tweet(tweet)] }
+          );
         }
       });
     });
@@ -94,7 +97,9 @@ module.exports = function(settings, twitter, sockets, _) {
     // Here, we don't know which category they're in, so we send them
     // everything. Not sure how to make that better.
     sockets.sockets.on('connection', function(socket) { 
-        socket.emit('tweets', streamer.complete_cache());
+        socket.emit('messages',
+          {type: 'cached', tweets: streamer.complete_cache() }
+        );
     });
   };
 
@@ -111,7 +116,7 @@ module.exports = function(settings, twitter, sockets, _) {
 
 
   streamer.cache_sorter = function(a,b) {
-    return b.time - a.time;
+    return a.time - b.time;
   };
 
 
@@ -130,10 +135,11 @@ module.exports = function(settings, twitter, sockets, _) {
       } else {
         streamer.cache[category] = [shrunk_tweet];
       };
-      // Sort with newest items first, in case things have got out of sync.
+      // Sort, in case things have got out of sync.
       streamer.cache[category].sort(streamer.cache_sorter);
-      // Truncate cache to length.
-      streamer.cache[category].length = settings.ui.number_of_tweets;
+      // Remove any superfluous items from start.
+      streamer.cache[category].splice(0,
+                        (streamer.cache[category] - settings.ui.number_of_tweets));
     });
   };
 

@@ -9,6 +9,6 @@ categories:
     greeting: ATTENTION SUBJECTS!
     accounts:
       - 2030131 # philgyfordtest
-      - 12552 # philgyford
-      - 12514 # tomcoates
+      #- 12552 # philgyford
+      #- 12514 # tomcoates
 
