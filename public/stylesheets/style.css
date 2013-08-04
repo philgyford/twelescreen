@@ -47,10 +47,33 @@ table {
   border-spacing: 0;
 }
 
+
+.slabtexted .slabtext
+        {
+        display:-moz-inline-box;
+        display:inline-block;
+        white-space:nowrap;
+        }
+.slabtextinactive .slabtext
+        {
+        display:inline;
+        white-space:normal;
+        font-size:1em !important;
+        letter-spacing:inherit !important;
+        word-spacing:inherit !important;
+        *letter-spacing:0 !important;
+        *word-spacing:0 !important;
+        }
+.slabtextdone .slabtext
+        {
+        display:block;
+        }
+
 .slide {
   position: absolute;
   top: 0;
   left: -5000px;
+  font-size: 70px;
 }
 .slide-on {
   left: 0;
