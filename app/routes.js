@@ -22,7 +22,8 @@ module.exports = function(app, settings) {
                         category: {
                           key: category_key,
                           name: category_data['name'],
-                          accounts: category_data['accounts']
+                          accounts: category_data['accounts'],
+                          greeting: category_data['greeting']
                         },
                         number_of_tweets_to_display: settings.ui.number_of_tweets 
                      }
