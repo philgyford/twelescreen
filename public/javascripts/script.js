@@ -23,16 +23,30 @@ var twelescreen_client = {
   /**
    * The ID of the currently-displayed tweet.
    */
-  current_tweet_id: null,
+  current_tweet_id: '',
 
   init: function(spec) {
     $.extend(this.config, spec);
+
+    this.prepare_display();
 
     this.prepare_connection();
 
     this.listen_for_tweets();
 
     this.start_carousel();
+  },
+
+  prepare_display: function() {
+    var that = this;
+    that.size_screen();
+    $(window).resize(function() {
+      that.size_screen();
+    });
+  },
+
+  size_screen: function() {
+    $('.slide').width($(window).width()).height($(window).height());
   },
 
   prepare_connection: function() {
@@ -91,7 +105,8 @@ var twelescreen_client = {
    */
   show_greeting: function(next_tweet) {
     var that = this;
-    $('#tweet').text(this.config.category.greeting);
+    $('#greeting').text(that.config.category.greeting);
+    that.switch_slides('#greeting');
     setTimeout(function(){
       if (next_tweet) {
         that.display_tweet(next_tweet); 
@@ -136,12 +151,23 @@ var twelescreen_client = {
    * Do the actual displaying of a tweet.
    */
   display_tweet: function(tweet) {
+    if ( ! $('#tweet-'+tweet.id).exists()) {
+      $('body').append(
+        $('<div/>').attr('id', 'tweet-'+tweet.id).addClass('slide').text(tweet.text)
+      );
+    };
+    this.switch_slides('#tweet-'+tweet.id);
     this.current_tweet_id = tweet.id;
-    $('#tweet').text(tweet.text);
     var that = this;
     setTimeout(function(){
       that.show_next_item();
     }, 2000);
+  },
+
+  switch_slides: function(to) {
+    $('.slide-on').removeClass('slide-on');
+    $(to).addClass('slide-on');
+  
   },
 
   display_disconnection_alert: function() {
@@ -155,7 +181,8 @@ var twelescreen_client = {
   add_to_tweet_store: function(tweet) {
     this.tweet_store.push(tweet);
     if (this.tweet_store.length > this.config.number_of_tweets_to_display) {
-      this.tweet_store.shift();
+      var old_tweet = this.tweet_store.shift();
+      $('#tweet-'+old_tweet.id).remove();
     };
   },
 
@@ -171,4 +198,6 @@ var twelescreen_client = {
     };
   }
 };
+
+jQuery.fn.exists = function(){return jQuery(this).length>0;};  
 
