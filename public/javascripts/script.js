@@ -28,14 +28,26 @@ var twelescreen_client = {
   init: function(spec) {
     $.extend(this.config, spec);
 
+    this.prepare_connection();
+
     this.listen_for_tweets();
 
     this.start_carousel();
   },
 
-  listen_for_tweets: function() {
+  prepare_connection: function() {
     var that = this;
     that.socket = io.connect(window.location.hostname);
+    that.socket.on('connect', function(){
+      that.hide_disconnection_alert();
+    });
+    that.socket.on('disconnect', function(){
+      that.display_disconnection_alert();
+    });
+  },
+
+  listen_for_tweets: function() {
+    var that = this;
     // Tweets arrive as an array, with the newest last.
     that.socket.on('messages', function(messages_packet) {
       $.each(messages_packet.tweets, function(idx, tweet) {
@@ -130,6 +142,14 @@ var twelescreen_client = {
     setTimeout(function(){
       that.show_next_item();
     }, 2000);
+  },
+
+  display_disconnection_alert: function() {
+    $('#alert').text(this.config.category.disconnect_warning).show();
+  },
+
+  hide_disconnection_alert: function() {
+    $('#alert').hide();
   },
 
   add_to_tweet_store: function(tweet) {

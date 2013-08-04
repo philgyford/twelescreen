@@ -23,7 +23,8 @@ module.exports = function(app, settings) {
                           key: category_key,
                           name: category_data['name'],
                           accounts: category_data['accounts'],
-                          greeting: category_data['greeting']
+                          greeting: category_data['greeting'],
+                          disconnect_warning: category_data['disconnect_warning'],
                         },
                         number_of_tweets_to_display: settings.ui.number_of_tweets 
                      }
