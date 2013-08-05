@@ -89,6 +89,18 @@ table {
   box-pack: center;
 }
 
+
+/* Twelescreen specific styles */
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  background: #000;
+  color: #fff;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+}
+
 .slide {
   position: absolute;
   top: 0;
@@ -100,5 +112,39 @@ table {
 }
 
 #greeting {
-  font-size: 220px;
+  text-align: center;
+  background: #ff0;
+  color: #000;
 }
+#greeting.invert {
+  background: #000;
+  color: #ff0;
+}
+
+.tweet-account {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  line-height: 1.4em;
+  text-transform: uppercase;
+  color: #C3E3CC;
+}
+  .tweet-account-avatar {
+    position: absolute;
+    top: 0;
+    right: 3%;
+    width: 12%;
+  }
+  .tweet-account-name {
+    width: 80%;
+    height: 10%;
+    margin: 0 0 0 3%;
+    text-overflow: hidden;
+  }
+.tweet-message {
+  width: 94%;
+  margin: 0 auto;
+  line-height: 1.2em;
+}
+

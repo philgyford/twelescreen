@@ -21,6 +21,12 @@ var twelescreen_client = {
   tweet_store: [],
 
   /**
+   * Should generally always be set to true.
+   * Useful to be able to turn this off for debugging.
+   */
+  auto_advance: false,
+
+  /**
    * The ID of the currently-displayed tweet.
    */
   current_tweet_id: '',
@@ -78,7 +84,9 @@ var twelescreen_client = {
   },
 
   start_carousel: function() {
-    this.show_greeting();
+    if (this.auto_advance) {
+      this.show_greeting();
+    };
   },
 
   /**
@@ -86,10 +94,12 @@ var twelescreen_client = {
    * store.
    */
   show_next_item: function() {
-    if (this.tweet_queue.length > 0) {
-      this.show_new_tweet();
-    } else {
-      this.show_stored_tweet();
+    if (this.auto_advance) {
+      if (this.tweet_queue.length > 0) {
+        this.show_new_tweet();
+      } else {
+        this.show_stored_tweet();
+      };
     };
   },
 
@@ -101,15 +111,20 @@ var twelescreen_client = {
    */
   show_greeting: function(next_tweet) {
     var that = this;
-    $('#greeting .slide-inner').html(that.config.category.greeting).fitText();
+    $('#greeting').html(that.config.category.greeting).fitText(0.7);
     that.show_slide('#greeting');
-    setTimeout(function(){
-      if (next_tweet) {
-        that.display_tweet(next_tweet); 
-      } else {
-        that.show_next_item();
-      };
-    }, 2000);
+    $('#greeting')
+      .delay(1000).queueFn(function(){$(this).addClass('invert')})
+      .delay(1000).queueFn(function(){$(this).removeClass('invert')})
+      .delay(1000).queueFn(function(){$(this).addClass('invert')})
+      .delay(1000).queueFn(function(){$(this).removeClass('invert')})
+      .delay(1000).queueFn(function(){
+        if (next_tweet) {
+          that.display_tweet(next_tweet); 
+        } else {
+          that.show_next_item();
+        };
+      });
   },
 
 
@@ -159,11 +174,19 @@ var twelescreen_client = {
   },
 
   make_tweet_slide: function(tweet) {
+    var id = 'tweet-'+tweet.id;
     $('body').append(
-      $('<div/>').attr('id', 'tweet-'+tweet.id).addClass('slide vbox center').text(tweet.text)
+      $('<div/>').attr('id', id).addClass('tweet').append(
+        $('<div/>').addClass('tweet-account').html(
+          '<img src="' + tweet.user.profile_image_url + '" alt="" class="tweet-account-avatar" /><div class="tweet-account-name">' + tweet.user.name + "</div>"
+        )
+      ).append(
+        $('<div/>').addClass('tweet-message vbox center').text(tweet.text)
+      ).addClass('slide')
     );
     this.size_slide('#tweet-'+tweet.id);
-    $('#tweet-'+tweet.id).fitText();
+    $('#' + id + ' .tweet-account').fitText(1.5);
+    $('#' + id + ' .tweet-message').fitText(1.1);
   },
 
   size_screen: function() {
@@ -172,6 +195,10 @@ var twelescreen_client = {
 
   size_slide: function(selector) {
     $(selector).width($(window).width()).height($(window).height());
+    var margin_top = $(selector + ' .tweet-account-avatar').height();
+    $(selector + ' .tweet-message')
+      .css('marginTop', margin_top) 
+      .height($(window).height() - margin_top);
   },
 
   show_slide: function(selector) {
@@ -209,6 +236,17 @@ var twelescreen_client = {
 };
 
 jQuery.fn.exists = function(){return jQuery(this).length>0;};  
+
+
+/*
+ * jQuery queueFn - v0.7 - 9/05/2010
+ * http://benalman.com/projects/jquery-misc-plugins/
+ * 
+ * Copyright (c) 2010 "Cowboy" Ben Alman
+ * Dual licensed under the MIT and GPL licenses.
+ * http://benalman.com/about/license/
+ */
+(function($){$.fn.queueFn=function(c){var b,d,a=Array.prototype.slice.call(arguments,1);if(typeof c==="boolean"){if(c){d=this;b=this.length}c=a.shift()}c=$.isFunction(c)?c:$.fn[c];return this.queue(function(){!--b&&c.apply(d||this,a);$.dequeue(this)})}})(jQuery);
 
 
 /*global jQuery */
