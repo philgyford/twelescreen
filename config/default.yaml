@@ -6,7 +6,7 @@ ui:
 categories:
   uk:
     name: United Kingdom
-    greeting: ATTENTION SUBJECTS!
+    greeting: ATTENTION<br />SUBJECTS!
     disconnect_warning: You are no longer connected. Reconnect or face arrest.
     accounts:
       - 2030131 # philgyfordtest

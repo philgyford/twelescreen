@@ -48,6 +48,46 @@ table {
 }
 
 
+/* Centering styles from http://infrequently.org/2009/08/css-3-progress/ */
+.hbox {
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+}
+.hbox > * {
+  -webkit-box-flex: 0;
+  -moz-box-flex: 0;
+  box-flex: 0;
+  display: block;
+}
+.vbox {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+}
+.vbox > * {
+  -webkit-box-flex: 0;
+  -moz-box-flex: 0;
+  box-flex: 0;
+  display: block;
+}
+.center {
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  box-pack: center;
+}
 
 .slide {
   position: absolute;
@@ -57,4 +97,8 @@ table {
 }
 .slide-on {
   left: 0;
+}
+
+#greeting {
+  font-size: 220px;
 }

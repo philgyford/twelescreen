@@ -8,7 +8,7 @@
   <script src="/javascripts/script.js"></script>
 </head>
 <body>
-  <div id="greeting" class="slide slabtext" style="background: yellow;"></div>
+  <div id="greeting" class="slide hbox center" style="background: yellow;"><div class="slide-inner vbox center"></div></div>
 
   <div id="alert" style="display: none;"></div>
 
@@ -19,7 +19,7 @@
           key: '{{config.category.key}}',
           name: "{{config.category.name}}",
           accounts: [{{config.category.accounts}}],
-          greeting: "{{config.category.greeting}}",
+          greeting: "{{{config.category.greeting}}}",
           disconnect_warning: "{{config.category.disconnect_warning}}"
         },
         number_of_tweets_to_display: {{config.number_of_tweets_to_display}}

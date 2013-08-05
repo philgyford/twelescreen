@@ -45,10 +45,6 @@ var twelescreen_client = {
     });
   },
 
-  size_screen: function() {
-    $('.slide').width($(window).width()).height($(window).height());
-  },
-
   prepare_connection: function() {
     var that = this;
     that.socket = io.connect(window.location.hostname);
@@ -105,7 +101,7 @@ var twelescreen_client = {
    */
   show_greeting: function(next_tweet) {
     var that = this;
-    $('#greeting').text(that.config.category.greeting);
+    $('#greeting .slide-inner').html(that.config.category.greeting).fitText();
     that.show_slide('#greeting');
     setTimeout(function(){
       if (next_tweet) {
@@ -164,13 +160,23 @@ var twelescreen_client = {
 
   make_tweet_slide: function(tweet) {
     $('body').append(
-      $('<div/>').attr('id', 'tweet-'+tweet.id).addClass('slide').text(tweet.text)
+      $('<div/>').attr('id', 'tweet-'+tweet.id).addClass('slide vbox center').text(tweet.text)
     );
+    this.size_slide('#tweet-'+tweet.id);
+    $('#tweet-'+tweet.id).fitText();
+  },
+
+  size_screen: function() {
+    this.size_slide('.slide');
+  },
+
+  size_slide: function(selector) {
+    $(selector).width($(window).width()).height($(window).height());
   },
 
   show_slide: function(selector) {
     $('.slide-on').removeClass('slide-on');
-    $(selector).addClass('slide-on').fitText();
+    $(selector).addClass('slide-on');
   },
 
   display_disconnection_alert: function() {
