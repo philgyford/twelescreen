@@ -195,7 +195,7 @@ var twelescreen_client = {
 
   size_slide: function(selector) {
     $(selector).width($(window).width()).height($(window).height());
-    var margin_top = $(selector + ' .tweet-account-avatar').height();
+    var margin_top = $(selector + ' .tweet-account-avatar').height() * 0.9;
     $(selector + ' .tweet-message')
       .css('marginTop', margin_top) 
       .height($(window).height() - margin_top);
@@ -207,7 +207,8 @@ var twelescreen_client = {
   },
 
   display_disconnection_alert: function() {
-    $('#alert').text(this.config.category.disconnect_warning).show();
+    $('#alert-inner').text(this.config.category.disconnect_warning);
+    $('#alert').show().fitText(1.5);
   },
 
   hide_disconnection_alert: function() {
