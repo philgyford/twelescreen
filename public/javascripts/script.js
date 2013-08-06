@@ -111,7 +111,7 @@ var twelescreen_client = {
    */
   show_greeting: function(next_tweet) {
     var that = this;
-    $('#greeting').html(that.config.category.greeting).fitText(0.7);
+    $('#greeting').html(that.config.category.greeting);
     that.show_slide('#greeting');
     $('#greeting')
       .delay(1000).queueFn(function(){$(this).addClass('invert')})
@@ -191,7 +191,7 @@ var twelescreen_client = {
 
   size_screen: function() {
     this.size_slide('.slide');
-    this.size_greeting();
+    this.size_slidetitle();
   },
 
   size_slide: function(selector) {
@@ -210,13 +210,15 @@ var twelescreen_client = {
 
   /**
    * In addition to what's done by size_slide().
+   * The #greeting and #burn slides.
    */
-  size_greeting: function() {
+  size_slidetitle: function() {
     // To move the vertically-centered text up a bit.
-    var padding_bottom = Math.round($('#greeting').height() / 10);
-    $('#greeting')
+    var padding_bottom = Math.round($('.slidetitle').height() / 10);
+    $('.slidetitle')
       .css('paddingBottom', padding_bottom)
-      .height($('#greeting').height() - padding_bottom);
+      .height($('.slidetitle').height() - padding_bottom)
+      .fitText(0.7);
   },
 
   show_slide: function(selector) {

@@ -104,14 +104,26 @@ body {
   position: absolute;
   top: 0;
   left: -5000px;
+  /* Reset using fitText() in JS. */
   font-size: 70px;
 }
 .slide-on {
   left: 0;
 }
-
-#greeting {
+.slidetitle {
   text-align: center;
+}
+
+#burn {
+  z-index: 2000;
+  left: 0;  
+  background: none;
+	zoom: 1;
+	filter: alpha(opacity=5);
+	opacity: 0.05;
+  text-transform: uppercase;
+}
+#greeting {
   background: #EDED39;
   color: #222;
 }
@@ -119,6 +131,7 @@ body {
   background: #222;
   color: #EDED39;
 }
+
 #alert {
   position: absolute;
   bottom: 0;
