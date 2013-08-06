@@ -191,14 +191,32 @@ var twelescreen_client = {
 
   size_screen: function() {
     this.size_slide('.slide');
+    this.size_greeting();
   },
 
   size_slide: function(selector) {
     $(selector).width($(window).width()).height($(window).height());
-    var margin_top = $(selector + ' .tweet-account-avatar').height() * 0.9;
+    // Leave space for the account stripe, and some of the avatar.
+    var margin_top = Math.round($(selector + ' .tweet-account-avatar').height() * 0.9);
+    // To push things up a bit so it looks balanced.
+    var margin_bottom = Math.round(margin_top / 4);
     $(selector + ' .tweet-message')
       .css('marginTop', margin_top) 
-      .height($(window).height() - margin_top);
+      .css('marginBottom', margin_bottom)
+      .height($(window).height() - margin_top - margin_bottom);
+    $(selector + ' .tweet-account-avatar')
+      .css('borderWidth', Math.round(margin_top / 6));
+  },
+
+  /**
+   * In addition to what's done by size_slide().
+   */
+  size_greeting: function() {
+    // To move the vertically-centered text up a bit.
+    var padding_bottom = Math.round($('#greeting').height() / 10);
+    $('#greeting')
+      .css('paddingBottom', padding_bottom)
+      .height($('#greeting').height() - padding_bottom);
   },
 
   show_slide: function(selector) {

@@ -93,9 +93,8 @@ table {
 /* Twelescreen specific styles */
 
 body {
-  font-family: Helvetica, Arial, sans-serif;
-  font-weight: bold;
-  background: #000;
+  font-family: 'Russo One', Impact, Arial, sans-serif;
+  background: #c00;
   color: #fff;
   text-rendering: optimizeLegibility;
   overflow: hidden;
@@ -144,13 +143,17 @@ body {
   width: 100%;
   line-height: 1.4em;
   text-transform: uppercase;
-  color: #C3E3CC;
+  color: #ff0;
+  background: #000;
 }
   .tweet-account-avatar {
     position: absolute;
     top: 0;
     right: 3%;
     width: 12%;
+    /* Border width is set in JS */
+    border: 20px solid black;
+    border-top: none;
   }
   .tweet-account-name {
     width: 80%;
@@ -162,5 +165,6 @@ body {
   width: 94%;
   margin: 0 auto;
   line-height: 1.2em;
+  text-transform: uppercase;
 }
 
