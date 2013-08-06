@@ -24,6 +24,7 @@ module.exports = function(app, settings) {
                           name: category_data['name'],
                           accounts: category_data['accounts'],
                           greeting: category_data['greeting'],
+                          burn_in_text: category_data['burn_in_text'],
                           disconnect_warning: category_data['disconnect_warning'],
                         },
                         number_of_tweets_to_display: settings.ui.number_of_tweets 

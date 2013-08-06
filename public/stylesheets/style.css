@@ -112,6 +112,7 @@ body {
 }
 .slidetitle {
   text-align: center;
+  text-transform: uppercase;
 }
 
 #burn {
@@ -119,9 +120,8 @@ body {
   left: 0;  
   background: none;
 	zoom: 1;
-	filter: alpha(opacity=5);
-	opacity: 0.05;
-  text-transform: uppercase;
+	filter: alpha(opacity=4);
+	opacity: 0.04;
 }
 #greeting {
   background: #EDED39;
@@ -132,7 +132,7 @@ body {
   color: #EDED39;
 }
 
-#alert {
+.alert {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -144,7 +144,7 @@ body {
   z-index: 1000;
   text-transform: uppercase;
 }
-  #alert-inner {
+  .alert-inner {
     width: 94%;
     margin: 0 auto;
     line-height: 1.2em;

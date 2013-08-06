@@ -14,10 +14,8 @@
   <script src="/javascripts/script.js"></script>
 </head>
 <body>
-  <div id="burn" class="slide slidetitle vbox center">Go home or face arrest</div>
+  <div id="burn" class="slide slidetitle vbox center"></div>
   <div id="greeting" class="slide slidetitle vbox center"></div>
-
-  <div id="alert" style="display: none;"><div id="alert-inner"></div></div>
 
   <script>
     $(document).ready(function() {
@@ -27,6 +25,7 @@
           name: "{{config.category.name}}",
           accounts: [{{config.category.accounts}}],
           greeting: "{{{config.category.greeting}}}",
+          burn_in_text: "{{{config.category.burn_in_text}}}",
           disconnect_warning: "{{config.category.disconnect_warning}}"
         },
         number_of_tweets_to_display: {{config.number_of_tweets_to_display}}

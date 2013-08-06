@@ -21,10 +21,16 @@ var twelescreen_client = {
   tweet_store: [],
 
   /**
+   * Which tweet from tweet_store are we currently viewing.
+   * So we can cycle through them in order.
+   */
+  current_store_index: 0,
+
+  /**
    * Should generally always be set to true.
    * Useful to be able to turn this off for debugging.
    */
-  auto_advance: false,
+  auto_advance: true,
 
   /**
    * The ID of the currently-displayed tweet.
@@ -49,16 +55,18 @@ var twelescreen_client = {
     $(window).resize(function() {
       that.size_screen();
     });
+
+    $('#burn').html(this.config.category.burn_in_text);
   },
 
   prepare_connection: function() {
     var that = this;
     that.socket = io.connect(window.location.hostname);
     that.socket.on('connect', function(){
-      that.hide_disconnection_alert();
+      that.hide_alert('connection');
     });
     that.socket.on('disconnect', function(){
-      that.display_disconnection_alert();
+      that.show_alert('connection', that.config.category.disconnect_warning);
     });
   },
 
@@ -127,25 +135,16 @@ var twelescreen_client = {
       });
   },
 
-
   /**
    * Show a random tweet from the carousel (but not the one already displayed).
    */
   show_stored_tweet: function() {
-    var that = this;
-
-    // Return an index of a random tweet from the store, which isn't the tweet
-    // that's currently displayed.
-    var new_index = function() {
-      var index = Math.floor(Math.random() * (that.tweet_store.length));
-      if (that.tweet_store[index].id == that.current_tweet_id) {
-        return new_index(); 
-      } else {
-        return index; 
-      };
+    if (this.current_store_index == 0) {
+      this.current_store_index = this.tweet_store.length - 1;
+    } else {
+      this.current_store_index--;
     };
-
-    this.display_tweet(this.tweet_store[new_index()]);
+    this.display_tweet(this.tweet_store[this.current_store_index]);
   },
 
   /**
@@ -162,11 +161,16 @@ var twelescreen_client = {
    * Do the actual displaying of a tweet.
    */
   display_tweet: function(tweet) {
-    if ( ! $('#tweet-'+tweet.id).exists()) {
-      this.make_tweet_slide(tweet);
+    if (typeof tweet === 'undefined') {
+      this.show_alert('tweets', 'No tweets found');
+    } else {
+      this.hide_alert('tweets');
+      if ( ! $('#tweet-'+tweet.id).exists()) {
+        this.make_tweet_slide(tweet);
+      };
+      this.show_slide('#tweet-'+tweet.id);
+      this.current_tweet_id = tweet.id;
     };
-    this.show_slide('#tweet-'+tweet.id);
-    this.current_tweet_id = tweet.id;
     var that = this;
     setTimeout(function(){
       that.show_next_item();
@@ -226,13 +230,15 @@ var twelescreen_client = {
     $(selector).addClass('slide-on');
   },
 
-  display_disconnection_alert: function() {
-    $('#alert-inner').text(this.config.category.disconnect_warning);
-    $('#alert').show().fitText(1.5);
+  show_alert: function(id, message) {
+    $('body').append(
+      '<div id=' + id + ' class="alert"><div class="alert-inner">' + message + '</div></div>'
+    );
+    $('#'+id).fitText(1.5);
   },
 
-  hide_disconnection_alert: function() {
-    $('#alert').hide();
+  hide_alert: function(id) {
+    $('#'+id).remove();
   },
 
   add_to_tweet_store: function(tweet) {
@@ -241,6 +247,8 @@ var twelescreen_client = {
       var old_tweet = this.tweet_store.shift();
       $('#tweet-'+old_tweet.id).remove();
     };
+    // So that we'll show this tweet next.
+    this.current_store_index = this.tweet_store.length;
   },
 
   add_to_tweet_queue: function(tweet) {
