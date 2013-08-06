@@ -151,10 +151,7 @@ body {
     position: absolute;
     top: 0;
     right: 3%;
-    width: 12%;
-    /* Border width is set in JS */
-    border: 20px solid #222;
-    border-top: none;
+    width: 1.4em;
   }
   .tweet-account-name {
     width: 80%;

@@ -196,8 +196,8 @@ var twelescreen_client = {
 
   size_slide: function(selector) {
     $(selector).width($(window).width()).height($(window).height());
-    // Leave space for the account stripe, and some of the avatar.
-    var margin_top = Math.round($(selector + ' .tweet-account-avatar').height() * 0.9);
+    // Leave space for the account stripe.
+    var margin_top = $(selector + ' .tweet-account').height();
     // To push things up a bit so it looks balanced.
     var margin_bottom = Math.round(margin_top / 4);
     $(selector + ' .tweet-message')
