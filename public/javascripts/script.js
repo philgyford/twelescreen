@@ -256,7 +256,7 @@ var twelescreen_client = {
   },
 
   tweet_is_in_this_category: function(tweet) {
-    if (this.config.category.accounts.indexOf(tweet.user.id) > -1) {
+    if (this.config.category.screen_names.indexOf(tweet.user.screen_name) > -1) {
       return true;
     } else {
       return false;

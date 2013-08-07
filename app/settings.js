@@ -16,40 +16,42 @@ module.exports = function(_) {
     settings[key] = config[key];
   });
 
-
-  /**
-   * Will be an array of all the Twitter account numbers for all of the
-   * categories. Like: [30313925, 138037459]
-   */
-  settings.watched_accounts = _.uniq(
-      _.flatten(
-        _.map(settings.categories, function(v, k, l) { return v.accounts; })
-      )
-  );
-
-
-  /**
-   * Will map Twitter account numbers (as strings) to all the categoires they're in.
-   * Like: {'138037459': ['uk'], '30313925': ['us']}
-   */
-  settings.account_to_category = {};
-  _.each(settings.categories, function(category_data, category, l) {
-    _.each(category_data.accounts, function(account) {
-      account = account.toString();
-      if (account in account_to_category) {
-        account_to_category[account.toString()].push(category);
-      } else {
-        account_to_category[account] = [category];  
-      }
-    })
-  });
-
-
   /**
    * Will be an array of valid category keys, like: ['uk', 'us'].
    */
   settings.valid_categories = _.map(settings.categories,
                           function(category_data, category, l) { return category; })
+
+  /**
+   * Will be an array of all the twitter account screen_names for all of the
+   * categories. like: ['ukhomeoffice', 'dhsgov']
+   */
+  settings.watched_screen_names = _.uniq(
+      _.flatten(
+        _.map(settings.categories, function(v, k, l) { return v.screen_names; })
+      )
+  );
+
+  /**
+   * Will map Twitter screen_names to all the categories they're in.
+   * Like: {'ukhomeoffice': ['uk'], 'dhsgov': ['us']}
+   */
+  settings.screen_name_to_category = {};
+  _.each(settings.categories, function(category_data, category, l) {
+    _.each(category_data.screen_names, function(screen_name) {
+      if (screen_name in screen_name_to_category) {
+        screen_name_to_category[screen_name].push(category);
+      } else {
+        screen_name_to_category[screen_name] = [category];
+      }
+    })
+  });
+
+  /**
+   * Will be populated by streamer.get_user_ids().
+   */
+  settings.watched_ids = [];
+
 
   return settings;
 };

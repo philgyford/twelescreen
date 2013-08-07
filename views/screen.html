@@ -23,7 +23,7 @@
         category: {
           key: '{{config.category.key}}',
           name: "{{config.category.name}}",
-          accounts: [{{config.category.accounts}}],
+          screen_names: [{{#each config.category.screen_names}}'{{this}}',{{/each}}],
           greeting: "{{{config.category.greeting}}}",
           burn_in_text: "{{{config.category.burn_in_text}}}",
           disconnect_warning: "{{config.category.disconnect_warning}}"

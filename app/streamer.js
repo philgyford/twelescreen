@@ -33,20 +33,54 @@ module.exports = function(settings, twitter, sockets, _) {
       access_token_secret: settings.twitter.access_token_secret 
     });
 
-    // It'd probably be best to wait for all the previous tweets to be cached
-    // before starting to stream. But I couldn't work out how to do that, using
-    // the async module. So for now, we'll hope it won't be an issue.
-    streamer.cache_previous_tweets();
-    streamer.start_streaming();
-    streamer.prepare_for_clients();
+    // These methods are kind of dependent on each other, so we only run them
+    // serially.
+    streamer.queue = [
+                      streamer.get_user_ids,
+                      streamer.cache_previous_tweets,
+                      streamer.start_streaming];
+
+    // Let's start...
+    streamer.next_in_queue();
   };
 
 
-  streamer.cache_previous_tweets = function() {
-    console.log('Caching previous tweets starting');
+  // Call this to call the next method in the queue.
+  streamer.next_in_queue = function() {
+    if (streamer.queue.length > 0) {
+      (streamer.queue.shift())();
+    };
+  };
 
-    settings.watched_accounts.forEach(function(id) {
-      console.log('fetching tweets for '+id);
+      
+  /**
+   * Get all the Twitter user IDs from the screen_names we have in config.
+   * We need the user IDs, not screen_names, for streaming.
+   */
+  streamer.get_user_ids = function() {
+    console.log('Fetching Twitter user IDs');
+    streamer.twitter.lookupUser(settings.watched_screen_names, function(err, users) {
+      if (err) {
+        console.log("Error fetching user IDs: "+err);
+      } else {
+        users.forEach(function(user){
+          settings.watched_ids.push(user.id); 
+        });
+        // On to the next method...
+        streamer.next_in_queue();
+      }; 
+    });
+  };
+
+
+  /**
+   * Get some recent tweets for each user account, so that we have some tweets
+   * to display from the start.
+   */
+  streamer.cache_previous_tweets = function() {
+    console.log('Caching previous tweets');
+
+    settings.watched_ids.forEach(function(id) {
       streamer.twitter.getUserTimeline({
         user_id: id, count: settings.ui.number_of_tweets,
         trim_user: false, exclude_replies: true,
@@ -58,6 +92,8 @@ module.exports = function(settings, twitter, sockets, _) {
           tweets.forEach(function(tweet){
             streamer.add_tweet_to_cache(tweet);
           });
+          // On to the next method...
+          streamer.next_in_queue();
         };
       })
     });
@@ -69,11 +105,13 @@ module.exports = function(settings, twitter, sockets, _) {
    * When one comes in, sends it to the front end.
    */
   streamer.start_streaming = function() {
-    console.log('Streaming from Twitter starting');
+    console.log('Streaming from Twitter');
+    
+    streamer.prepare_for_clients();
 
-    // Tell the twitter API to filter on the watched_accounts. 
+    // Tell the twitter API to filter on the watched_ids. 
     streamer.twitter.stream(
-      'statuses/filter', {follow: settings.watched_accounts}, function(stream) {
+      'statuses/filter', {follow: settings.watched_ids}, function(stream) {
 
       // We have a connection. Now watch the 'tweets' event for incoming tweets.
       stream.on('data', function(tweet) {
@@ -92,10 +130,12 @@ module.exports = function(settings, twitter, sockets, _) {
   };
 
 
+  /**
+   * When a client connects, give them initial data.
+   * Here, we don't know which category they're in, so we send them
+   * everything. Not sure how to make that better.
+   */
   streamer.prepare_for_clients = function() {
-    // When a client connect, give them initial data.
-    // Here, we don't know which category they're in, so we send them
-    // everything. Not sure how to make that better.
     sockets.sockets.on('connection', function(socket) { 
         socket.emit('messages',
           {type: 'cached', tweets: streamer.complete_cache() }
@@ -126,10 +166,10 @@ module.exports = function(settings, twitter, sockets, _) {
    */
   streamer.add_tweet_to_cache = function(tweet) {
     var shrunk_tweet = streamer.shrink_tweet(tweet);  
-    var user_id = tweet.user.id_str;
     // For each category this twitter account is associated with, add to its
     // cache.
-    settings.account_to_category[user_id].forEach(function(category){
+    settings.screen_name_to_category[tweet.user.screen_name].forEach(
+    function(category){
       if (category in streamer.cache) {
         streamer.cache[category].push(shrunk_tweet); 
       } else {

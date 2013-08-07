@@ -22,7 +22,7 @@ module.exports = function(app, settings) {
                         category: {
                           key: category_key,
                           name: category_data['name'],
-                          accounts: category_data['accounts'],
+                          screen_names: category_data['screen_names'],
                           greeting: category_data['greeting'],
                           burn_in_text: category_data['burn_in_text'],
                           disconnect_warning: category_data['disconnect_warning'],
