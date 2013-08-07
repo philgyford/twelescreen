@@ -185,7 +185,7 @@ var twelescreen_client = {
           '<img src="' + tweet.user.profile_image_url + '" alt="" class="tweet-account-avatar" /><div class="tweet-account-name">' + tweet.user.name + "</div>"
         )
       ).append(
-        $('<div/>').addClass('tweet-message vbox center').text(tweet.text)
+        $('<div/>').addClass('tweet-message vbox center').html(tweet.text)
       ).addClass('slide')
     );
     this.size_slide('#tweet-'+tweet.id);
