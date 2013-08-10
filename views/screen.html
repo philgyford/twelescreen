@@ -3,7 +3,12 @@
 <head>
   <meta charset="utf-8">
   <title>{{config.category.name}} Twelescreen</title>
-  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="/stylesheets/base.css">
+  {{#if config.category.theme}}
+  <link rel="stylesheet" href="/stylesheets/themes/{{config.category.theme}}.css">
+  {{else}}
+  <link rel="stylesheet" href="/stylesheets/themes/default.css">
+  {{/if}}
   <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/webfont/1.4.8/webfont.js"></script>
   <script src="/components/socket.io-client/dist/socket.io.min.js"></script>

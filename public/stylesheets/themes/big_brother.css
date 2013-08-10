@@ -1,0 +1,29 @@
+body {
+  font-family: 'Russo One', Helvetica, Arial, sans-serif;
+  background: #CC2211;
+  color: #FAFAEB;
+}
+
+#greeting {
+  background: #EDED39;
+  color: #222;
+}
+#greeting.invert {
+  background: #222;
+  color: #EDED39;
+}
+
+.alert {
+  background: #FAFAEB;
+  color: #222;
+}
+
+.tweet-account {
+  color: #FAFAEB;
+  background: #222;
+  text-transform: uppercase;
+}
+.tweet-message {
+  text-transform: uppercase;
+}
+

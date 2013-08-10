@@ -6,6 +6,7 @@ ui:
 categories:
   _defaults:
     font: Russo One
+    theme: big_brother
   us:
     name: United States
     greeting: Attention<br />folks!

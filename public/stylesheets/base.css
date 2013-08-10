@@ -48,6 +48,11 @@ table {
 }
 
 
+body {
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+}
+
 /* Centering styles from http://infrequently.org/2009/08/css-3-progress/ */
 .hbox {
   display: -webkit-box;
@@ -89,17 +94,6 @@ table {
   box-pack: center;
 }
 
-
-/* Twelescreen specific styles */
-
-body {
-  font-family: 'Russo One', Impact, Arial, sans-serif;
-  background: #CC2211;
-  color: #FAFAEB;
-  text-rendering: optimizeLegibility;
-  overflow: hidden;
-}
-
 .slide {
   position: absolute;
   top: 0;
@@ -123,22 +117,12 @@ body {
 	filter: alpha(opacity=4);
 	opacity: 0.04;
 }
-#greeting {
-  background: #EDED39;
-  color: #222;
-}
-#greeting.invert {
-  background: #222;
-  color: #EDED39;
-}
 
 .alert {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  background: #FAFAEB;
-  color: #222;
   text-align: center;
   padding: 0.5em 0 0.6em 0;
   z-index: 1000;
@@ -156,9 +140,6 @@ body {
   left: 0;
   width: 100%;
   line-height: 1.4em;
-  text-transform: uppercase;
-  color: #FAFAEB;
-  background: #222;
 }
   .tweet-account-avatar {
     position: absolute;
@@ -176,6 +157,7 @@ body {
   width: 94%;
   margin: 0 auto;
   line-height: 1.2em;
-  text-transform: uppercase;
 }
+
+
 

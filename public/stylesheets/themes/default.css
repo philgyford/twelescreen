@@ -1,0 +1,31 @@
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  background: #333;
+  color: #fff;
+}
+
+#greeting {
+  background: #fff;
+  color: #000;
+}
+#greeting.invert {
+  background: #000;
+  color: #fff;
+}
+
+#burn {
+  display: none;
+}
+
+.alert {
+  background: #fff;
+  color: #000;
+}
+
+.tweet-account {
+  color: #fff;
+  background: #000;
+}
+
