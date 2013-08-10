@@ -16,21 +16,18 @@ module.exports = function(app, settings) {
     if (settings.valid_categories.indexOf(req.params[0]) > -1) {
       var category_key = req.params[0];
       var category_data = settings.categories[category_key];
-      res.render('screen',
-                  {
-                    config: {
-                        category: {
-                          key: category_key,
-                          name: category_data['name'],
-                          screen_names: category_data['screen_names'],
-                          greeting: category_data['greeting'],
-                          burn_in_text: category_data['burn_in_text'],
-                          disconnect_warning: category_data['disconnect_warning'],
-                        },
-                        number_of_tweets_to_display: settings.ui.number_of_tweets 
-                     }
-                  }
-                );
+      // What we'll pass to the front end.
+      var config = {
+                    category: {
+                      key: category_key
+                    },
+                    number_of_tweets_to_display: settings.ui.number_of_tweets
+                   };
+      // Add all of the category config data.
+      for (var key in category_data) {
+        config.category[key] = category_data[key];
+      };
+      res.render('screen', {config: config});
     } else {
       res.send(404, "'" + req.params[0] + "' is not a valid country. Go home or face arrest.");	
     };
