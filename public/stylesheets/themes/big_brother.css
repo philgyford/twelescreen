@@ -16,6 +16,7 @@ body {
 .alert {
   background: #FAFAEB;
   color: #222;
+  text-transform: uppercase;
 }
 
 .tweet-account {
