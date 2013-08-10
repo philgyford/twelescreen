@@ -4,9 +4,10 @@ ui:
   # How many tweets do we cycle through?
   number_of_tweets: 3
 categories:
+  _defaults:
+    font: Russo One
   us:
     name: United States
-    font: Russo One
     greeting: Attention<br />folks!
     burn_in_text: TODO
     disconnect_warning: You are no longer connected. TODO
@@ -15,7 +16,6 @@ categories:
       - mattb
   uk:
     name: United Kingdom
-    font: Russo One
     greeting: Attention<br />subjects!
     burn_in_text: Go home or face arrest
     disconnect_warning: You are no longer connected. Reconnect or face arrest.

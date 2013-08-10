@@ -14,7 +14,20 @@ module.exports = function(_) {
   // Mirror all of our settings from config for slightly easier access.
   _.each(['env', 'categories', 'twitter', 'ui'], function(key) {
     settings[key] = config[key];
+
+    // Add any default category values to each of the category settings, where
+    // the category doesn't have a matching setting.
+    if (key == 'categories' && '_defaults' in settings['categories']) {
+      _.each(settings['categories'], function(cat_settings, cat_key) {
+        if (cat_key != '_defaults') {
+          _.defaults(settings['categories'][cat_key], settings['categories']['_defaults']);
+        };
+      });
+    };
   });
+
+  // We don't need the defaults now they're copied to all the real categories.
+  delete settings['categories']['_defaults'];
 
   /**
    * Will be an array of valid category keys, like: ['uk', 'us'].
