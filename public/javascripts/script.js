@@ -2,8 +2,9 @@ var twelescreen_client = {
 
   config: {
     category: {},
+    // May be overridden by passed-in config settings.
     number_of_tweets_to_display: 3,
-    seconds_per_slide: 5
+    seconds_per_slide: 10
   },
 
   socket: null,
@@ -31,7 +32,7 @@ var twelescreen_client = {
    * Should generally always be set to true.
    * Useful to be able to turn this off for debugging.
    */
-  auto_advance: false,
+  auto_advance: true,
 
   /**
    * The ID of the currently-displayed tweet.

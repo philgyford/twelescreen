@@ -21,7 +21,8 @@ module.exports = function(app, settings) {
                     category: {
                       key: category_key
                     },
-                    number_of_tweets_to_display: settings.ui.number_of_tweets
+                    number_of_tweets_to_display: settings.ui.number_of_tweets,
+                    seconds_per_slide: settings.ui.seconds_per_slide
                    };
       // Add all of the category config data.
       for (var key in category_data) {

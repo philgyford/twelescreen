@@ -3,6 +3,7 @@ env:
 ui:
   # How many tweets do we cycle through?
   number_of_tweets: 3
+  seconds_per_slide: 5
 categories:
   _defaults:
     font: Russo One
