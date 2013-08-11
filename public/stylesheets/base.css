@@ -152,12 +152,15 @@ body {
     height: 10%;
     margin: 0 0 0 3%;
     text-overflow: hidden;
+    white-space: nowrap;
   }
 .tweet-message {
   width: 94%;
   margin: 0 auto;
-  line-height: 1.2em;
 }
+  .tweet-message-inner {
+    line-height: 1.2em;
+  }
 
 
 

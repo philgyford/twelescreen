@@ -31,7 +31,7 @@ var twelescreen_client = {
    * Should generally always be set to true.
    * Useful to be able to turn this off for debugging.
    */
-  auto_advance: true,
+  auto_advance: false,
 
   /**
    * The ID of the currently-displayed tweet.
@@ -181,12 +181,16 @@ var twelescreen_client = {
           '<img src="' + tweet.user.profile_image_url + '" alt="" class="tweet-account-avatar" /><div class="tweet-account-name">' + tweet.user.name + "</div>"
         )
       ).append(
-        $('<div/>').addClass('tweet-message vbox center').html(tweet.text)
+        $('<div/>').addClass('tweet-message vbox center').html(
+          '<div class="tweet-message-inner">' + tweet.text + '</div>'
+        )
       ).addClass('slide')
     );
     this.size_slide('#tweet-'+tweet.id);
     $('#' + id + ' .tweet-account').fitText(1.5);
-    $('#' + id + ' .tweet-message').fitText(1.1);
+    // The minFontSize stops things going too small when the browser is small,
+    // and very portrait. Might need to adjust for, say phone screens.
+    $('#' + id + ' .tweet-message-inner').fitText(1.1, {minFontSize: 45});
   },
 
   size_screen: function() {
@@ -197,15 +201,10 @@ var twelescreen_client = {
   size_slide: function(selector) {
     $(selector).width($(window).width()).height($(window).height());
     // Leave space for the account stripe.
-    var margin_top = $(selector + ' .tweet-account').height();
-    // To push things up a bit so it looks balanced.
-    var margin_bottom = Math.round(margin_top / 4);
+    var margin = $(selector + ' .tweet-account').height();
     $(selector + ' .tweet-message')
-      .css('marginTop', margin_top) 
-      .css('marginBottom', margin_bottom)
-      .height($(window).height() - margin_top - margin_bottom);
-    $(selector + ' .tweet-account-avatar')
-      .css('borderWidth', Math.round(margin_top / 6));
+      .css({'margin-top': margin}) 
+      .height($(window).height() - margin - (margin / 3));
   },
 
   /**
@@ -230,6 +229,9 @@ var twelescreen_client = {
     if (typeof from_id === 'undefined' && to_id == 'greeting') {
       this.transition_nothing_to_greeting($to); 
 
+    } else if (typeof from_id === 'undefined' && $to.hasClass('tweet')) {
+      this.transition_nothing_to_tweet($to); 
+
     } else if (from_id == 'greeting' && $to.hasClass('tweet')) {
       this.transition_greeting_to_tweet($from, $to); 
 
@@ -249,6 +251,13 @@ var twelescreen_client = {
    */
   transition_nothing_to_greeting: function($to) {
     $to.addClass('slide-on');
+  },
+
+  /**
+   * Currently only happens when testing, manually advancing direct to a tweet.
+   */
+  transition_nothing_to_tweet: function($to) {
+    $to.addClass('slide-on').css({zIndex: 200});
   },
 
   /**
@@ -334,9 +343,8 @@ jQuery.fn.exists = function(){return jQuery(this).length>0;};
 (function($){$.fn.queueFn=function(c){var b,d,a=Array.prototype.slice.call(arguments,1);if(typeof c==="boolean"){if(c){d=this;b=this.length}c=a.shift()}c=$.isFunction(c)?c:$.fn[c];return this.queue(function(){!--b&&c.apply(d||this,a);$.dequeue(this)})}})(jQuery);
 
 
-/*global jQuery */
 /*!
-* FitText.js 1.1
+* FitText.js 1.1 (PLUS custom vertical re-sizing for Twelescreen's messages)
 *
 * Copyright 2011, Dave Rupert http://daverupert.com
 * Released under the WTFPL license
@@ -362,7 +370,38 @@ jQuery.fn.exists = function(){return jQuery(this).length>0;};
 
       // Resizer() resizes items based on the object width divided by the compressor * 10
       var resizer = function () {
-        $this.css('font-size', Math.max(Math.min($this.width() / (compressor*10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize)));
+
+        var font_size = Math.max(Math.min($this.width() / (compressor*10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize));
+
+        // For Twelescreen, we also save the font size in data-font-size, so that
+        // if we change it we have a record of what it was before.
+        $this.css('font-size', font_size).data('font-size', font_size);
+
+        // If this is a Twitter message, the content might be too long at the
+        // standard size. So we'll shrink it in a way that will hopefully make
+        // it fit the space available.
+        if ($this.hasClass('tweet-message-inner')) {
+          if ($this.height() > $this.parent().height()) {
+            var new_font_size = (
+              // The original fitText-created size.
+              $this.data('font-size')
+               *
+              Math.pow(
+               // The area of the message 'window'
+               ($this.parent().height() * $this.parent().width())
+                /
+               // Divided by the larger area of the actual message
+               ($this.height() * $this.width()),
+               // To the power of 1/1.75
+               (1/1.75)
+              )
+              // That last figure is just a figure that seems to work in our
+              // situation, for different browser dimensions.
+            );
+
+            $this.css('font-size', new_font_size);
+          };
+        };
       };
 
       // Call once to set.
@@ -376,3 +415,4 @@ jQuery.fn.exists = function(){return jQuery(this).length>0;};
   };
 
 })( jQuery );
+
