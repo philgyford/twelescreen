@@ -81,11 +81,6 @@ var twelescreen_client = {
           } else {
             that.add_to_tweet_queue(tweet);
           };
-          //$('#tweets').prepend('<li><img src="' + tweet.user.profile_image_url + '" /> '+ tweet.text + '</li>');
-
-          //if ($('#tweets li').length > that.config.number_of_tweets_to_display) {
-            //$('#tweets li:last-child').remove();
-          //};
         };
       });
     });
