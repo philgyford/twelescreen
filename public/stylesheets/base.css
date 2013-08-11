@@ -98,6 +98,7 @@ body {
   position: absolute;
   top: 0;
   left: -5000px;
+  z-index: 100;
   /* Reset using fitText() in JS. */
   font-size: 70px;
 }

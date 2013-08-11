@@ -2,7 +2,8 @@ var twelescreen_client = {
 
   config: {
     category: {},
-    number_of_tweets_to_display: 3
+    number_of_tweets_to_display: 3,
+    seconds_per_slide: 5
   },
 
   socket: null,
@@ -115,7 +116,7 @@ var twelescreen_client = {
   show_greeting: function(next_tweet) {
     var that = this;
     $('#greeting').html(that.config.category.greeting);
-    that.show_slide('#greeting');
+    that.show_slide('greeting');
     $('#greeting')
       .delay(1000).queueFn(function(){$(this).addClass('invert')})
       .delay(1000).queueFn(function(){$(this).removeClass('invert')})
@@ -163,13 +164,13 @@ var twelescreen_client = {
       if ( ! $('#tweet-'+tweet.id).exists()) {
         this.make_tweet_slide(tweet);
       };
-      this.show_slide('#tweet-'+tweet.id);
+      this.show_slide('tweet-'+tweet.id);
       this.current_tweet_id = tweet.id;
     };
     var that = this;
     setTimeout(function(){
       that.show_next_item();
-    }, 2000);
+    }, that.config.seconds_per_slide * 1000);
   },
 
   make_tweet_slide: function(tweet) {
@@ -220,9 +221,69 @@ var twelescreen_client = {
       .fitText(0.7);
   },
 
-  show_slide: function(selector) {
-    $('.slide-on').removeClass('slide-on');
-    $(selector).addClass('slide-on');
+  show_slide: function(to_id) {
+    var from_id = $('.slide-on').attr('id');
+    var $from = $('#'+from_id);
+    var $to = $('#'+to_id);
+
+    // We have different types of transition for different combinations:
+    if (typeof from_id === 'undefined' && to_id == 'greeting') {
+      this.transition_nothing_to_greeting($to); 
+
+    } else if (from_id == 'greeting' && $to.hasClass('tweet')) {
+      this.transition_greeting_to_tweet($from, $to); 
+
+    } else if ($from.hasClass('tweet') && to_id == 'greeting') {
+      this.transition_tweet_to_greeting($from, $to); 
+
+    } else if ($from.hasClass('tweet') && $to.hasClass('tweet')) {
+      this.transition_tweet_to_tweet($from, $to); 
+
+    } else {
+      console.log('UNDEFINED TRANSITION: ', from_id, to_id);
+    };
+  },
+
+  /**
+   * Probably the first display of the greeting.
+   */
+  transition_nothing_to_greeting: function($to) {
+    $to.addClass('slide-on');
+  },
+
+  /**
+   * Probably the brand new tweet.
+   */
+  transition_greeting_to_tweet: function($from, $to) {
+    $to.addClass('slide-on').css({zIndex: 200});
+    $from.removeClass('slide-on');
+  },
+
+  /**
+   * Probably when there's a new tweet being announced.
+   */
+  transition_tweet_to_greeting: function($from, $to) {
+    $to.addClass('slide-on');
+    $from.removeClass('slide-on').css('zIndex', 100);
+  },
+
+  /**
+   * Standard fade as we cycle through tweets.
+   */
+  transition_tweet_to_tweet: function($from, $to) {
+    // Move on stage, behind current slide:
+    $to.addClass('slide-on');
+    // Make current (front) slide transparent:
+    $from.animate(
+      {opacity: 0},
+      400,
+      function(){
+        // Move old current slide off-stage, put z-index back to default.
+        $from.removeClass('slide-on').css({zIndex: 100, opacity: 1}); 
+        // Move new current slide forward so we can do all this next time.
+        $to.css({zIndex: 200});
+      }
+    );
   },
 
   show_alert: function(id, message) {
@@ -243,7 +304,7 @@ var twelescreen_client = {
       $('#tweet-'+old_tweet.id).remove();
     };
     // So that we'll show this tweet next.
-    this.current_store_index = this.tweet_store.length;
+    this.current_store_index = this.tweet_store.length - 1;
   },
 
   add_to_tweet_queue: function(tweet) {

@@ -1,7 +1,11 @@
 body {
   font-family: 'Russo One', Helvetica, Arial, sans-serif;
-  background: #CC2211;
+  background: #000;
   color: #FAFAEB;
+}
+
+.slide {
+  background: #CC2211;
 }
 
 #greeting {

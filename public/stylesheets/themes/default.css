@@ -1,9 +1,12 @@
-
 body {
   font-family: Helvetica, Arial, sans-serif;
   font-weight: bold;
-  background: #333;
+  background: #000;
   color: #fff;
+}
+
+.slide {
+  background: #333;
 }
 
 #greeting {
