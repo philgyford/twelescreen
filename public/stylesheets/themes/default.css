@@ -13,7 +13,7 @@ body {
   background: #fff;
   color: #000;
 }
-#greeting.invert {
+#greeting.is-inverted {
   background: #000;
   color: #fff;
 }
@@ -27,8 +27,11 @@ body {
   color: #000;
 }
 
-.tweet-account {
+.tweet_account {
   color: #fff;
   background: #000;
 }
 
+  .tweet_message_panel {
+    background: #333;
+  }

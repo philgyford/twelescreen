@@ -12,7 +12,7 @@ body {
   background: #EDED39;
   color: #222;
 }
-#greeting.invert {
+#greeting.is-inverted {
   background: #222;
   color: #EDED39;
 }
@@ -23,12 +23,15 @@ body {
   text-transform: uppercase;
 }
 
-.tweet-account {
+.tweet_account {
   color: #FCFCF2;
   background: #222;
   text-transform: uppercase;
 }
-.tweet-message {
+.tweet_message {
   text-transform: uppercase;
 }
+  .tweet_message_panel {
+    background: #CC2211;
+  }
 

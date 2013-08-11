@@ -102,10 +102,10 @@ body {
   /* Reset using fitText() in JS. */
   font-size: 70px;
 }
-.slide-on {
+.is-slide-on {
   left: 0;
 }
-.slidetitle {
+.slide-title {
   text-align: center;
   text-transform: uppercase;
 }
@@ -128,38 +128,49 @@ body {
   padding: 0.5em 0 0.6em 0;
   z-index: 1000;
 }
-  .alert-inner {
+  .alert_inner {
     width: 94%;
     margin: 0 auto;
     line-height: 1.2em;
   }
 
-.tweet-account {
+.tweet_account {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   line-height: 1.4em;
 }
-  .tweet-account-avatar {
+  .tweet_account_avatar {
     position: absolute;
     top: 0;
     right: 3%;
     width: 1.4em;
   }
-  .tweet-account-name {
+  .tweet_account_name {
     width: 80%;
     height: 10%;
     margin: 0 0 0 3%;
     text-overflow: hidden;
     white-space: nowrap;
   }
-.tweet-message {
+.tweet_message {
   width: 94%;
   margin: 0 auto;
+  position: relative;
 }
-  .tweet-message-inner {
+  .tweet_message_panel {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 200;
+  }
+  .tweet_message_panel-text .tweet_message_panel_inner {
     line-height: 1.2em;
+  }
+  .tweet_message_panel-image .tweet_message_panel_inner {
+    line-height: 1px;
+    text-align: center;
   }
 
 

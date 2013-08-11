@@ -2,6 +2,7 @@ var twelescreen_client = {
 
   config: {
     category: {},
+    slide_transition_time: 0.4,
     // May be overridden by passed-in config settings.
     number_of_tweets_to_display: 3,
     seconds_per_slide: 10
@@ -119,10 +120,10 @@ var twelescreen_client = {
     $('#greeting').html(that.config.category.greeting);
     that.show_slide('greeting');
     $('#greeting')
-      .delay(1000).queueFn(function(){$(this).addClass('invert')})
-      .delay(1000).queueFn(function(){$(this).removeClass('invert')})
-      .delay(1000).queueFn(function(){$(this).addClass('invert')})
-      .delay(1000).queueFn(function(){$(this).removeClass('invert')})
+      .delay(1000).queueFn(function(){$(this).addClass('is-inverted')})
+      .delay(1000).queueFn(function(){$(this).removeClass('is-inverted')})
+      .delay(1000).queueFn(function(){$(this).addClass('is-inverted')})
+      .delay(1000).queueFn(function(){$(this).removeClass('is-inverted')})
       .delay(1000).queueFn(function(){
         if (next_tweet) {
           that.display_tweet(next_tweet); 
@@ -165,64 +166,117 @@ var twelescreen_client = {
       if ( ! $('#tweet-'+tweet.id).exists()) {
         this.make_tweet_slide(tweet);
       };
+      // If this tweet has an image, and has been seen before, the text panel
+      // will currently have 0 opacity. So reset it before showing.
+      $('#tweet-'+tweet.id+' .tweet_message_panel-text').css('opacity', 1);
       this.show_slide('tweet-'+tweet.id);
       this.current_tweet_id = tweet.id;
     };
     var that = this;
     setTimeout(function(){
-      that.show_next_item();
+      if ($('#tweet-'+tweet.id+' .tweet_message_panel-image').exists()) {
+        // Hide text to reveal image, wait, then move on.
+        $('#tweet-'+tweet.id+' .tweet_message_panel-text').animate(
+          {'opacity': 0},
+          that.config.slide_transition_time * 1000,
+          function(){
+            setTimeout(function(){
+              that.show_next_item();
+            }, that.config.seconds_per_slide * 1000);
+          }
+        );
+      } else {
+        // No image on this slide, just move on.
+        that.show_next_item();
+      };
     }, that.config.seconds_per_slide * 1000);
   },
 
   make_tweet_slide: function(tweet) {
     var id = 'tweet-'+tweet.id;
     $('body').append(
-      $('<div/>').attr('id', id).addClass('tweet').append(
-        $('<div/>').addClass('tweet-account').html(
-          '<img src="' + tweet.user.profile_image_url + '" alt="" class="tweet-account-avatar" /><div class="tweet-account-name">' + tweet.user.name + "</div>"
+      $('<div/>').attr('id', id).addClass('slide-tweet').append(
+        $('<div/>').addClass('tweet_account').html(
+          '<img src="' + tweet.user.profile_image_url + '" alt="" class="tweet_account_avatar" /><div class="tweet_account_name">' + tweet.user.name + "</div>"
         )
       ).append(
-        $('<div/>').addClass('tweet-message vbox center').html(
-          '<div class="tweet-message-inner">' + tweet.text + '</div>'
+        $('<div/>').addClass('tweet_message').html(
+          '<div class="tweet_message_panel tweet_message_panel-text vbox center"><div class="tweet_message_panel_inner">' + tweet.text + '</div></div>'
         )
       ).addClass('slide')
     );
+    if ('image' in tweet) {
+      $('#'+id+' .tweet_message').append(
+        $('<div/>').addClass('tweet_message_panel tweet_message_panel-image vbox center').append(
+          $('<div/>').addClass('tweet_message_panel_inner').append(
+            $('<img/>').attr('src', tweet.image.url).data({
+              // Width and height as data attributes, for reference when resizing.
+              width: tweet.image.width,
+              height: tweet.image.height,
+              orientation: tweet.image.width >= tweet.image.height ? 'landscape' : 'portrait'
+            })
+          )
+        ).css('z-index', 100)
+      );
+    };
     this.size_slide('#tweet-'+tweet.id);
-    $('#' + id + ' .tweet-account').fitText(1.5);
+    $('#' + id + ' .tweet_account').fitText(1.5);
     // The minFontSize stops things going too small when the browser is small,
     // and very portrait. Might need to adjust for, say phone screens.
-    $('#' + id + ' .tweet-message-inner').fitText(1.1, {minFontSize: 45});
+    $('#' + id + ' .tweet_message_panel-text .tweet_message_panel_inner').fitText(1.1, {minFontSize: 45});
   },
 
   size_screen: function() {
     this.size_slide('.slide');
-    this.size_slidetitle();
+    this.size_slide_title();
   },
 
   size_slide: function(selector) {
-    $(selector).width($(window).width()).height($(window).height());
-    // Leave space for the account stripe.
-    var margin = $(selector + ' .tweet-account').height();
-    $(selector + ' .tweet-message')
-      .css({'margin-top': margin}) 
-      .height($(window).height() - margin - (margin / 3));
+    $slide = $(selector);
+    $slide.width($(window).width()).height($(window).height());
+
+    if ($('.tweet_account', $slide).exists()) {
+      // It's a .slide-tweet.
+      
+      // Leave space for the account stripe plus a bit more.
+      var margin = Math.floor($('.tweet_account', $slide).height() * 1.2);
+      $('.tweet_message', $slide)
+        .css({'margin-top': margin}) 
+        // Make it the height under the account stripe, minus a bit for
+        // a bottom margin.
+        .height(Math.floor($(window).height() - margin - (margin / 5)));
+
+      // Make any image the tweet has stretch to fill space.
+      if ($('.tweet_message_panel-image', $slide).exists()) {
+        var $img = $('.tweet_message_panel-image img', $slide);
+        var max_w = $('.tweet_message_panel-image', $slide).width();
+        var max_h = $('.tweet_message_panel-image', $slide).height();
+        if ($img.data('orientation') == 'landscape') {
+          $img.width(max_w)
+              .height(Math.floor(($img.data('height') / $img.data('width')) * max_w)); 
+        } else {
+          $img.width(Math.floor(($img.data('width') / $img.data('height')) * max_h))
+              .height(max_h); 
+        };
+      };
+    };
   },
 
   /**
    * In addition to what's done by size_slide().
    * The #greeting and #burn slides.
    */
-  size_slidetitle: function() {
+  size_slide_title: function() {
     // To move the vertically-centered text up a bit.
-    var padding_bottom = Math.round($('.slidetitle').height() / 10);
-    $('.slidetitle')
+    var padding_bottom = Math.round($('.slide-title').height() / 10);
+    $('.slide-title')
       .css('paddingBottom', padding_bottom)
-      .height($('.slidetitle').height() - padding_bottom)
+      .height($('.slide-title').height() - padding_bottom)
       .fitText(0.7);
   },
 
   show_slide: function(to_id) {
-    var from_id = $('.slide-on').attr('id');
+    var from_id = $('.is-slide-on').attr('id');
     var $from = $('#'+from_id);
     var $to = $('#'+to_id);
 
@@ -230,16 +284,16 @@ var twelescreen_client = {
     if (typeof from_id === 'undefined' && to_id == 'greeting') {
       this.transition_nothing_to_greeting($to); 
 
-    } else if (typeof from_id === 'undefined' && $to.hasClass('tweet')) {
+    } else if (typeof from_id === 'undefined' && $to.hasClass('slide-tweet')) {
       this.transition_nothing_to_tweet($to); 
 
-    } else if (from_id == 'greeting' && $to.hasClass('tweet')) {
+    } else if (from_id == 'greeting' && $to.hasClass('slide-tweet')) {
       this.transition_greeting_to_tweet($from, $to); 
 
-    } else if ($from.hasClass('tweet') && to_id == 'greeting') {
+    } else if ($from.hasClass('slide-tweet') && to_id == 'greeting') {
       this.transition_tweet_to_greeting($from, $to); 
 
-    } else if ($from.hasClass('tweet') && $to.hasClass('tweet')) {
+    } else if ($from.hasClass('slide-tweet') && $to.hasClass('slide-tweet')) {
       this.transition_tweet_to_tweet($from, $to); 
 
     } else {
@@ -251,30 +305,30 @@ var twelescreen_client = {
    * Probably the first display of the greeting.
    */
   transition_nothing_to_greeting: function($to) {
-    $to.addClass('slide-on');
+    $to.addClass('is-slide-on');
   },
 
   /**
    * Currently only happens when testing, manually advancing direct to a tweet.
    */
   transition_nothing_to_tweet: function($to) {
-    $to.addClass('slide-on').css({zIndex: 200});
+    $to.addClass('is-slide-on').css({zIndex: 200});
   },
 
   /**
    * Probably the brand new tweet.
    */
   transition_greeting_to_tweet: function($from, $to) {
-    $to.addClass('slide-on').css({zIndex: 200});
-    $from.removeClass('slide-on');
+    $to.addClass('is-slide-on').css({zIndex: 200});
+    $from.removeClass('is-slide-on');
   },
 
   /**
    * Probably when there's a new tweet being announced.
    */
   transition_tweet_to_greeting: function($from, $to) {
-    $to.addClass('slide-on');
-    $from.removeClass('slide-on').css('zIndex', 100);
+    $to.addClass('is-slide-on');
+    $from.removeClass('is-slide-on').css('z-index', 100);
   },
 
   /**
@@ -282,14 +336,14 @@ var twelescreen_client = {
    */
   transition_tweet_to_tweet: function($from, $to) {
     // Move on stage, behind current slide:
-    $to.addClass('slide-on');
+    $to.addClass('is-slide-on');
     // Make current (front) slide transparent:
     $from.animate(
       {opacity: 0},
-      400,
+      this.config.slide_transition_time * 1000,
       function(){
         // Move old current slide off-stage, put z-index back to default.
-        $from.removeClass('slide-on').css({zIndex: 100, opacity: 1}); 
+        $from.removeClass('is-slide-on').css({zIndex: 100, opacity: 1}); 
         // Move new current slide forward so we can do all this next time.
         $to.css({zIndex: 200});
       }
@@ -298,7 +352,7 @@ var twelescreen_client = {
 
   show_alert: function(id, message) {
     $('body').append(
-      '<div id=' + id + ' class="alert"><div class="alert-inner">' + message + '</div></div>'
+      '<div id=' + id + ' class="alert"><div class="alert_inner">' + message + '</div></div>'
     );
     $('#'+id).fitText(1.5);
   },
@@ -381,7 +435,7 @@ jQuery.fn.exists = function(){return jQuery(this).length>0;};
         // If this is a Twitter message, the content might be too long at the
         // standard size. So we'll shrink it in a way that will hopefully make
         // it fit the space available.
-        if ($this.hasClass('tweet-message-inner')) {
+        if ($this.hasClass('tweet_message_panel_inner')) {
           if ($this.height() > $this.parent().height()) {
             var new_font_size = (
               // The original fitText-created size.
