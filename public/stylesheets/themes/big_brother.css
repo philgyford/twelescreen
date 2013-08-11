@@ -1,7 +1,7 @@
 body {
   font-family: 'Russo One', Helvetica, Arial, sans-serif;
   background: #000;
-  color: #FAFAEB;
+  color: #FCFCF2;
 }
 
 .slide {
@@ -18,13 +18,13 @@ body {
 }
 
 .alert {
-  background: #FAFAEB;
+  background: #FCFCF2;
   color: #222;
   text-transform: uppercase;
 }
 
 .tweet-account {
-  color: #FAFAEB;
+  color: #FCFCF2;
   background: #222;
   text-transform: uppercase;
 }
