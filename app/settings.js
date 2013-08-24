@@ -12,7 +12,7 @@ module.exports = function(_) {
   var config = require('config');
 
   // Mirror all of our settings from config for slightly easier access.
-  _.each(['env', 'categories', 'twitter', 'ui'], function(key) {
+  _.each(['env', 'categories', 'twitter'], function(key) {
     settings[key] = config[key];
 
     // Add any default category values to each of the category settings, where
@@ -27,6 +27,8 @@ module.exports = function(_) {
   });
 
   // We don't need the defaults now they're copied to all the real categories.
+  // But we keep a record of them, for use on the index page.
+  settings['category_defaults'] = settings['categories']['_defaults']
   delete settings['categories']['_defaults'];
 
   /**

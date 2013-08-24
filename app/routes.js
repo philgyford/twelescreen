@@ -6,12 +6,12 @@ module.exports = function(app, settings) {
    * A request for the front page of the site.
    */
   app.get('/', function(req, res) {
-    var config = {categories: settings.valid_categories};
-    if (settings.categories._defaults.theme) {
-      config.theme = settings.categories._defaults.theme;
+    var config = {categories: settings.categories};
+    if (settings.category_defaults.theme) {
+      config.theme = settings.category_defaults.theme;
     };
-    if (settings.categories._defaults.font) {
-      config.font = settings.categories._defaults.font;
+    if (settings.category_defaults.font) {
+      config.font = settings.category_defaults.font;
     };
     res.render('index', {config: config});
   });

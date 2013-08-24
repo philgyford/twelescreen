@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/stylesheets/themes/default.css">
   {{/if}}
 </head>
-<body>
+<body id="category-{{config.category_key}}">
   <div id="burn" class="slide slide-title vbox center"></div>
   <div id="greeting" class="slide slide-title vbox center"></div>
 
@@ -28,7 +28,7 @@
     $(document).ready(function() {
 
       twelescreen_client.init({
-        key: '{{config.key}}',
+        category_key: '{{config.category_key}}',
         title: "{{config.title}}",
         screen_names: [{{#each config.screen_names}}'{{this}}',{{/each}}],
         greeting: "{{{config.greeting}}}",
