@@ -43,13 +43,42 @@ var twelescreen_client = {
   init: function(spec) {
     $.extend(this.config, spec);
 
-    this.prepare_display();
+    var fonts = $.Deferred();
 
-    this.prepare_connection();
+    // If we have a font set, then load it...
+    // Assuming the WebFont JS is also working.
+    if (this.config.category.font && typeof WebFont !== 'undefined') {
+      WebFont.load({
+        google: {
+          families: [this.config.category.font]
+        },
+        active: function() { fonts.resolve(); }
+      });
+      // Load fonts.
+      (function() {
+        var wf = document.createElement('script');
+        wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+            '://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js';
+        wf.type = 'text/javascript';
+        wf.async = 'true';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(wf, s);
+      })();
+    } else {
+      // No font to load, so let's crack on...
+      fonts.resolve();
+    };
 
-    this.listen_for_tweets();
+    var that = this;
+    fonts.done(function(){
+      that.prepare_display();
 
-    this.start_carousel();
+      that.prepare_connection();
+
+      that.listen_for_tweets();
+
+      that.start_carousel();
+    });
   },
 
   prepare_display: function() {
