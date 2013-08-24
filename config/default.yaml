@@ -7,6 +7,7 @@ categories:
     number_of_tweets: 3
     time_per_slide: 5000
     slide_transition_time: 400
+    show_on_menu: true
   us:
     title: United States
     greeting: Attention<br />folks!

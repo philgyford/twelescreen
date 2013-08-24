@@ -13,7 +13,6 @@ module.exports = function(app, settings) {
     if (settings.categories._defaults.font) {
       config.font = settings.categories._defaults.font;
     };
-    console.log(config);
     res.render('index', {config: config});
   });
 
