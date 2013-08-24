@@ -3,16 +3,31 @@
 <head>
 	<meta charset="utf-8">
 	<title>Twelescreen</title>
-	<link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="/stylesheets/base.css">
+  {{#if config.theme}}
+  <link rel="stylesheet" href="/stylesheets/themes/{{config.theme}}.css">
+  {{else}}
+  <link rel="stylesheet" href="/stylesheets/themes/default.css">
+  {{/if}}
 </head>
 <body>
+<div class="page">
+	<header class="page-header">
+		<h1>Twelescreen</h1>
+	</header>
 
-	<ul id="categories">
-		{{#each categories}}
-			<li><a href="/{{this}}/">{{this}}</a></li>
-		{{/each}}
-	</ul>
+	<section class="page-body">
+		<ul id="categories">
+			{{#each config.categories}}
+				<li><a href="/{{this}}/">{{this}}</a></li>
+			{{/each}}
+		</ul>
+	</section> <!-- .page-body -->
 
+	<footer class="page-footer">
+
+	</footer>
+</div> <!-- #page -->
 </body>
 </html>
 
