@@ -99,10 +99,10 @@ var twelescreen_client = {
     var that = this;
     that.socket = io.connect(window.location.hostname);
     that.socket.on('connect', function(){
-      that.hide_alert('connection');
+      that.hide_alert('connection-alert');
     });
     that.socket.on('disconnect', function(){
-      that.show_alert('connection', that.config.disconnect_warning);
+      that.show_alert('connection-alert', that.config.disconnect_warning);
     });
   },
 
@@ -193,9 +193,9 @@ var twelescreen_client = {
    */
   display_tweet: function(tweet) {
     if (typeof tweet === 'undefined') {
-      this.show_alert('tweets', 'No tweets found');
+      this.show_alert('tweets-alert', 'No tweets found');
     } else {
-      this.hide_alert('tweets');
+      this.hide_alert('tweets-alert');
       if ( ! $('#tweet-'+tweet.id).exists()) {
         this.make_tweet_slide(tweet);
       };
@@ -207,7 +207,7 @@ var twelescreen_client = {
     };
     var that = this;
     setTimeout(function(){
-      if ($('#tweet-'+tweet.id+' .tweet_message_panel-image').exists()) {
+      if (tweet && $('#tweet-'+tweet.id+' .tweet_message_panel-image').exists()) {
         // Hide text to reveal image, wait, then move on.
         $('#tweet-'+tweet.id+' .tweet_message_panel-text').animate(
           {'opacity': 0},
@@ -384,9 +384,13 @@ var twelescreen_client = {
   },
 
   show_alert: function(id, message) {
-    $('body').append(
-      '<div id=' + id + ' class="alert"><div class="alert_inner">' + message + '</div></div>'
-    );
+    if ($('#'+id).exists()) {
+      $('#'+id+' .alert_inner').text(message); 
+    } else {
+      $('body').append(
+        '<div id=' + id + ' class="alert"><div class="alert_inner">' + message + '</div></div>'
+      );
+    };
     $('#'+id).fitText(1.5);
   },
 
