@@ -1,13 +1,11 @@
 env:
   heroku: false
-ui:
-  # How many tweets do we cycle through?
-  number_of_tweets: 3
-  seconds_per_slide: 5
 categories:
   _defaults:
     font: Russo One
     theme: big_brother
+    number_of_tweets: 3
+    seconds_per_slide: 5
   us:
     name: United States
     greeting: Attention<br />folks!

@@ -1,11 +1,12 @@
 var twelescreen_client = {
 
   config: {
-    category: {},
-    slide_transition_time: 0.4,
-    // May be overridden by passed-in config settings.
-    number_of_tweets_to_display: 3,
-    seconds_per_slide: 10
+    category: {
+      // May be overridden by passed-in config settings.
+      number_of_tweets: 3,
+      seconds_per_slide: 10
+    },
+    slide_transition_time: 0.4
   },
 
   socket: null,
@@ -18,7 +19,7 @@ var twelescreen_client = {
 
   /**
    * The tweets that we have in hand to rotate through if we receive no new
-   * ones. There should be config.number_of_tweets_to_display in here.
+   * ones. There should be config.category.number_of_tweets in here.
    * Newest at end.
    */
   tweet_store: [],
@@ -211,14 +212,14 @@ var twelescreen_client = {
           function(){
             setTimeout(function(){
               that.show_next_item();
-            }, that.config.seconds_per_slide * 1000);
+            }, that.config.category.seconds_per_slide * 1000);
           }
         );
       } else {
         // No image on this slide, just move on.
         that.show_next_item();
       };
-    }, that.config.seconds_per_slide * 1000);
+    }, that.config.category.seconds_per_slide * 1000);
   },
 
   make_tweet_slide: function(tweet) {
@@ -392,7 +393,7 @@ var twelescreen_client = {
 
   add_to_tweet_store: function(tweet) {
     this.tweet_store.push(tweet);
-    if (this.tweet_store.length > this.config.number_of_tweets_to_display) {
+    if (this.tweet_store.length > this.config.category.number_of_tweets) {
       var old_tweet = this.tweet_store.shift();
       $('#tweet-'+old_tweet.id).remove();
     };
