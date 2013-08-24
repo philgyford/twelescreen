@@ -6,7 +6,15 @@ module.exports = function(app, settings) {
    * A request for the front page of the site.
    */
   app.get('/', function(req, res) {
-    res.render('index', {categories: settings.valid_categories});
+    var config = {categories: settings.valid_categories};
+    if (settings.categories._defaults.theme) {
+      config.theme = settings.categories._defaults.theme;
+    };
+    if (settings.categories._defaults.font) {
+      config.font = settings.categories._defaults.font;
+    };
+    console.log(config);
+    res.render('index', {config: config});
   });
 
   /**
@@ -28,6 +36,9 @@ module.exports = function(app, settings) {
       for (var key in category_data) {
         config.category[key] = category_data[key];
       };
+      // To provide the same generic keys as in index.html:
+      config.theme = config.category.theme;
+      config.font = config.category.font;
       res.render('screen', {config: config});
     } else {
       res.send(404, "'" + req.params[0] + "' is not a valid country. Go home or face arrest.");	
