@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>{{config.title}} Twelescreen</title>
+  <title>{{# if config.title}}{{config.title}} {{/if}}Twelescreen</title>
   <link rel="stylesheet" href="/stylesheets/base.css">
   {{#if config.theme}}
   <link rel="stylesheet" href="/stylesheets/themes/{{config.theme}}.css">
@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/stylesheets/themes/default.css">
   {{/if}}
 </head>
-<body id="category-{{config.category_key}}">
+<body{{# if config.category_key}} id="category-{{config.category_key}}"{{/if}}>
   <div id="burn" class="slide slide-title vbox center"></div>
   <div id="greeting" class="slide slide-title vbox center"></div>
   <div id="slogan" class="slide slide-title vbox center"></div>
