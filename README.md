@@ -1,5 +1,9 @@
 # Twelescreen
 
+## TO DO
+
+* Put jQuery and underscore into bower_components?
+
 Work in progress.
 
 Originally based on this example, and gradually moving away from that:

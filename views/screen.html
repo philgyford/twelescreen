@@ -4,20 +4,26 @@
   <meta charset="utf-8">
   <title>{{config.category.name}} Twelescreen</title>
   <link rel="stylesheet" href="/stylesheets/base.css">
-  {{#if config.category.theme}}
-  <link rel="stylesheet" href="/stylesheets/themes/{{config.category.theme}}.css">
+  {{#if config.theme}}
+  <link rel="stylesheet" href="/stylesheets/themes/{{config.theme}}.css">
   {{else}}
   <link rel="stylesheet" href="/stylesheets/themes/default.css">
   {{/if}}
-  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/webfont/1.4.8/webfont.js"></script>
-  <script src="/components/socket.io-client/dist/socket.io.min.js"></script>
-  <script src="/javascripts/script.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
 </head>
 <body>
   <div id="burn" class="slide slide-title vbox center"></div>
   <div id="greeting" class="slide slide-title vbox center"></div>
+
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="/javascripts/jquery-1.9.1.min.js"><\/script>')</script>
+  
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+  <script>window._ || document.write('<script src="/javascripts/underscore-min.js"><\/script>')</script>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/webfont/1.4.8/webfont.js"></script>
+  <script src="/components/socket.io-client/dist/socket.io.min.js"></script>
+  <script src="/javascripts/script.js"></script>
 
   <script>
 
@@ -26,10 +32,11 @@
       var fonts = $.Deferred();
 
       // If we have a font set, then load it...
-      if ("{{config.category.font}}") {
+      // Assuming the WebFont JS is also working.
+      if ("{{config.font}}" && typeof WebFont !== 'undefined') {
         WebFont.load({
           google: {
-            families: ["{{config.category.font}}"] // Or Anton?
+            families: ["{{config.font}}"] // Or Anton?
           },
           active: function() { fonts.resolve(); }
         });
@@ -47,7 +54,7 @@
         // No font to load, so let's crack on...
         fonts.resolve();
       };
-        
+
       fonts.done(function(){
         twelescreen_client.init({
           category: {
