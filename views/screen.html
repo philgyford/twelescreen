@@ -13,6 +13,7 @@
 <body id="category-{{config.category_key}}">
   <div id="burn" class="slide slide-title vbox center"></div>
   <div id="greeting" class="slide slide-title vbox center"></div>
+  <div id="slogan" class="slide slide-title vbox center"></div>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="/javascripts/jquery-1.9.1.min.js"><\/script>')</script>
@@ -36,7 +37,8 @@
         disconnect_warning: "{{config.disconnect_warning}}",
         number_of_tweets: {{config.number_of_tweets}},
         time_per_slide: {{config.time_per_slide}},
-        slide_transition_time: {{config.slide_transition_time}}
+        slide_transition_time: {{config.slide_transition_time}},
+        slogans: [{{#each config.slogans}}"{{this}}",{{/each}}]
       });
 
     });

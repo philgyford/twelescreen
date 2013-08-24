@@ -1,13 +1,15 @@
 var twelescreen_client = {
 
   config: {
-    // May be overridden by passed-in config settings.
+    // May be overridden by passed-in config settings:
     disconnect_warning: "Connection to server lost",
     greeting: "Hello there",
     screen_names: [],
+    slogans: [],
     number_of_tweets: 5,
     time_per_slide: 5000,
-    slide_transition_time: 400 
+    slide_transition_time: 400, 
+    chance_of_slogan: 10
   },
 
   socket: null,
@@ -30,6 +32,12 @@ var twelescreen_client = {
    * So we can cycle through them in order.
    */
   current_store_index: 0,
+
+  /**
+   * We put any slogans in here, in random order, and cycle through them.
+   * It's then refilled when empty.
+   */
+  slogan_queue: [],
 
   /**
    * Should generally always be set to true.
@@ -79,7 +87,7 @@ var twelescreen_client = {
 
       that.listen_for_tweets();
 
-      that.start_carousel();
+      that.start_rotation();
     });
   },
 
@@ -122,7 +130,7 @@ var twelescreen_client = {
     });
   },
 
-  start_carousel: function() {
+  start_rotation: function() {
     if (this.auto_advance) {
       this.show_greeting();
     };
@@ -130,18 +138,22 @@ var twelescreen_client = {
 
   /**
    * Decides what to show next; a new, queued tweet, or something from the
-   * store.
+   * store. Or maybe a random slogan.
    */
   show_next_item: function() {
     if (this.auto_advance) {
       if (this.tweet_queue.length > 0) {
+        // We have a new tweet waiting to be shown.
         this.show_new_tweet();
       } else {
-        this.show_stored_tweet();
+        if (this.config.slogans.length > 0 && (Math.random() * 100) < this.config.chance_of_slogan && ! $('#slogan').is(':visible')) {
+          this.show_slogan();
+        } else {
+          this.show_stored_tweet();
+        };
       };
     };
   },
-
 
   /**
    * Displays the ATTENTION CITIZENS type greeting.
@@ -166,8 +178,25 @@ var twelescreen_client = {
       });
   },
 
+  show_slogan: function() {
+    if (this.config.slogans.length == 0) {
+      return;
+    };
+
+    if (this.slogan_queue.length == 0) {
+      this.slogan_queue = _.shuffle(this.config.slogans);
+    };
+    
+    $('#slogan').html(this.slogan_queue.shift());
+    this.show_slide('slogan');
+    var that = this;
+    setTimeout(function(){
+      that.show_next_item();
+    }, that.config.time_per_slide);
+  },
+
   /**
-   * Show a random tweet from the carousel (but not the one already displayed).
+   * Show a tweet from the store of existing tweets.
    */
   show_stored_tweet: function() {
     if (this.current_store_index == 0) {
@@ -312,22 +341,26 @@ var twelescreen_client = {
     var from_id = $('.is-slide-on').attr('id');
     var $from = $('#'+from_id);
     var $to = $('#'+to_id);
+    var title_ids = ['greeting', 'slogan'];
 
     // We have different types of transition for different combinations:
-    if (typeof from_id === 'undefined' && to_id == 'greeting') {
-      this.transition_nothing_to_greeting($to); 
+    if (typeof from_id === 'undefined' && title_ids.indexOf(to_id) > -1) {
+      this.transition_nothing_to_title($to); 
 
     } else if (typeof from_id === 'undefined' && $to.hasClass('slide-tweet')) {
       this.transition_nothing_to_tweet($to); 
 
-    } else if (from_id == 'greeting' && $to.hasClass('slide-tweet')) {
-      this.transition_greeting_to_tweet($from, $to); 
+    } else if (title_ids.indexOf(from_id) > -1 && $to.hasClass('slide-tweet')) {
+      this.transition_title_to_tweet($from, $to); 
 
-    } else if ($from.hasClass('slide-tweet') && to_id == 'greeting') {
-      this.transition_tweet_to_greeting($from, $to); 
+    } else if ($from.hasClass('slide-tweet') && title_ids.indexOf(to_id) > -1) {
+      this.transition_tweet_to_title($from, $to); 
 
     } else if ($from.hasClass('slide-tweet') && $to.hasClass('slide-tweet')) {
       this.transition_tweet_to_tweet($from, $to); 
+
+    } else if (title_ids.indexOf(from_id) > -1 && title_ids.indexOf(to_id) > -1) {
+      this.transition_title_to_title($from, $to); 
 
     } else {
       console.log('UNDEFINED TRANSITION: ', from_id, to_id);
@@ -337,7 +370,7 @@ var twelescreen_client = {
   /**
    * Probably the first display of the greeting.
    */
-  transition_nothing_to_greeting: function($to) {
+  transition_nothing_to_title: function($to) {
     $to.addClass('is-slide-on');
   },
 
@@ -351,15 +384,23 @@ var twelescreen_client = {
   /**
    * Probably the brand new tweet.
    */
-  transition_greeting_to_tweet: function($from, $to) {
+  transition_title_to_tweet: function($from, $to) {
     $to.addClass('is-slide-on').css({zIndex: 200});
+    $from.removeClass('is-slide-on');
+  },
+
+  /**
+   * eg, from greeting to slogan.
+   */
+  transition_title_to_title: function($from, $to) {
+    $to.addClass('is-slide-on');
     $from.removeClass('is-slide-on');
   },
 
   /**
    * Probably when there's a new tweet being announced.
    */
-  transition_tweet_to_greeting: function($from, $to) {
+  transition_tweet_to_title: function($from, $to) {
     $to.addClass('is-slide-on');
     $from.removeClass('is-slide-on').css('z-index', 100);
   },
