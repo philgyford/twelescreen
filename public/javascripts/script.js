@@ -363,7 +363,7 @@ var twelescreen_client = {
       this.transition_title_to_title($from, $to); 
 
     } else {
-      console.log('UNDEFINED TRANSITION: ', from_id, to_id);
+      console.log("UNDEFINED TRANSITION, from '#" + from_id + "' to '#" + to_id + "'");
     };
   },
 
