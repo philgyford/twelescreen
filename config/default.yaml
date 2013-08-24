@@ -5,9 +5,10 @@ categories:
     font: Russo One
     theme: big_brother
     number_of_tweets: 3
-    seconds_per_slide: 5
+    time_per_slide: 5000
+    slide_transition_time: 400
   us:
-    name: United States
+    title: United States
     greeting: Attention<br />folks!
     burn_in_text: TODO
     disconnect_warning: You are no longer connected. TODO
@@ -15,7 +16,7 @@ categories:
       - tomcoates
       - mattb
   uk:
-    name: United Kingdom
+    title: United Kingdom
     greeting: Attention<br />subjects!
     burn_in_text: Go home or face arrest
     disconnect_warning: You are no longer connected. Reconnect or face arrest.

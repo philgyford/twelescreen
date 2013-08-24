@@ -23,23 +23,11 @@ module.exports = function(app, settings) {
   app.get(/^\/(\w\w)\/$/, function(req, res) {
     if (settings.valid_categories.indexOf(req.params[0]) > -1) {
       var category_key = req.params[0];
-      var category_data = settings.categories[category_key];
-      // What we'll pass to the front end.
-      var config = {
-                    category: {
-                      key: category_key
-                    }
-                   };
-      // Add all of the category config data.
-      for (var key in category_data) {
-        config.category[key] = category_data[key];
-      };
-      // To provide the same generic keys as in index.html:
-      config.theme = config.category.theme;
-      config.font = config.category.font;
+      var config = settings.categories[category_key];
+      config['category_key'] = category_key;
       res.render('screen', {config: config});
     } else {
-      res.send(404, "'" + req.params[0] + "' is not a valid country. Go home or face arrest.");	
+      res.send(404, "'/" + req.params[0] + "/' is not a valid address.");	
     };
   });
 

@@ -1,12 +1,13 @@
 var twelescreen_client = {
 
   config: {
-    category: {
-      // May be overridden by passed-in config settings.
-      number_of_tweets: 3,
-      seconds_per_slide: 10
-    },
-    slide_transition_time: 0.4
+    // May be overridden by passed-in config settings.
+    disconnect_warning: "Connection to server lost",
+    greeting: "Hello there",
+    screen_names: [],
+    number_of_tweets: 5,
+    time_per_slide: 5000,
+    slide_transition_time: 400 
   },
 
   socket: null,
@@ -19,7 +20,7 @@ var twelescreen_client = {
 
   /**
    * The tweets that we have in hand to rotate through if we receive no new
-   * ones. There should be config.category.number_of_tweets in here.
+   * ones. There should be config.number_of_tweets in here.
    * Newest at end.
    */
   tweet_store: [],
@@ -48,10 +49,10 @@ var twelescreen_client = {
 
     // If we have a font set, then load it...
     // Assuming the WebFont JS is also working.
-    if (this.config.category.font && typeof WebFont !== 'undefined') {
+    if (this.config.font && typeof WebFont !== 'undefined') {
       WebFont.load({
         google: {
-          families: [this.config.category.font]
+          families: [this.config.font]
         },
         active: function() { fonts.resolve(); }
       });
@@ -89,7 +90,9 @@ var twelescreen_client = {
       that.size_screen();
     });
 
-    $('#burn').html(this.config.category.burn_in_text);
+    if (this.config.burn_in_text) {
+      $('#burn').html(this.config.burn_in_text);
+    };
   },
 
   prepare_connection: function() {
@@ -99,7 +102,7 @@ var twelescreen_client = {
       that.hide_alert('connection');
     });
     that.socket.on('disconnect', function(){
-      that.show_alert('connection', that.config.category.disconnect_warning);
+      that.show_alert('connection', that.config.disconnect_warning);
     });
   },
 
@@ -147,7 +150,7 @@ var twelescreen_client = {
    */
   show_greeting: function(next_tweet) {
     var that = this;
-    $('#greeting').html(that.config.category.greeting);
+    $('#greeting').html(that.config.greeting);
     that.show_slide('greeting');
     $('#greeting')
       .delay(1000).queueFn(function(){$(this).addClass('is-inverted')})
@@ -208,18 +211,18 @@ var twelescreen_client = {
         // Hide text to reveal image, wait, then move on.
         $('#tweet-'+tweet.id+' .tweet_message_panel-text').animate(
           {'opacity': 0},
-          that.config.slide_transition_time * 1000,
+          that.config.slide_transition_time,
           function(){
             setTimeout(function(){
               that.show_next_item();
-            }, that.config.category.seconds_per_slide * 1000);
+            }, that.config.time_per_slide);
           }
         );
       } else {
         // No image on this slide, just move on.
         that.show_next_item();
       };
-    }, that.config.category.seconds_per_slide * 1000);
+    }, that.config.time_per_slide);
   },
 
   make_tweet_slide: function(tweet) {
@@ -370,7 +373,7 @@ var twelescreen_client = {
     // Make current (front) slide transparent:
     $from.animate(
       {opacity: 0},
-      this.config.slide_transition_time * 1000,
+      this.config.slide_transition_time,
       function(){
         // Move old current slide off-stage, put z-index back to default.
         $from.removeClass('is-slide-on').css({zIndex: 100, opacity: 1}); 
@@ -393,7 +396,7 @@ var twelescreen_client = {
 
   add_to_tweet_store: function(tweet) {
     this.tweet_store.push(tweet);
-    if (this.tweet_store.length > this.config.category.number_of_tweets) {
+    if (this.tweet_store.length > this.config.number_of_tweets) {
       var old_tweet = this.tweet_store.shift();
       $('#tweet-'+old_tweet.id).remove();
     };
@@ -406,7 +409,7 @@ var twelescreen_client = {
   },
 
   tweet_is_in_this_category: function(tweet) {
-    if (this.config.category.screen_names.indexOf(tweet.user.screen_name) > -1) {
+    if (this.config.screen_names.indexOf(tweet.user.screen_name) > -1) {
       return true;
     } else {
       return false;

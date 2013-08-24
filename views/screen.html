@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>{{config.category.name}} Twelescreen</title>
+  <title>{{config.title}} Twelescreen</title>
   <link rel="stylesheet" href="/stylesheets/base.css">
   {{#if config.theme}}
   <link rel="stylesheet" href="/stylesheets/themes/{{config.theme}}.css">
@@ -29,16 +29,15 @@
     $(document).ready(function() {
 
       twelescreen_client.init({
-        category: {
-          key: '{{config.category.key}}',
-          name: "{{config.category.name}}",
-          screen_names: [{{#each config.category.screen_names}}'{{this}}',{{/each}}],
-          greeting: "{{{config.category.greeting}}}",
-          burn_in_text: "{{{config.category.burn_in_text}}}",
-          disconnect_warning: "{{config.category.disconnect_warning}}",
-          number_of_tweets: {{config.category.number_of_tweets}},
-          seconds_per_slide: {{config.category.seconds_per_slide}}
-        },
+        key: '{{config.key}}',
+        title: "{{config.title}}",
+        screen_names: [{{#each config.screen_names}}'{{this}}',{{/each}}],
+        greeting: "{{{config.greeting}}}",
+        burn_in_text: "{{{config.burn_in_text}}}",
+        disconnect_warning: "{{config.disconnect_warning}}",
+        number_of_tweets: {{config.number_of_tweets}},
+        time_per_slide: {{config.time_per_slide}},
+        slide_transition_time: {{config.slide_transition_time}}
       });
 
     });
