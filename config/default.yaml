@@ -7,16 +7,17 @@ categories:
     number_of_tweets: 3
     time_per_slide: 5000
     slide_transition_time: 400
-    chance_of_slogan: 10
+    chance_of_slogan: 5
     show_on_menu: true
   us:
     title: United States
-    greeting: Attention<br />folks!
-    burn_in_text: TODO
     disconnect_warning: You are no longer connected. TODO
     screen_names:
       - tomcoates
       - mattb
+    burn_in_text: TODO
+    greetings:
+      - Attention<br />folks!
     slogans:
       - Believe in America
       - Country first
@@ -26,12 +27,13 @@ categories:
       - Yes we can
   uk:
     title: United Kingdom
-    greeting: Attention<br />subjects!
-    burn_in_text: Go home or face arrest
     disconnect_warning: You are no longer connected. Reconnect or face arrest.
     screen_names:
       - philgyfordtest
       - philgyford
+    burn_in_text: Go home or face arrest
+    greetings:
+      - Attention<br />subjects!
     slogans:
       - Are you thinking what we’re thinking?
       - You’ve had your debate

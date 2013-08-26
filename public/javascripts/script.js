@@ -3,13 +3,13 @@ var twelescreen_client = {
   config: {
     // May be overridden by passed-in config settings:
     disconnect_warning: "Connection to server lost",
-    greeting: "Hello there",
+    greetings: ["Hello there"],
     screen_names: [],
     slogans: [],
     number_of_tweets: 5,
     time_per_slide: 5000,
     slide_transition_time: 400, 
-    chance_of_slogan: 10
+    chance_of_slogan: 5
   },
 
   socket: null,
@@ -162,7 +162,8 @@ var twelescreen_client = {
    */
   show_greeting: function(next_tweet) {
     var that = this;
-    $('#greeting').html(that.config.greeting);
+    var idx = _.random(0, that.config.greetings.length - 1);
+    $('#greeting').html(that.config.greetings[idx]);
     that.show_slide('greeting');
     $('#greeting')
       .delay(1000).queueFn(function(){$(this).addClass('is-inverted')})

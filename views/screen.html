@@ -32,13 +32,13 @@
         category_key: '{{config.category_key}}',
         title: "{{config.title}}",
         screen_names: [{{#each config.screen_names}}'{{this}}',{{/each}}],
-        greeting: "{{{config.greeting}}}",
         burn_in_text: "{{{config.burn_in_text}}}",
         disconnect_warning: "{{config.disconnect_warning}}",
         number_of_tweets: {{config.number_of_tweets}},
         time_per_slide: {{config.time_per_slide}},
         slide_transition_time: {{config.slide_transition_time}},
-        slogans: [{{#each config.slogans}}"{{this}}",{{/each}}]
+        greetings: [{{#each config.greetings}}"{{{this}}}",{{/each}}],
+        slogans: [{{#each config.slogans}}"{{{this}}}",{{/each}}]
       });
 
     });
