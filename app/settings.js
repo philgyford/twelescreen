@@ -11,16 +11,20 @@ module.exports = function(_) {
 
   var config = require('config');
 
-  // Mirror all of our settings from config for slightly easier access.
   _.each(['env', 'categories', 'twitter'], function(key) {
-    settings[key] = config[key];
+    // Mirror all of our settings from config for slightly easier access.
+    if (_.has(config, key) && config[key] != null) {
+      settings[key] = config[key];
+    } else {
+      settings[key] = {};
+    };
 
     // Add any default category values to each of the category settings, where
     // the category doesn't have a matching setting.
-    if (key == 'categories' && '_defaults' in settings['categories']) {
-      _.each(settings['categories'], function(cat_settings, cat_key) {
+    if (key == 'categories' && '_defaults' in settings.categories) {
+      _.each(settings.categories, function(cat_settings, cat_key) {
         if (cat_key != '_defaults') {
-          _.defaults(settings['categories'][cat_key], settings['categories']['_defaults']);
+          _.defaults(settings.categories[cat_key], settings.categories._defaults);
         };
       });
     };
@@ -28,23 +32,25 @@ module.exports = function(_) {
 
   // We don't need the defaults now they're copied to all the real categories.
   // But we keep a record of them, for use on the index page.
-  settings['category_defaults'] = settings['categories']['_defaults']
-  delete settings['categories']['_defaults'];
+  if (_.has(settings.categories, '_defaults')) {
+    settings.category_defaults = settings.categories._defaults;
+    delete settings.categories._defaults;
+  } else {
+    settings.category_defaults = {theme: 'default'}; 
+  };
 
   /**
    * Will be an array of valid category keys, like: ['uk', 'us'].
    */
   settings.valid_categories = _.map(settings.categories,
-                          function(category_data, category, l) { return category; })
+                          function(category_data, category, l) { return category; });
 
   /**
    * Will be an array of all the twitter account screen_names for all of the
    * categories. like: ['ukhomeoffice', 'dhsgov']
    */
   settings.watched_screen_names = _.uniq(
-      _.flatten(
         _.map(settings.categories, function(v, k, l) { return v.screen_names; })
-      )
   );
 
   /**

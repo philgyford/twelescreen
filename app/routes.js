@@ -6,10 +6,8 @@ module.exports = function(app, settings) {
    * A request for the front page of the site.
    */
   app.get('/', function(req, res) {
-    var config = {categories: settings.categories};
-    if (settings.category_defaults.theme) {
-      config.theme = settings.category_defaults.theme;
-    };
+    var config = {categories: settings.valid_categories};
+    config.theme = settings.category_defaults.theme;
     if (settings.category_defaults.font) {
       config.font = settings.category_defaults.font;
     };
