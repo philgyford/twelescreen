@@ -9,6 +9,7 @@ var twelescreen_client = {
     number_of_tweets: 5,
     time_per_slide: 5000,
     slide_transition_time: 400, 
+    greeting_time: 5000,
     chance_of_slogan: 5
   },
 
@@ -165,12 +166,13 @@ var twelescreen_client = {
     var idx = _.random(0, that.config.greetings.length - 1);
     $('#greeting').html(that.config.greetings[idx]);
     that.show_slide('greeting');
+    var ms = that.config.greeting_time / 5;
     $('#greeting')
-      .delay(1000).queueFn(function(){$(this).addClass('is-inverted')})
-      .delay(1000).queueFn(function(){$(this).removeClass('is-inverted')})
-      .delay(1000).queueFn(function(){$(this).addClass('is-inverted')})
-      .delay(1000).queueFn(function(){$(this).removeClass('is-inverted')})
-      .delay(1000).queueFn(function(){
+      .delay(ms).queueFn(function(){$(this).addClass('is-inverted')})
+      .delay(ms).queueFn(function(){$(this).removeClass('is-inverted')})
+      .delay(ms).queueFn(function(){$(this).addClass('is-inverted')})
+      .delay(ms).queueFn(function(){$(this).removeClass('is-inverted')})
+      .delay(ms).queueFn(function(){
         if (next_tweet) {
           that.display_tweet(next_tweet); 
         } else {
