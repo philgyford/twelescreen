@@ -3,8 +3,8 @@ var twelescreen_client = {
   config: {
     // May be overridden by passed-in config settings:
     disconnect_warning: "Connection to server lost",
-    greetings: ["Hello there"],
     screen_names: [],
+    greetings: ["Hello there"],
     slogans: [],
     number_of_tweets: 5,
     time_per_slide: 5000,
