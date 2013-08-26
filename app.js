@@ -38,7 +38,7 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-require('./app/routes')(app, settings);
+require('./app/routes')(app, settings, _);
 
 var sockets = io.listen(server);
 

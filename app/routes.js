@@ -1,4 +1,4 @@
-module.exports = function(app, settings) {
+module.exports = function(app, settings, _) {
 
   var routes = this;
 
@@ -6,12 +6,29 @@ module.exports = function(app, settings) {
    * A request for the front page of the site.
    */
   app.get('/', function(req, res) {
-    var config = {categories: settings.valid_categories};
-    config.theme = settings.category_defaults.theme;
-    if (settings.category_defaults.font) {
-      config.font = settings.category_defaults.font;
+    if (settings.valid_categories.length == 1) {
+      // There's only one category, so jump straight to it.
+      res.redirect('/' + settings.valid_categories[0] + '/'); 
+    } else {
+      var menu_categories = _.filter(settings.valid_categories,
+                                    function(key){
+                                      if (settings.categories[key].show_on_menu) {
+                                        return key; 
+                                      };
+                                    });
+     if (menu_categories.length == 1) {
+        // There's only one category to show in the menu, so jump straight to it.
+        res.redirect('/' + menu_categories[0] + '/'); 
+      } else {
+        // Normal menu page.
+        var config = {categories: settings.categories};
+        config.theme = settings.category_defaults.theme;
+        if (settings.category_defaults.font) {
+          config.font = settings.category_defaults.font;
+        };
+        res.render('index', {config: config});
+      };
     };
-    res.render('index', {config: config});
   });
 
   /**
