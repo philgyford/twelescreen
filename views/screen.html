@@ -28,7 +28,7 @@
   <script>
     $(document).ready(function() {
 
-      twelescreen_client.init({
+      twelescreen_client.init('screen', {
         category_key: '{{config.category_key}}',
         title: "{{config.title}}",
         screen_names: [{{#each config.screen_names}}'{{this}}',{{/each}}],

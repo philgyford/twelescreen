@@ -3,6 +3,7 @@ var twelescreen_client = {
   config: {
     // May be overridden by passed-in config settings:
     disconnect_warning: "Connection to server lost",
+    font: null,
     screen_names: [],
     greetings: ["Hello there"],
     slogans: [],
@@ -51,9 +52,36 @@ var twelescreen_client = {
    */
   current_tweet_id: '',
 
-  init: function(spec) {
+
+
+// Move all the fonts stuff into a separate method.
+// Pass the function that's called after fonts.done() into it.
+// Call that method from both init_screen and init_method.
+
+  /**
+   * Call this to initialise everything.
+   * page is either 'menu' or 'screen', depending on the type of page.
+   * spec is an object of items that can override this.config settings.
+   */
+  init: function(page, spec) {
     $.extend(this.config, spec);
 
+    var init_callback = function(){};
+
+    if (page == 'screen') {
+      var that = this;
+      init_callback = function(){
+        that.prepare_screen();
+        that.prepare_connection();
+        that.listen_for_tweets();
+        that.start_rotation();
+      };
+    };
+
+    this.prepare_fonts(init_callback);
+  },
+
+  prepare_fonts: function(init_callback) {
     var fonts = $.Deferred();
 
     // If we have a font set, then load it...
@@ -65,7 +93,6 @@ var twelescreen_client = {
         },
         active: function() { fonts.resolve(); }
       });
-      // Load fonts.
       (function() {
         var wf = document.createElement('script');
         wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
@@ -76,23 +103,15 @@ var twelescreen_client = {
         s.parentNode.insertBefore(wf, s);
       })();
     } else {
-      // No font to load, so let's crack on...
+      // No font to load, so let's move on...
       fonts.resolve();
     };
 
-    var that = this;
-    fonts.done(function(){
-      that.prepare_display();
-
-      that.prepare_connection();
-
-      that.listen_for_tweets();
-
-      that.start_rotation();
-    });
+    // Starts the rest of the page-building process.
+    fonts.done(init_callback);
   },
 
-  prepare_display: function() {
+  prepare_screen: function() {
     var that = this;
     that.size_screen();
     $(window).resize(function() {
