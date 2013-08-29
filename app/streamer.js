@@ -82,7 +82,7 @@ module.exports = function(settings, twitter, sockets, _) {
 
     settings.watched_ids.forEach(function(id) {
       streamer.twitter.getUserTimeline({
-        user_id: id, count: settings.ui.number_of_tweets,
+        user_id: id, count: settings.max_number_of_tweets,
         trim_user: false, exclude_replies: true,
         contributor_details: true, include_rts: false
       }, function(err, tweets) {
@@ -179,7 +179,7 @@ module.exports = function(settings, twitter, sockets, _) {
       streamer.cache[category].sort(streamer.cache_sorter);
       // Remove any superfluous items from start.
       streamer.cache[category].splice(0,
-                        (streamer.cache[category] - settings.ui.number_of_tweets));
+        (streamer.cache[category] - settings.categories[category].number_of_tweets));
     });
   };
 

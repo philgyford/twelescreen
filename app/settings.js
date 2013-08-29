@@ -73,6 +73,9 @@ module.exports = function(_) {
    */
   settings.watched_ids = [];
 
+  settings.max_number_of_tweets = _.max(settings.categories,
+      function(category){ return category.number_of_tweets; })['number_of_tweets']
+
 
   return settings;
 };
