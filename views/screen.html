@@ -29,6 +29,7 @@
     $(document).ready(function() {
 
       twelescreen_client.init('screen', {
+        font: '{{config.font}}',
         category_key: '{{config.category_key}}',
         title: "{{config.title}}",
         screen_names: [{{#each config.screen_names}}'{{this}}',{{/each}}],
