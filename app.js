@@ -5,7 +5,7 @@
 
 var express = require('express'),
 		consolidate = require('consolidate'),
-		io = require('socket.io'),
+		socket = require('socket.io'),
 		http = require('http'),
 		twitter = require('ntwitter'),
 		cronJob = require('cron').CronJob,
@@ -40,18 +40,18 @@ if ('development' == app.get('env')) {
 
 require('./app/routes')(app, settings, _);
 
-var sockets = io.listen(server);
+var io = socket.listen(server);
 
 // Set the sockets.io configuration.
 if (settings.env.heroku == true) {
-	sockets.configure(function() {
-		sockets.set('transports', ['xhr-polling']);
-		sockets.set('polling duration', 10);
+	io.configure(function() {
+		io.set('transports', ['xhr-polling']);
+		io.set('polling duration', 10);
 	});
 };
 
 // Start fetching Tweets from Twitter.
-var streamer = require('./app/streamer')(settings, twitter, sockets, _);
+var streamer = require('./app/streamer')(settings, twitter, io, _);
 streamer.start();
 
 //Reset everything on a new day!
@@ -64,7 +64,7 @@ streamer.start();
     //_.each(watchSymbols, function(v) { watchList.symbols[v] = 0; });
 
     ////Send the update to the clients
-    //sockets.sockets.emit('tweets', watchList);
+    //io.sockets.emit('tweets', watchList);
 //}, null, true);
 
 //Create the server

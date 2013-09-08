@@ -326,25 +326,26 @@ var twelescreen_client = {
       // It's a .slide-tweet.
       
       // Leave space for the account stripe plus a bit more.
-      var margin = Math.floor($('.tweet_account', $slide).height() * 1.2);
+      var margin = Math.floor($('.tweet_account', $slide).height() * 1.05);
+      var padding_bottom = Math.floor(margin / 5);
       $('.tweet_message', $slide)
-        .css({'margin-top': margin}) 
-        // Make it the height under the account stripe, minus a bit for
-        // a bottom margin.
-        .height(Math.floor($(window).height() - margin - (margin / 5)));
+        .css({'margin-top': margin, 'padding-bottom': padding_bottom}) 
+        // Make it the height under the account stripe, minus a bit for bottom 
+        // padding.
+        .height(Math.floor($(window).height() - margin - padding_bottom));
 
       // Make any image the tweet has stretch to fill space.
       if ($('.tweet_message_panel-image', $slide).exists()) {
         var $img = $('.tweet_message_panel-image img', $slide);
         var max_w = $('.tweet_message_panel-image', $slide).width();
-        var max_h = $('.tweet_message_panel-image', $slide).height();
-        if ($img.data('orientation') == 'landscape') {
-          $img.width(max_w)
-              .height(Math.floor(($img.data('height') / $img.data('width')) * max_w)); 
-        } else {
-          $img.width(Math.floor(($img.data('width') / $img.data('height')) * max_h))
-              .height(max_h); 
+        var max_h = $('.tweet_message_panel-image', $slide).height() - padding_bottom;
+        var w = max_w;
+        var h = Math.floor(($img.data('height') / $img.data('width')) * max_w);
+        if (h > max_h) {
+          h = max_h;
+          w = Math.floor(($img.data('width') / $img.data('height')) * max_h);
         };
+        $img.width(w).height(h); 
       };
     };
   },

@@ -3,10 +3,10 @@
  * tweets, and sending them to the front end.
  *
  * Get it going with:
- *  var streamer = require('./app/streamer')(settings, twitter, sockets);
+ *  var streamer = require('./app/streamer')(settings, twitter, io, _);
  *  streamer.start();
  */
-module.exports = function(settings, twitter, sockets, _) {
+module.exports = function(settings, twitter, io, _) {
 
   var streamer = this;
 
@@ -125,7 +125,7 @@ module.exports = function(settings, twitter, sockets, _) {
           // and send the tweet to all clients in that category's sockets 'room'.
           settings.screen_name_to_category[tweet.user.screen_name].forEach(
           function(category) {
-            sockets.sockets.in(category).emit('messages',
+            io.sockets.in(category).emit('messages',
               {type: 'fresh', tweets: [streamer.shrink_tweet(tweet)] }
             );
           });
@@ -140,7 +140,7 @@ module.exports = function(settings, twitter, sockets, _) {
    * We only send them the most recent tweets for their category/room.
    */
   streamer.prepare_for_clients = function() {
-    sockets.sockets.on('connection', function(client) { 
+    io.sockets.on('connection', function(client) { 
       console.log('Connected client:', client.id);
       client.on('subscribe', function(room) {
         if (_.indexOf(settings.valid_categories, room) >= 0) {
