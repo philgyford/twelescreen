@@ -143,6 +143,7 @@ var twelescreen_client = {
           if (messages_packet.type == 'cached') {
             that.add_to_tweet_store(tweet);
           } else {
+            // type == 'fresh'
             that.add_to_tweet_queue(tweet);
           };
         };
