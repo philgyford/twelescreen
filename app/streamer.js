@@ -81,12 +81,12 @@ module.exports = function(settings, twitter, sockets, _) {
     console.log('Caching previous tweets');
 
     settings.watched_ids.forEach(function(id) {
-      // We don't apply a count, because that doesn't include retweets and
-      // @replies.
+      // Note: The 'count' doesn't include retweets and replies, so we'll
+      // probably get less than that many tweets returned.
       streamer.twitter.getUserTimeline({
         user_id: id, 
         trim_user: false, exclude_replies: true,
-        contributor_details: true, include_rts: false
+        contributor_details: true, include_rts: false, count: 200
       }, function(err, tweets) {
         if (err) {
           console.log("Error fetching tweets for user id '"+id+"': "+err); 
