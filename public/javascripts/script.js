@@ -3,6 +3,7 @@ var twelescreen_client = {
   config: {
     // May be overridden by passed-in config settings:
     disconnect_warning: "Connection to server lost",
+    category_key: '',
     font: null,
     screen_names: [],
     greetings: ["Hello there"],
@@ -128,6 +129,7 @@ var twelescreen_client = {
     that.socket = io.connect(window.location.hostname);
     that.socket.on('connect', function(){
       that.hide_alert('connection-alert');
+      that.socket.emit('subscribe', that.config.category_key);
     });
     that.socket.on('disconnect', function(){
       that.show_alert('connection-alert', that.config.disconnect_warning);

@@ -121,11 +121,14 @@ module.exports = function(settings, twitter, sockets, _) {
         // Make sure it was a valid tweet, and also not a reply.
         if (tweet.text !== undefined && tweet.in_reply_to_user_id === null) {
           streamer.add_tweet_to_cache(tweet);
-          // Send to all the clients - we don't know which client is in which
-          // category, so they filter in the client.
-          sockets.sockets.emit('messages',
-            {type: 'fresh', tweets: [streamer.shrink_tweet(tweet)] }
-          );
+          // Get all the categories this Tweet's account is in
+          // and send the tweet to all clients in that category's sockets 'room'.
+          settings.screen_name_to_category[tweet.user.screen_name].forEach(
+          function(category) {
+            sockets.sockets.in(category).emit('messages',
+              {type: 'fresh', tweets: [streamer.shrink_tweet(tweet)] }
+            );
+          });
         }
       });
     });
@@ -134,14 +137,21 @@ module.exports = function(settings, twitter, sockets, _) {
 
   /**
    * When a client connects, give them initial data.
-   * Here, we don't know which category they're in, so we send them
-   * everything. Not sure how to make that better.
+   * We only send them the most recent tweets for their category/room.
    */
   streamer.prepare_for_clients = function() {
-    sockets.sockets.on('connection', function(socket) { 
-        socket.emit('messages',
-          {type: 'cached', tweets: streamer.complete_cache() }
-        );
+    sockets.sockets.on('connection', function(client) { 
+      console.log('Connected client:', client.id);
+      client.on('subscribe', function(room) {
+        if (_.indexOf(settings.valid_categories, room) >= 0) {
+          client.join(room);
+          client.emit('messages',
+            {type: 'cached', tweets: streamer.cache_for_category(room, settings.categories[room].number_of_tweets) }
+          );
+        } else {
+          console.log("INVALID ROOM: "+room);
+        };
+      });
     });
   };
 
@@ -159,6 +169,20 @@ module.exports = function(settings, twitter, sockets, _) {
 
   streamer.cache_sorter = function(a,b) {
     return a.time - b.time;
+  };
+
+
+  /**
+   * Returns all the tweets in the cache for a particular category.
+   * If limit is set to a number, that number of most recent tweets is returned.
+   * Otherwise, the whole cache for that category is sent.
+   */
+  streamer.cache_for_category = function(category, limit) {
+    if (limit) {
+      return streamer.cache[category].slice(-limit);
+    } else {
+      return streamer.cache[category];
+    };
   };
 
 
