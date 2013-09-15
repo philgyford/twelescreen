@@ -25,6 +25,7 @@ body {
 .alert {
   background: #fff;
   color: #000;
+  /* border-top: 1px solid #000; */
 }
 
 .tweet_account {

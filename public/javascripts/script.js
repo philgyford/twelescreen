@@ -468,7 +468,7 @@ var twelescreen_client = {
         '<div id=' + id + ' class="alert"><div class="alert_inner">' + message + '</div></div>'
       );
     };
-    $('#'+id).fitText(1.5);
+    $('#'+id).fitText(4);
   },
 
   hide_alert: function(id) {

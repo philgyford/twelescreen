@@ -21,6 +21,9 @@ body {
   background: #FCFCF2;
   color: #222;
   text-transform: uppercase;
+  padding-top: 0.3em;
+  padding-bottom: 0.2em;
+  border-top: 2px solid #000;
 }
 
 .tweet_account {
