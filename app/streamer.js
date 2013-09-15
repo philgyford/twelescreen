@@ -38,7 +38,8 @@ module.exports = function(settings, twitter, io, _) {
     streamer.queue = [
                       streamer.get_user_ids,
                       streamer.cache_previous_tweets,
-                      streamer.start_streaming];
+                      streamer.start_streaming
+                    ];
 
     // Let's start...
     streamer.next_in_queue();
@@ -58,15 +59,16 @@ module.exports = function(settings, twitter, io, _) {
    * We need the user IDs, not screen_names, for streaming.
    */
   streamer.get_user_ids = function() {
-    console.log('Fetching Twitter user IDs');
+    console.log('Streamer (1/3): Fetching Twitter user IDs (starting)');
     streamer.twitter.lookupUser(settings.watched_screen_names, function(err, users) {
       if (err) {
-        console.log("Error fetching user IDs: "+err);
+        console.log("Streamer: Error fetching user IDs: "+err);
       } else {
         users.forEach(function(user){
           settings.watched_ids.push(user.id); 
         });
         // On to the next method...
+        console.log('Streamer (1/3): Fetching Twitter user IDs (finished)');
         streamer.next_in_queue();
       }; 
     });
@@ -78,8 +80,9 @@ module.exports = function(settings, twitter, io, _) {
    * to display from the start.
    */
   streamer.cache_previous_tweets = function() {
-    console.log('Caching previous tweets');
+    console.log('Streamer (2/3): Caching existing Tweets (starting)');
 
+    var id_count = 1;
     settings.watched_ids.forEach(function(id) {
       // Note: The 'count' doesn't include retweets and replies, so we'll
       // probably get less than that many tweets returned.
@@ -89,13 +92,18 @@ module.exports = function(settings, twitter, io, _) {
         contributor_details: true, include_rts: false, count: 200
       }, function(err, tweets) {
         if (err) {
-          console.log("Error fetching tweets for user id '"+id+"': "+err); 
+          console.log("Streamer: Error fetching tweets for user id '"+id+"': "+err); 
         } else {
           tweets.forEach(function(tweet){
             streamer.add_tweet_to_cache(tweet);
           });
           // On to the next method...
-          streamer.next_in_queue();
+          if (id_count == settings.watched_ids.length) {
+            console.log('Streamer (2/3): Caching existing Tweets (finished)');
+            streamer.next_in_queue();
+          } else {
+            id_count++;
+          };
         };
       })
     });
@@ -107,8 +115,7 @@ module.exports = function(settings, twitter, io, _) {
    * When one comes in, sends it to the front end.
    */
   streamer.start_streaming = function() {
-    console.log('Streaming from Twitter');
-    
+    console.log('Streamer (3/3): Listening for new Tweets (starting)');
     streamer.prepare_for_clients();
 
     // Tell the twitter API to filter on the watched_ids. 
@@ -131,6 +138,7 @@ module.exports = function(settings, twitter, io, _) {
           });
         }
       });
+      console.log('Streamer (3/3): Listening for new Tweets (process now ongoing)');
     });
   };
 
