@@ -17,7 +17,7 @@ categories:
     theme: default
     number_of_tweets: 10
     show_on_menu: false
-    time_per_slide: 5000
+    time_per_slide: 10000
     slide_transition_time: 1000
     greeting_time: 2000
     screen_names:
