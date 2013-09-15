@@ -34,7 +34,7 @@ module.exports = function(app, settings, _) {
   /**
    * A request for a screen for a particular category.
    */
-  app.get(/^\/(\w\w)\/$/, function(req, res) {
+  app.get(/^\/([\w-]+)\/$/, function(req, res) {
     if (settings.valid_categories.indexOf(req.params[0]) > -1) {
       var category_key = req.params[0];
       var config = settings.categories[category_key];
