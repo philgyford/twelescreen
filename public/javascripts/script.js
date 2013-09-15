@@ -339,11 +339,21 @@ var twelescreen_client = {
         var $img = $('.tweet_message_panel-image img', $slide);
         var max_w = $('.tweet_message_panel-image', $slide).width();
         var max_h = $('.tweet_message_panel-image', $slide).height() - padding_bottom;
-        var w = max_w;
-        var h = Math.floor(($img.data('height') / $img.data('width')) * max_w);
-        if (h > max_h) {
+        var w, h;
+        if ($img.data('orientation') == 'landscape') {
+          w = max_w;
+          h = Math.floor(($img.data('height') / $img.data('width')) * max_w);
+          if (h > max_h) {
+            h = max_h;
+            w = Math.floor(($img.data('width') / $img.data('height')) * max_h);
+          };
+        } else {
           h = max_h;
           w = Math.floor(($img.data('width') / $img.data('height')) * max_h);
+          if (w > max_w) {
+            w = max_w;
+            h = Math.floor(($img.data('height') / $img.data('width')) * max_w);
+          };
         };
         $img.width(w).height(h); 
       };
