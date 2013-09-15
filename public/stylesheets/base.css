@@ -117,6 +117,7 @@ body {
 	zoom: 1;
 	filter: alpha(opacity=4);
 	opacity: 0.04;
+  display: none;
 }
 
 .alert {
@@ -156,11 +157,12 @@ body {
   }
 .tweet_message {
   width: 94%;
-  margin: 0 auto;
+  padding-left: 3%;
+  padding-right: 3%;
   position: relative;
 }
   .tweet_message_panel {
-    width: 100%;
+    width: 94%;
     height: 100%;
     position: absolute;
     z-index: 200;

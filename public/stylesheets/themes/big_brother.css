@@ -17,6 +17,10 @@ body {
   color: #EDED39;
 }
 
+#burn {
+  display: block;
+}
+
 .alert {
   background: #FCFCF2;
   color: #222;

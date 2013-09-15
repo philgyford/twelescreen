@@ -325,14 +325,17 @@ var twelescreen_client = {
     if ($('.tweet_account', $slide).exists()) {
       // It's a .slide-tweet.
       
-      // Leave space for the account stripe plus a bit more.
-      var margin = Math.floor($('.tweet_account', $slide).height() * 1.05);
-      var padding_bottom = Math.floor(margin / 5);
+      // Leave space for the account stripe.
+      var margin_top = Math.floor($('.tweet_account', $slide).height());
+      var padding_top = Math.floor(margin_top / 8);
+      var padding_bottom = Math.floor(margin_top / 3);
+      var message_height = $(window).height() - margin_top - padding_top - padding_bottom;
       $('.tweet_message', $slide)
-        .css({'margin-top': margin, 'padding-bottom': padding_bottom}) 
-        // Make it the height under the account stripe, minus a bit for bottom 
-        // padding.
-        .height(Math.floor($(window).height() - margin - padding_bottom));
+        .css({'margin-top': margin_top,
+              'padding-top': padding_top,
+              'padding-bottom': padding_bottom})
+        .height(message_height);
+      $('.tweet_message_panel').height(message_height);
 
       // Make any image the tweet has stretch to fill space.
       if ($('.tweet_message_panel-image', $slide).exists()) {
@@ -561,11 +564,12 @@ jQuery.fn.exists = function(){return jQuery(this).length>0;};
                 /
                // Divided by the larger area of the actual message
                ($this.height() * $this.width()),
-               // To the power of 1/1.75
-               (1/1.75)
+               // To the power of 1/1. Er, 1.
+               (1/1)
               )
-              // That last figure is just a figure that seems to work in our
-              // situation, for different browser dimensions.
+              // At one point we used 1/1.75 as an adjustment, but we're not
+              // needing that now. Keeping this here in case we need to tweak
+              // things in future. Rather trial and error...
             );
 
             $this.css('font-size', new_font_size);
