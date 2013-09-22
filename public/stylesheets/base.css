@@ -112,12 +112,12 @@ body {
 
 #burn {
   z-index: 2000;
-  left: 0;  
+  /* Hidden by default. Set it to 0 in a theme to have it display. */
+  left: -5000px;
   background: none;
 	zoom: 1;
 	filter: alpha(opacity=4);
 	opacity: 0.04;
-  display: none;
   pointer-events: none;
 }
 
@@ -148,7 +148,7 @@ body {
     top: 0;
     right: 3%;
     width: 1.4em;
-  }
+  
   .tweet_account_name {
     width: 80%;
     height: 10%;
