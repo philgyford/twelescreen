@@ -54,19 +54,6 @@ if (settings.env.heroku == true) {
 var streamer = require('./app/streamer')(settings, twitter, io, _);
 streamer.start();
 
-//Reset everything on a new day!
-//We don't want to keep data around from the previous day so reset everything.
-//new cronJob('0 0 0 * * *', function(){
-    ////Reset the total
-    //watchList.total = 0;
-
-    ////Clear out everything in the map
-    //_.each(watchSymbols, function(v) { watchList.symbols[v] = 0; });
-
-    ////Send the update to the clients
-    //io.sockets.emit('tweets', watchList);
-//}, null, true);
-
 //Create the server
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
