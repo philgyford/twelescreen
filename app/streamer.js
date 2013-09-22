@@ -59,7 +59,7 @@ module.exports = function(settings, twitter, io, _) {
    * We need the user IDs, not screen_names, for streaming.
    */
   streamer.get_user_ids = function() {
-    console.log('Streamer (1/3): Fetching Twitter user IDs (starting)');
+    console.log('Streamer (1/3 start):  Fetching Twitter user IDs');
     streamer.twitter.lookupUser(settings.watched_screen_names, function(err, users) {
       if (err) {
         console.log("Streamer: Error fetching user IDs: "+err);
@@ -68,7 +68,7 @@ module.exports = function(settings, twitter, io, _) {
           settings.watched_ids.push(user.id); 
         });
         // On to the next method...
-        console.log('Streamer (1/3): Fetching Twitter user IDs (finished)');
+        console.log('Streamer (1/3 finish): Fetching Twitter user IDs');
         streamer.next_in_queue();
       }; 
     });
@@ -80,7 +80,7 @@ module.exports = function(settings, twitter, io, _) {
    * to display from the start.
    */
   streamer.cache_previous_tweets = function() {
-    console.log('Streamer (2/3): Caching existing Tweets (starting)');
+    console.log('Streamer (2/3 start):  Caching existing Tweets');
 
     var id_count = 1;
     settings.watched_ids.forEach(function(id) {
@@ -99,7 +99,7 @@ module.exports = function(settings, twitter, io, _) {
           });
           // On to the next method...
           if (id_count == settings.watched_ids.length) {
-            console.log('Streamer (2/3): Caching existing Tweets (finished)');
+            console.log('Streamer (2/3 finish): Caching existing Tweets');
             streamer.next_in_queue();
           } else {
             id_count++;
@@ -115,7 +115,7 @@ module.exports = function(settings, twitter, io, _) {
    * When one comes in, sends it to the front end.
    */
   streamer.start_streaming = function() {
-    console.log('Streamer (3/3): Listening for new Tweets (starting)');
+    console.log('Streamer (3/3 start):      Listening for new Tweets');
     streamer.prepare_for_clients();
 
     // Tell the twitter API to filter on the watched_ids. 
@@ -138,7 +138,7 @@ module.exports = function(settings, twitter, io, _) {
           });
         }
       });
-      console.log('Streamer (3/3): Listening for new Tweets (process now ongoing)');
+      console.log('Streamer (3/3 continuing): Listening for new Tweets');
     });
   };
 
