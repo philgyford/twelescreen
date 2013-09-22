@@ -118,6 +118,7 @@ body {
 	filter: alpha(opacity=4);
 	opacity: 0.04;
   display: none;
+  pointer-events: none;
 }
 
 .alert {

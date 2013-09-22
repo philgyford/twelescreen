@@ -31,6 +31,10 @@ body {
 
 .tweet_message {
 }
+  .tweet_message a {
+    color: #ddd;
+    text-decoration: none;
+  }
   .tweet_message_panel {
     background: #333
   }

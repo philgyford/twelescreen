@@ -281,6 +281,11 @@ var twelescreen_client = {
 
   make_tweet_slide: function(tweet) {
     var id = 'tweet-'+tweet.id;
+
+    // Make URLs into links.
+    var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    var tweet_text = tweet.text.replace(exp, "<a href='$1'>$1</a>");
+
     $('body').append(
       $('<div/>').attr('id', id).addClass('slide-tweet').append(
         $('<div/>').addClass('tweet_account').html(
@@ -288,7 +293,7 @@ var twelescreen_client = {
         )
       ).append(
         $('<div/>').addClass('tweet_message').html(
-          '<div class="tweet_message_panel tweet_message_panel-text vbox center"><div class="tweet_message_panel_inner">' + tweet.text + '</div></div>'
+          '<div class="tweet_message_panel tweet_message_panel-text vbox center"><div class="tweet_message_panel_inner">' + tweet_text + '</div></div>'
         )
       ).addClass('slide')
     );

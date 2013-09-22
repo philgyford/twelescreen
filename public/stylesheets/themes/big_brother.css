@@ -38,6 +38,11 @@ body {
 .tweet_message {
   text-transform: uppercase;
 }
+  .tweet_message a {
+    text-transform: none;
+    color: #FCFCF2;
+    text-decoration: none;
+  }
   .tweet_message_panel {
     background: #CC2211;
   }
