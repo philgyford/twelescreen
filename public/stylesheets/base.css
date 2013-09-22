@@ -1,8 +1,13 @@
+/**
+ * Base CSS Styles for Twelescreen.
+ * These styles define dimensions and positions, but not colors or styles.
+ * Extend with a theme CSS file, like themes/default/styles.css
+ */
+
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
 */
-
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -46,6 +51,7 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+/* END CSS RESET */
 
 
 body {
