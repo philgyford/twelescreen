@@ -1,5 +1,5 @@
 {
-  "name": "Twelescreen",
+  "name": "twelescreen",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -13,8 +13,9 @@
     "config": "0.4.x",
     "consolidate": "0.9.x",
     "cron": "1.0.x",
+    "dustjs-helpers": "~1.1.1",
+    "dustjs-linkedin": "~2.0.3",
     "express": "3.1.x",
-    "handlebars": "1.0.x",
     "js-yaml": "2.1.x",
     "ntwitter": "0.5.x",
     "socket.io": "0.9.x",

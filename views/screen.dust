@@ -1,0 +1,9 @@
+{>"base"/}
+
+{<content}
+
+  <div id="burn" class="slide slide-title vbox center"></div>
+  <div id="greeting" class="slide slide-title vbox center"></div>
+  <div id="slogan" class="slide slide-title vbox center"></div>
+
+{/content}

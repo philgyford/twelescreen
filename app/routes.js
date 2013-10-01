@@ -21,12 +21,17 @@ module.exports = function(app, settings, _) {
         res.redirect('/' + menu_categories[0] + '/'); 
       } else {
         // Normal menu page.
-        var config = {categories: settings.categories};
+        var config = {
+          categories_list: settings.categories_list
+        };
         config.theme = settings.category_defaults.theme;
         if (settings.category_defaults.font) {
           config.font = settings.category_defaults.font;
         };
-        res.render('index', {config: config});
+        res.render('index', {
+          page: 'menu',
+          config: config
+        });
       };
     };
   });
@@ -39,7 +44,10 @@ module.exports = function(app, settings, _) {
       var category_key = req.params[0];
       var config = settings.categories[category_key];
       config['category_key'] = category_key;
-      res.render('screen', {config: config});
+      res.render('screen', {
+        page: 'screen',
+        config: config
+      });
     } else {
       res.send(404, "'/" + req.params[0] + "/' is not a valid address.");	
     };

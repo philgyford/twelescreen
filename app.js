@@ -10,19 +10,16 @@ var express = require('express'),
 		twitter = require('ntwitter'),
 		cronJob = require('cron').CronJob,
 		_ = require('underscore'),
-		handlebars = require('handlebars')
+		dust = require('dustjs-linkedin'),
 		path = require('path');
 
 var settings = require('./app/settings')(_);
 
-// Express setup
 var app = express();
 var server = http.createServer(app);
 app.set('port', process.env.PORT || 3000);
-// Assign the handlebars template engine to .html files
-app.engine('html', consolidate.handlebars);
-// Set .html as the default extension 
-app.set('view engine', 'html');
+app.engine('dust', consolidate.dust);
+app.set('view engine', 'dust');
 app.set('views', path.join(__dirname, '/views'));
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -31,12 +28,20 @@ app.use(app.router);
 app.use(require('stylus').middleware(__dirname + '/public'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 // We're using bower components so add it to the path to make things easier.
 app.use('/components', express.static(path.join(__dirname, 'bower_components')));
 
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
+//handlebars.registerHelper('ifequal', function (val1, val2, fn, elseFn) {
+  //if (val1 === val2) {
+    //return fn();
+  //} else if (elseFn) {
+    //return elseFn();
+  //}
+//});
 
 require('./app/routes')(app, settings, _);
 
@@ -58,3 +63,17 @@ streamer.start();
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+
+/**
+ * So we can do this in templates:
+ * {{#ifequal var compare='bibble'}}
+ * {{/ifequal}}
+ */
+//handlebars.registerHelper('ifequal', function(context, options) {
+  //if (context == options.hash.compare) {
+    //return options.fn(this);
+  //};
+  //return options.inverse(this);
+//});
+

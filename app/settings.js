@@ -46,6 +46,21 @@ module.exports = function(_) {
                           function(category_data, category, l) { return category; });
 
   /**
+   * Will be an array of all the data in settings.categories, but in a list
+   * ordered by title. Used for the menu screen.
+   */
+  settings.categories_list = _.sortBy(
+    _.map(settings.categories, function(category_data, category, l) { 
+      // Put the keys ('uk') into the category data.
+      category_data.key = category;
+      return category_data;
+    }),
+    function(data){
+      return data.title;
+    }
+  );
+
+  /**
    * Will be an array of all the twitter account screen_names for all of the
    * categories. like: ['ukhomeoffice', 'dhsgov']
    */

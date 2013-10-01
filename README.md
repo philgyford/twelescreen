@@ -11,6 +11,8 @@ http://www.dillonbuchanan.com/programming/node-js-twitter-streaming-api-socket-i
 
 Notes for myself about all this stuff:
 
+Run the server with `node app.js`.
+
 
 ### NVM
 
@@ -22,8 +24,6 @@ You can use https://github.com/creationix/nvm to install and manage different ve
 Managing the server-side components. These are listed in `package.json` and get installed in `node_modules/`.
 
 Install NPM. https://github.com/isaacs/npm
-
-Run the server with `npm app.js`.
 
 
 ### Bower
