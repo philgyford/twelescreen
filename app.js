@@ -3,17 +3,19 @@
  * Run with `node app.js`.
  */
 
+console.log('Twelescreen starting, using Node '+ process.version);
+
 var express = require('express'),
 		consolidate = require('consolidate'),
 		socket = require('socket.io'),
 		http = require('http'),
 		twitter = require('ntwitter'),
-		cronJob = require('cron').CronJob,
 		_ = require('underscore'),
 		dust = require('dustjs-linkedin'),
-		path = require('path');
+		path = require('path'),
+    fs = require('fs');
 
-var settings = require('./app/settings')(_);
+var settings = require(path.resolve('app','settings'))(_);
 
 var app = express();
 var server = http.createServer(app);
@@ -25,7 +27,7 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
-app.use(require('stylus').middleware(__dirname + '/public'));
+app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
@@ -35,15 +37,8 @@ app.use('/components', express.static(path.join(__dirname, 'bower_components')))
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
-//handlebars.registerHelper('ifequal', function (val1, val2, fn, elseFn) {
-  //if (val1 === val2) {
-    //return fn();
-  //} else if (elseFn) {
-    //return elseFn();
-  //}
-//});
 
-require('./app/routes')(app, settings, _);
+require(path.resolve('app','routes'))(app, settings, fs, path, _);
 
 var io = socket.listen(server);
 
@@ -56,24 +51,11 @@ if (settings.env.heroku == true) {
 };
 
 // Start fetching Tweets from Twitter.
-var streamer = require('./app/streamer')(settings, twitter, io, _);
+var streamer = require(path.resolve('app','streamer'))(settings, twitter, io, _);
 streamer.start();
 
 //Create the server
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
-
-
-/**
- * So we can do this in templates:
- * {{#ifequal var compare='bibble'}}
- * {{/ifequal}}
- */
-//handlebars.registerHelper('ifequal', function(context, options) {
-  //if (context == options.hash.compare) {
-    //return options.fn(this);
-  //};
-  //return options.inverse(this);
-//});
 

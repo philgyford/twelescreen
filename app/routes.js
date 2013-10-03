@@ -1,4 +1,4 @@
-module.exports = function(app, settings, _) {
+module.exports = function(app, settings, fs, path, _) {
 
   var routes = this;
 
@@ -28,7 +28,20 @@ module.exports = function(app, settings, _) {
         if (settings.category_defaults.font) {
           config.font = settings.category_defaults.font;
         };
-        res.render('index', {
+
+        // Work out which template to use.
+        // A custom theme might not have its own template, in which case
+        // we use the default.
+        var menu_template = path.join('themes','default','index');
+        if (config.theme != 'default') {
+          fs.exists(path.resolve('views','themes',config.theme,'index.dust'), function(exists){
+            if (exists) {
+              menu_template = path.join('themes',config.theme,'index');
+            }
+          });
+        };
+
+        res.render(menu_template, {
           page: 'menu',
           config: config
         });

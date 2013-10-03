@@ -23,9 +23,8 @@
 
     <footer class="page-footer">
       <div class="page-footer-inner">
-
       </div>
     </footer>
-  </div> <!-- #page -->
+  </div> <!-- .page -->
 
 {/content}
