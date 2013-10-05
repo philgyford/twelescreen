@@ -39,3 +39,6 @@ Add the `--save` flag to add them to `component.json`: `bower install socket.io-
 Install all required components needed with `bower install`.
 
 
+### Config
+
+google_analytics_id
