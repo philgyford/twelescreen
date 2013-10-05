@@ -11,11 +11,15 @@ module.exports = function(_) {
 
   var config = require('config');
 
-  _.each(['env', 'categories', 'twitter'], function(key) {
+  _.each(['env', 'google_analytics_id', 'categories', 'twitter'], function(key) {
     // Mirror all of our settings from config for slightly easier access.
     if (_.has(config, key) && config[key] != null) {
       settings[key] = config[key];
+    } else if (_.indexOf(['env', 'google_analytics_id'], key) >= 0) {
+      // Default value for these:
+      settings[key] = false;
     } else {
+      // Default value for everything else:
       settings[key] = {};
     };
 

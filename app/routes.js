@@ -22,7 +22,8 @@ module.exports = function(app, settings, fs, path, _) {
       } else {
         // Normal menu page.
         var config = {
-          categories_list: settings.categories_list
+          categories_list: settings.categories_list,
+          google_analytics_id: settings.google_analytics_id
         };
         config.theme = settings.category_defaults.theme;
         if (settings.category_defaults.font) {
@@ -57,6 +58,7 @@ module.exports = function(app, settings, fs, path, _) {
       var category_key = req.params[0];
       var config = settings.categories[category_key];
       config['category_key'] = category_key;
+      config['google_analytics_id'] = settings.google_analytics_id;
       res.render('screen', {
         page: 'screen',
         config: config
