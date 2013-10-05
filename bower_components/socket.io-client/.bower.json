@@ -9,5 +9,5 @@
     "commit": "947d0a4c0653c901924c0aeb2c99771a9c01f705"
   },
   "_source": "git://github.com/LearnBoost/socket.io-client.git",
-  "_target": "*"
+  "_target": "0.9.x"
 }

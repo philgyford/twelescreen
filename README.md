@@ -34,7 +34,7 @@ Install bower https://github.com/bower/bower with `npm install -g bower`
 
 Then do something like this to install new ones: `bower install socket.io-client`.
 
-Add the `--save` flag to add them to `component.json`: `bower install socket.io-client --save`.
+Add the `--save` flag to add them to `bowyer.json`: `bower install socket.io-client --save`.
 
 Install all required components needed with `bower install`.
 
