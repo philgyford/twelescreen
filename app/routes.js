@@ -35,7 +35,7 @@ module.exports = function(app, settings, fs, path, _) {
         // we use the default.
         var menu_template = path.join('themes','default','index');
         if (config.theme != 'default') {
-          fs.exists(path.resolve('views','themes',config.theme,'index.dust'), function(exists){
+          fs.exists(path.resolve('views','themes',config.theme,'index.html'), function(exists){
             if (exists) {
               menu_template = path.join('themes',config.theme,'index');
             }
