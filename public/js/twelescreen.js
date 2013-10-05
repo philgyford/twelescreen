@@ -185,7 +185,7 @@ var twelescreen_client = {
    */
   show_greeting: function(next_tweet) {
     var that = this;
-    var idx = _.random(0, that.config.greetings.length - 1);
+    var idx = Math.floor(Math.random() * that.config.greetings.length)
     $('#greeting').html(that.config.greetings[idx]);
     that.show_slide('greeting');
     var ms = that.config.greeting_time / 5;
@@ -209,7 +209,8 @@ var twelescreen_client = {
     };
 
     if (this.slogan_queue.length == 0) {
-      this.slogan_queue = _.shuffle(this.config.slogans);
+      // shuffle() is below in this file...
+      this.slogan_queue = shuffle(this.config.slogans);
     };
     
     $('#slogan').html(this.slogan_queue.shift());
@@ -506,8 +507,29 @@ var twelescreen_client = {
   }
 };
 
+/**
+ * Handy exists() function for testing presence of an element.
+ */
 jQuery.fn.exists = function(){return jQuery(this).length>0;};  
 
+/**
+ * Return a randomised version of an array.
+ * http://stackoverflow.com/a/6274398/250962
+ */
+function shuffle(array) {
+  var counter = array.length, temp, index;
+  // While there are elements in the array
+  while (counter--) {
+    // Pick a random index
+    index = (Math.random() * counter) | 0;
+
+    // And swap the last element with it
+    temp = array[counter];
+    array[counter] = array[index];
+    array[index] = temp;
+  }
+  return array;
+}
 
 /*
  * jQuery queueFn - v0.7 - 9/05/2010
