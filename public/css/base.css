@@ -121,9 +121,9 @@ body {
   /* Hidden by default. Set it to 0 in a theme to have it display. */
   left: -5000px;
   background: none;
-	zoom: 1;
-	filter: alpha(opacity=4);
-	opacity: 0.04;
+  zoom: 1;
+  filter: alpha(opacity=4);
+  opacity: 0.04;
   pointer-events: none;
 }
 

@@ -92,7 +92,11 @@ var twelescreen_client = {
         google: {
           families: [this.config.font]
         },
-        active: function() { fonts.resolve(); }
+        active: function() { fonts.resolve(); },
+        inactive: function() {
+          console.log("WebFonts failed to load.");
+          fonts.done(init_callback);
+        }
       });
       (function() {
         var wf = document.createElement('script');
@@ -115,13 +119,36 @@ var twelescreen_client = {
   prepare_screen: function() {
     var that = this;
     that.size_screen();
-    $(window).resize(function() {
-      that.size_screen();
-    });
 
     if (this.config.burn_in_text) {
       $('#burn').html(this.config.burn_in_text);
     };
+
+
+    // We use this, below, to ensure that we only call the sizing methods after
+    // the window has finished resizing, not multiple times during the process.
+    // From http://stackoverflow.com/a/4298672/250962
+    var debouncer = function debouncer(func , timeout) {
+      var timeoutID, timeout = timeout || 200;
+      return function () {
+        var scope = this, args = arguments;
+        clearTimeout(timeoutID);
+        timeoutID = setTimeout(function() {
+          func.apply( scope, Array.prototype.slice.call(args) );
+        }, timeout);
+      };
+    };
+
+    // See, here:
+    $(window).resize(
+      debouncer(function(e) {
+        console.log('calling');
+        that.size_screen();
+        //$('.tweet_message_panel-text .tweet_message_panel_inner')each(function(idx){
+          //$(this).fitTextBlock();
+        //});
+      })
+    );
   },
 
   prepare_connection: function() {
@@ -313,10 +340,6 @@ var twelescreen_client = {
       );
     };
     this.size_slide('#tweet-'+tweet.id);
-    $('#' + id + ' .tweet_account').fitText(1.5);
-    // The minFontSize stops things going too small when the browser is small,
-    // and very portrait. Might need to adjust for, say phone screens.
-    $('#' + id + ' .tweet_message_panel-text .tweet_message_panel_inner').fitText(1.1, {minFontSize: 45});
   },
 
   size_screen: function() {
@@ -330,7 +353,8 @@ var twelescreen_client = {
 
     if ($('.tweet_account', $slide).exists()) {
       // It's a .slide-tweet.
-      
+      $('.tweet_account', $slide).fitText(1.5);
+
       // Leave space for the account stripe.
       var margin_top = Math.floor($('.tweet_account', $slide).height());
       var padding_top = Math.floor(margin_top / 8);
@@ -366,6 +390,7 @@ var twelescreen_client = {
         };
         $img.width(w).height(h); 
       };
+      $('.tweet_message_panel-text .tweet_message_panel_inner', $slide).fitTextBlock();
     };
   },
 
@@ -563,45 +588,12 @@ function shuffle(array) {
         }, options);
 
     return this.each(function(){
-
       // Store the object
       var $this = $(this);
 
       // Resizer() resizes items based on the object width divided by the compressor * 10
       var resizer = function () {
-
-        var font_size = Math.max(Math.min($this.width() / (compressor*10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize));
-
-        // For Twelescreen, we also save the font size in data-font-size, so that
-        // if we change it we have a record of what it was before.
-        $this.css('font-size', font_size).data('font-size', font_size);
-
-        // If this is a Twitter message, the content might be too long at the
-        // standard size. So we'll shrink it in a way that will hopefully make
-        // it fit the space available.
-        if ($this.hasClass('tweet_message_panel_inner')) {
-          if ($this.height() > $this.parent().height()) {
-            var new_font_size = (
-              // The original fitText-created size.
-              $this.data('font-size')
-               *
-              Math.pow(
-               // The area of the message 'window'
-               ($this.parent().height() * $this.parent().width())
-                /
-               // Divided by the larger area of the actual message
-               ($this.height() * $this.width()),
-               // To the power of 1/1. Er, 1.
-               (1/1)
-              )
-              // At one point we used 1/1.75 as an adjustment, but we're not
-              // needing that now. Keeping this here in case we need to tweak
-              // things in future. Rather trial and error...
-            );
-
-            $this.css('font-size', new_font_size);
-          };
-        };
+        $this.css('font-size', Math.max(Math.min($this.width() / (compressor*10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize)));
       };
 
       // Call once to set.
@@ -609,10 +601,55 @@ function shuffle(array) {
 
       // Call on resize. Opera debounces their resize by default.
       $(window).on('resize.fittext orientationchange.fittext', resizer);
-
     });
 
   };
 
 })( jQuery );
 
+
+/**
+ * FitTextBlock.
+ *
+ * Call .fitTextBlock() on an object that has no fixed height, and this will:
+ *  * Set its initial font size to the height of its parent block.
+ *  * If its own height is greater than that of its parent (ie, it overlaps)
+ *  * then reduce its font size to 90% and try again.
+ *  * Keep trying until the text fits.
+ * Not especially elegant, could maybe be better, but its jankiness is only
+ * really noticeable when the window is resized, which won't happen too often.
+ */
+(function( $ ){
+
+  $.fn.fitTextBlock = function() {
+  
+    return this.each(function() {
+      var $this = $(this);
+
+      var resizer = function() {
+        var font_size = $this.parent().height();
+
+        // We save the font size in data-font-size, so that if we change it we   
+        // have a record of what it was before.
+        $this.css('font-size', font_size).data('font-size', font_size);
+
+        // Keep reducing font size until it fits.
+        var reduce_font_size = function($el) {
+          var font_size = $el.data('font-size') * 0.9;
+          $el.css('font-size', font_size).data('font-size', font_size);
+
+          if ($el.height() > $el.parent().height()) {
+            reduce_font_size($el);
+          };
+        };
+
+        if ($this.height() > $this.parent().height()) {
+          reduce_font_size($this);
+        };
+      };
+
+      resizer();
+    }); 
+  };
+
+})( jQuery );
