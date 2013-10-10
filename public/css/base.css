@@ -176,7 +176,6 @@ body {
   }
   .tweet_message_panel-text .tweet_message_panel_inner {
     line-height: 1.2em;
-    word-wrap: break-word;
   }
   .tweet_message_panel-image .tweet_message_panel_inner {
     line-height: 1px;

@@ -614,6 +614,7 @@ function shuffle(array) {
  * Call .fitTextBlock() on an object that has no fixed height, and this will:
  *  * Set its initial font size to the height of its parent block.
  *  * If its own height is greater than that of its parent (ie, it overlaps)
+ *      (or its content is wider than its width, eg withlongunbrokenwords)
  *  * then reduce its font size to 90% and try again.
  *  * Keep trying until the text fits.
  * Not especially elegant, could maybe be better, but its jankiness is only
@@ -627,25 +628,18 @@ function shuffle(array) {
       var $this = $(this);
 
       var resizer = function() {
-        var font_size = $this.parent().height();
-
-        // We save the font size in data-font-size, so that if we change it we   
-        // have a record of what it was before.
-        $this.css('font-size', font_size).data('font-size', font_size);
-
         // Keep reducing font size until it fits.
-        var reduce_font_size = function($el) {
-          var font_size = $el.data('font-size') * 0.9;
+        var set_font_size = function($el, font_size) {
           $el.css('font-size', font_size).data('font-size', font_size);
 
-          if ($el.height() > $el.parent().height()) {
-            reduce_font_size($el);
+          if ($el.height() > $el.parent().height()
+              || $el[0].offsetWidth < $el[0].scrollWidth) {
+            set_font_size($el, font_size * 0.9);
           };
         };
 
-        if ($this.height() > $this.parent().height()) {
-          reduce_font_size($this);
-        };
+        set_font_size($this, $this.parent().height());
+
       };
 
       resizer();
