@@ -53,12 +53,6 @@ var twelescreen_client = {
    */
   current_tweet_id: '',
 
-
-
-// Move all the fonts stuff into a separate method.
-// Pass the function that's called after fonts.done() into it.
-// Call that method from both init_screen and init_method.
-
   /**
    * Call this to initialise everything.
    * page is either 'menu' or 'screen', depending on the type of page.
