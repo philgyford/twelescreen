@@ -202,19 +202,23 @@ module.exports = function(settings, twitter, io, _) {
     var shrunk_tweet = streamer.shrink_tweet(tweet);  
     // For each category this twitter account is associated with, add to its
     // cache.
-    settings.screen_name_to_category[tweet.user.screen_name].forEach(
-    function(category){
-      if (category in streamer.cache) {
-        streamer.cache[category].push(shrunk_tweet); 
-      } else {
-        streamer.cache[category] = [shrunk_tweet];
-      };
-      // Sort, in case things have got out of sync.
-      streamer.cache[category].sort(streamer.cache_sorter);
-      // Remove any superfluous items from start.
-      streamer.cache[category].splice(0,
-        (streamer.cache[category] - settings.categories[category].number_of_tweets));
-    });
+    var categories = settings.screen_name_to_category[tweet.user.screen_name];
+    if (categories) {
+      categories.forEach(
+        function(category){
+          if (category in streamer.cache) {
+            streamer.cache[category].push(shrunk_tweet); 
+          } else {
+            streamer.cache[category] = [shrunk_tweet];
+          };
+          // Sort, in case things have got out of sync.
+          streamer.cache[category].sort(streamer.cache_sorter);
+          // Remove any superfluous items from start.
+          streamer.cache[category].splice(0,
+            (streamer.cache[category] - settings.categories[category].number_of_tweets));
+        }
+      );
+    };
   };
 
 
