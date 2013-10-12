@@ -71,6 +71,8 @@ var twelescreen_client = {
         that.listen_for_tweets();
         that.start_rotation();
       };
+    } else {
+      this.prepare_menu();
     };
 
     this.prepare_fonts(init_callback);
@@ -110,6 +112,9 @@ var twelescreen_client = {
     fonts.done(init_callback);
   },
 
+  /**
+   * Prepares the 'screen' - the page showing tweets.
+   */
   prepare_screen: function() {
     var that = this;
     that.size_screen();
@@ -117,7 +122,6 @@ var twelescreen_client = {
     if (this.config.burn_in_text) {
       $('#burn').html(this.config.burn_in_text);
     };
-
 
     // We use this, below, to ensure that we only call the sizing methods after
     // the window has finished resizing, not multiple times during the process.
@@ -136,13 +140,33 @@ var twelescreen_client = {
     // See, here:
     $(window).resize(
       debouncer(function(e) {
-        console.log('calling');
         that.size_screen();
-        //$('.tweet_message_panel-text .tweet_message_panel_inner')each(function(idx){
-          //$(this).fitTextBlock();
-        //});
       })
     );
+  },
+
+  /**
+   * Prepares the 'menu' - the front page of categories.
+   */
+  prepare_menu: function() {
+    this.size_menu();
+    var that = this;
+    $(window).resize(function(){
+      that.size_menu()
+    });
+  },
+
+  /**
+   * A few things needed for sizing on the menu screen.
+   */
+  size_menu: function() {
+    if ($('.menu').exists()) {
+      if ($('.menu').height() <= $(window).height()) {
+        $('.menu').height($(window).height());
+      } else {
+        $('.menu').height('auto');
+      };
+    };
   },
 
   prepare_connection: function() {
@@ -174,11 +198,15 @@ var twelescreen_client = {
     });
   },
 
+  /**
+   * Once everything else is prepared, this kicks off the display of tweets.
+   */
   start_rotation: function() {
     if (this.auto_advance) {
       this.show_greeting();
     };
   },
+
 
   /**
    * Decides what to show next; a new, queued tweet, or something from the
@@ -246,13 +274,11 @@ var twelescreen_client = {
    * Show a tweet from the store of existing tweets.
    */
   show_stored_tweet: function() {
-    console.log('store index a: '+this.current_store_index)
     if (this.current_store_index == (this.tweet_store.length - 1)) {
       this.current_store_index = 0;
     } else {
       this.current_store_index++;
     };
-    console.log('store index b: '+this.current_store_index)
     this.display_tweet(this.tweet_store[this.current_store_index]);
   },
 

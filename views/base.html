@@ -11,7 +11,7 @@
   {/config.theme}
 </head>
 
-<body{?config.category_key} id="category-{config.category_key}"{/config.category_key}>
+<body class="page-{page}"{?config.category_key} id="category-{config.category_key}"{/config.category_key}>
 
 
   {+content}
@@ -21,7 +21,9 @@
 
   <script src="/components/jquery/jquery.min.js"></script>
 
-  <script src="http://ajax.googleapis.com/ajax/libs/webfont/1.4.10/webfont.js"></script>
+  {?config.font}
+    <script src="http://ajax.googleapis.com/ajax/libs/webfont/1.4.10/webfont.js"></script>
+  {/config.font}
 
   {@eq key=page value="screen"}
     <script src="/components/socket.io-client/dist/socket.io.min.js"></script>

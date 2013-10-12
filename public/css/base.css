@@ -56,7 +56,6 @@ table {
 
 body {
   text-rendering: optimizeLegibility;
-  overflow: hidden;
 }
 
 /* Centering styles from http://infrequently.org/2009/08/css-3-progress/ */
@@ -98,6 +97,81 @@ body {
   -webkit-box-pack: center;
   -moz-box-pack: center;
   box-pack: center;
+}
+
+/*************************************************
+ * Styles for the index page.
+ */
+
+.menu-header {
+  width: 100%;
+  height: 15%;
+  text-align: center;
+  line-height: 1em;
+}
+  .menu-header-inner {
+    padding: 0.2em 10%; 
+  }
+.menu-body {
+  width: 100%;
+  height: 78%;
+}
+  .menu-body-inner {
+    padding-bottom: 13%;
+  }
+  .categories {
+    width: 96%;
+    margin: 0 auto; 
+  }
+  .category {
+    margin: 0.5em 2%;
+    display: inline-block;
+    vertical-align: top;
+  }
+    .category a {
+      display: block;
+      padding: 0.5em 0.7em 0.7em 0.7em;
+    }
+      .category-title {
+        display: block;
+      }
+
+.menu-footer {
+  width: 100%;
+  height: 5%;
+  text-align: center;
+} 
+  .menu-footer-inner {
+    width: 90%;
+    margin: 0.5em auto;
+    padding: 0.2em 0;
+  }
+
+/* One column. */
+@media (max-width: 750px) {
+    .category {
+      width: 96%;
+    }
+}
+/* Two columns. */
+@media (min-width: 751px) and (max-width: 1300px) {
+    .category {
+      width: 46%;
+    }
+}
+/* Three columns. */
+@media (min-width: 1301px) {
+    .category {
+      width: 29%; 
+    }
+}
+
+/*************************************************
+ * Styles for the screen page.
+ */
+
+.page-screen {
+  overflow: hidden;
 }
 
 .slide {

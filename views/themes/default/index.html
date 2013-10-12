@@ -2,27 +2,34 @@
 
 {<content}
 
-  <div class="page">
-    <header class="page-header">
-      <div class="page-header-inner">
-        <h1>Select Twelescreen</h1>
+  <div class="menu">
+    <header class="menu-header">
+      <div class="menu-header-inner">
+        <h1>Twelescreen</h1>
       </div>
     </header>
 
-    <section class="page-body vbox center">
-      <div class="page-body-inner">
-        <ul id="categories">
+    <section class="menu-body vbox center">
+      <div class="menu-body-inner">
+        <ul class="categories">
           {#config.categories_list}
             {?show_on_menu}
-              <li id="category-{key}"><a href="/{key}/">{title}</a></li>
+            <li id="category-{key}" class="category">
+              <a href="/{key}/">
+                <span class="category-title">{title} and Some more</span>
+                <span class="category-screennames">{#screen_names}
+                  <span class="category-screenname">@{.}{@sep}, {/sep}</span>{/screen_names}</span>
+              </a>
+            </li>
             {/show_on_menu}
           {/config.categories_list}
         </ul>
       </div>
-    </section> <!-- .page-body -->
+    </section> <!-- .menu-body -->
 
-    <footer class="page-footer">
-      <div class="page-footer-inner">
+    <footer class="menu-footer">
+      <div class="menu-footer-inner">
+        <a href="https://github.com/philgyford/twelescreen">More about Twelescreen</a>
       </div>
     </footer>
   </div> <!-- .page -->
