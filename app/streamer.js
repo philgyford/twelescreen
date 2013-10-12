@@ -125,8 +125,9 @@ module.exports = function(settings, twitter, io, _) {
       // We have a connection. Now watch the 'tweets' event for incoming tweets.
       stream.on('data', function(tweet) {
 
-        // Make sure it was a valid tweet, and also not a reply.
-        if (tweet.text !== undefined && tweet.in_reply_to_user_id === null) {
+        // Make sure it was a valid tweet, and also not a reply, and also
+        // not a retweet.
+        if (tweet.text !== undefined && tweet.in_reply_to_user_id === null && tweet.retweeted_status === undefined) {
           streamer.add_tweet_to_cache(tweet);
           // Get all the categories this Tweet's account is in
           // and send the tweet to all clients in that category's sockets 'room'.
@@ -200,11 +201,11 @@ module.exports = function(settings, twitter, io, _) {
    */
   streamer.add_tweet_to_cache = function(tweet) {
     var shrunk_tweet = streamer.shrink_tweet(tweet);  
-    // For each category this twitter account is associated with, add to its
-    // cache.
-    var categories = settings.screen_name_to_category[tweet.user.screen_name];
-    if (categories) {
-      categories.forEach(
+    // We want to ignore any retweets of the the accounts we follow:
+    if (tweet.retweeted_status === undefined) {
+      // For each category this twitter account is associated with, add to its
+      // cache.
+      settings.screen_name_to_category[tweet.user.screen_name].forEach(
         function(category){
           if (category in streamer.cache) {
             streamer.cache[category].push(shrunk_tweet); 
