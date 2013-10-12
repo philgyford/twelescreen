@@ -246,11 +246,13 @@ var twelescreen_client = {
    * Show a tweet from the store of existing tweets.
    */
   show_stored_tweet: function() {
-    if (this.current_store_index == 0) {
-      this.current_store_index = this.tweet_store.length - 1;
+    console.log('store index a: '+this.current_store_index)
+    if (this.current_store_index == (this.tweet_store.length - 1)) {
+      this.current_store_index = 0;
     } else {
-      this.current_store_index--;
+      this.current_store_index++;
     };
+    console.log('store index b: '+this.current_store_index)
     this.display_tweet(this.tweet_store[this.current_store_index]);
   },
 
@@ -503,16 +505,18 @@ var twelescreen_client = {
     $('#'+id).remove();
   },
 
+  // The store of existing tweets that we rotate through.
   add_to_tweet_store: function(tweet) {
     this.tweet_store.push(tweet);
     if (this.tweet_store.length > this.config.number_of_tweets) {
       var old_tweet = this.tweet_store.shift();
       $('#tweet-'+old_tweet.id).remove();
     };
-    // So that we'll show this tweet next.
+    // This means that we'll loop back round and show tweet index 0 next.
     this.current_store_index = this.tweet_store.length - 1;
   },
 
+  // The queue of new tweets to show.
   add_to_tweet_queue: function(tweet) {
     this.tweet_queue.push(tweet);
   },
