@@ -28,10 +28,10 @@ body {
       background-position: 50% 20px;
       background-repeat: no-repeat;
     }
-    #category-us a {
+    .menu #category-us a {
       background-image: url(img/us.png);
     }
-    #category-uk a {
+    .menu #category-uk a {
       background-image: url(img/uk.png);
     }
     .category a:hover {
@@ -64,6 +64,10 @@ body {
 #greeting.is-inverted {
   background: #222;
   color: #EDED39;
+}
+
+#slogan {
+  background: #222;
 }
 
 #burn {

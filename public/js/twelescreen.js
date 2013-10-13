@@ -221,7 +221,9 @@ var twelescreen_client = {
         // We have a new tweet waiting to be shown.
         this.show_new_tweet();
       } else {
-        if (this.config.slogans.length > 0 && (Math.random() * 100) < this.config.chance_of_slogan && ! $('#slogan').is(':visible')) {
+        if (this.config.slogans.length > 0
+            && (Math.random() * 100) < this.config.chance_of_slogan
+            && $('#slogan').is(':offscreen')) {
           this.show_slogan();
         } else {
           this.show_stored_tweet();
@@ -593,6 +595,17 @@ function shuffle(array) {
  */
 (function($){$.fn.queueFn=function(c){var b,d,a=Array.prototype.slice.call(arguments,1);if(typeof c==="boolean"){if(c){d=this;b=this.length}c=a.shift()}c=$.isFunction(c)?c:$.fn[c];return this.queue(function(){!--b&&c.apply(d||this,a);$.dequeue(this)})}})(jQuery);
 
+/**
+ * Use like $('.selector').is(':offscreen');
+ * From http://stackoverflow.com/a/8897628/250962 
+ */
+jQuery.expr.filters.offscreen = function(el) {
+  return (
+    (el.offsetLeft + el.offsetWidth) < 0 
+    || (el.offsetTop + el.offsetHeight) < 0
+    || (el.offsetLeft > window.innerWidth || el.offsetTop > window.innerHeight)
+  );
+};
 
 /*!
 * FitText.js 1.1 (PLUS custom vertical re-sizing for Twelescreen's messages)
