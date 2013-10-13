@@ -56,6 +56,8 @@ table {
 
 body {
   text-rendering: optimizeLegibility;
+  background: #fff;
+  color: #000;
 }
 
 /* Centering styles from http://infrequently.org/2009/08/css-3-progress/ */
@@ -107,7 +109,13 @@ body {
   width: 100%;
   height: 15%;
   text-align: center;
+  font-size: 5em;
   line-height: 1em;
+}
+@media (max-width: 600px) {
+  .menu-header {
+    font-size: 3em;
+  }
 }
   .menu-header-inner {
     padding: 0.2em 10%; 
@@ -134,12 +142,20 @@ body {
     }
       .category-title {
         display: block;
+        font-size: 2em;
+        line-height: 1.2em;
+        margin-bottom: 0.2em;
+      }
+      .category-screennames {
+        font-size: 1.2em;
+        line-height: 1.4em;
       }
 
 .menu-footer {
   width: 100%;
   height: 5%;
   text-align: center;
+  font-size: 1.2em;
 } 
   .menu-footer-inner {
     width: 90%;
@@ -181,6 +197,8 @@ body {
   z-index: 100;
   /* Reset using fitText() in JS. */
   font-size: 70px;
+  /* Should have a background so that transitions work nicely. */
+  background: #fff;
 }
 .is-slide-on {
   left: 0;

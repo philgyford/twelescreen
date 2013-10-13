@@ -12,7 +12,6 @@ body {
   text-decoration: none;
 }
 .menu-header {
-  font-size: 5em;
   color: #aaa;
 }
 
@@ -27,18 +26,12 @@ body {
       background: #555;
     }
       .category-title {
-        font-size: 2em;
-        line-height: 1.2em;
-        margin-bottom: 0.2em;
         color: #eee;
       }
       .category-screennames {
-        font-size: 1.2em;
-        line-height: 1.4em;
         color: #aaa;
       } 
 .menu-footer {
-  font-size: 1.2em;
 }
   .menu-footer a {
     color: #eee;
@@ -48,11 +41,6 @@ body {
     color: #fff;
   }
 
-@media (max-width: 600px) {
-  .page-header {
-    font-size: 3em;
-  }
-}
 /*************************************************
  * Styles for the screen page.
  */
