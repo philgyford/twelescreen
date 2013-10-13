@@ -37,8 +37,7 @@
       twelescreen_client.init(
         '{page}',
         {
-          {@eq key=page value="screen"}
-            font: '{config.font}',
+          font: '{config.font}'{@eq key=page value="screen"},
             category_key: '{config.category_key}',
             title: "{config.title}",
             screen_names: [{#config.screen_names}'{.}',{/config.screen_names}],
@@ -50,8 +49,9 @@
             greeting_time: {config.greeting_time},
             greetings: [{#config.greetings}"{.|s}",{/config.greetings}],
             slogans: [{#config.slogans}"{.|s}",{/config.slogans}]
-        {/eq}
-      });
+          {/eq}
+        }
+      );
 
     });
   </script>

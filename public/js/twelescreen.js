@@ -61,10 +61,10 @@ var twelescreen_client = {
   init: function(page, spec) {
     $.extend(this.config, spec);
 
-    var init_callback = function(){};
+    var init_callback,
+        that = this;
 
     if (page == 'screen') {
-      var that = this;
       init_callback = function(){
         that.prepare_screen();
         that.prepare_connection();
@@ -72,7 +72,9 @@ var twelescreen_client = {
         that.start_rotation();
       };
     } else {
-      this.prepare_menu();
+      init_callback = function(){
+        that.prepare_menu();
+      };
     };
 
     this.prepare_fonts(init_callback);
@@ -91,8 +93,9 @@ var twelescreen_client = {
         active: function() { fonts.resolve(); },
         inactive: function() {
           console.log("WebFonts failed to load.");
-          fonts.done(init_callback);
-        }
+          fonts.resolve();
+        },
+        timeout: 3000
       });
       (function() {
         var wf = document.createElement('script');
@@ -116,8 +119,7 @@ var twelescreen_client = {
    * Prepares the 'screen' - the page showing tweets.
    */
   prepare_screen: function() {
-    var that = this;
-    that.size_screen();
+    this.size_screen();
 
     if (this.config.burn_in_text) {
       $('#burn').html(this.config.burn_in_text);
@@ -138,6 +140,7 @@ var twelescreen_client = {
     };
 
     // See, here:
+    var that = this;
     $(window).resize(
       debouncer(function(e) {
         that.size_screen();

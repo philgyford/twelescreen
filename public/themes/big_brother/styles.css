@@ -1,8 +1,57 @@
 body {
   font-family: 'Russo One', Helvetica, Arial, sans-serif;
-  background: #000;
+  background: #CC2211;
   color: #FCFCF2;
 }
+
+/*************************************************
+ * Styles for the index page.
+ */
+.menu a {
+  color: #FCFCF2;
+  text-decoration: none;
+}
+.menu-header {
+}
+  .menu-header-inner {
+    background: #222;
+  }
+
+.menu-body {
+}
+  .category {
+  background: #222;
+  }
+    .category a {
+      text-align: center;
+      padding-top: 140px;
+      background-position: 50% 20px;
+      background-repeat: no-repeat;
+    }
+    #category-us a {
+      background-image: url(img/us.png);
+    }
+    #category-uk a {
+      background-image: url(img/uk.png);
+    }
+    .category a:hover {
+    }
+      .category-title {
+      }
+      .category-screennames {
+        display: none;
+      } 
+.menu-footer {
+  background: #222;
+}
+  .menu-footer a {
+  }
+  .menu-footer a:hover {
+  }
+
+/*************************************************
+ * Styles for the screen page.
+ */
 
 .slide {
   background: #CC2211;
