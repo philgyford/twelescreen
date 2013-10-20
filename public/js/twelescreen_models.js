@@ -336,7 +336,7 @@ twelescreen.models.tweet_slide = function(spec) {
       ).addClass('slide')
     );
     if ('image' in tweet) {
-      $('#'+id+' .tweet_message').append(
+      $('.tweet_message', $('#'+obj.get_id())).append(
         $('<div/>').addClass('tweet_message_panel tweet_message_panel-image vbox center').append(
           $('<div/>').addClass('tweet_message_panel_inner').append(
             $('<img/>').attr('src', tweet.image.url).data({
@@ -357,10 +357,15 @@ twelescreen.models.tweet_slide = function(spec) {
 
     $to = $('#'+obj.get_id());
 
+    // If this tweet has an image, and has been seen before, the text panel
+    // will currently have 0 opacity. So reset it before showing.
+    $('.tweet_message_panel-text', $to).css('opacity', 1);
+
     var from_slide = twelescreen.controller.current_slide
     if (from_slide) {
       $from = $('#'+from_slide.get_id());
 
+      // We're moving from the greeting or slogan to this tweet slide.
       if (['greeting_title', 'slogan_title'].indexOf(from_slide.get_type()) > -1) {
         $to.addClass('is-slide-on').css({zIndex: 200});
         $from.removeClass('is-slide-on');
@@ -385,7 +390,24 @@ twelescreen.models.tweet_slide = function(spec) {
 
     obj.play().done(function() {
       twelescreen.controller.current_slide = obj;
-      deferred.resolve();
+
+      setTimeout(function(){
+        if ($('.tweet_message_panel-image', $to).exists()) {
+          // Hide text to reveal image, wait, then move on.
+          $('.tweet_message_panel-text', $to).animate(
+            {'opacity': 0},
+            obj.get_transition_time(),
+            function(){
+              setTimeout(function(){
+                deferred.resolve();
+              }, obj.get_duration());
+            }
+          );
+        } else {
+          // No image.
+          deferred.resolve();
+        };
+      }, obj.get_duration());
     });
 
     return deferred.promise();

@@ -76,6 +76,8 @@ twelescreen.controller = {
   /**
    * Should generally always be set to true.
    * Useful to be able to turn this off for debugging.
+   * When set to false you can call twelescreen.controller.show_next_item()
+   * in the console to manually advance to whatever slide is next.
    */
   auto_advance: true,
 
@@ -305,7 +307,6 @@ twelescreen.controller = {
   show_next_item: function() {
     // No slides are showing (except maybe #burn), so must be our first time here.
     if ( ! this.current_slide) {
-      console.log('A first');
       var that = this;
       this.greeting_slide.update_text(this.new_greeting_text());
       this.greeting_slide.transition().done(function(){
@@ -315,7 +316,6 @@ twelescreen.controller = {
     // We have a NEW tweet waiting to be shown:
     } else if (this.tweet_queue.length > 0) {
       // Show the greeting first...
-      console.log('B new tweet');
       var that = this;
       this.greeting_slide.update_text(this.new_greeting_text());
       this.greeting_slide.transition().done(function(){
@@ -335,7 +335,6 @@ twelescreen.controller = {
           && (Math.random() * 100) < this.config.chance_of_slogan
           && $('#greeting').is(':offscreen')
           && $('#slogan').is(':offscreen')) {
-      console.log('C slogan');
       var that = this;
       this.slogan_slide.update_text(this.new_slogan_text());
       this.slogan_slide.transition().done(function(){
@@ -350,13 +349,7 @@ twelescreen.controller = {
       } else {
         this.current_store_index++;
       };
-      console.log('D stored tweet');
       var tweet_slide = this.tweet_slides[this.current_store_index];
-      // If this tweet has an image, and has been seen before, the text panel
-      // will currently have 0 opacity. So reset it before showing.
-      // TODO: Can we put this in the tweet_slide somewhere? At start of
-      // transition?
-      $(tweet_slide.get_id()+' .tweet_message_panel-text').css('opacity', 1);
       var that = this;
       tweet_slide.transition().done(function(){
         that.next_tick();
@@ -364,7 +357,6 @@ twelescreen.controller = {
 
     // No tweets to display!
     } else {
-      console.log('E No tweets');
       this.show_alert('tweets-alert', 'No tweets found');
       var that = this;
       setTimeout(function(){
