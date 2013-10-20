@@ -47,6 +47,11 @@ twelescreen_client.controller = {
   tweet_slides: [],
 
   /**
+   * Will be a burn_title_slide object.
+   */
+  burn_slide: null,
+
+  /**
    * Will be a greeting_title_slide object.
    */
   greeting_slide: null,
@@ -141,9 +146,13 @@ twelescreen_client.controller = {
    * Prepares the 'screen' - the page showing tweets.
    */
   prepare_screen: function() {
-    // TODO: Make into an object.
+
     if (this.config.burn_in_text) {
-      $('#burn').html(this.config.burn_in_text);
+      this.burn_slide = twelescreen_client.models.burn_title_slide({
+        id: 'burn',
+        text: this.config.burn_in_text
+      });
+      this.burn_slide.create_element();
     };
 
     this.greeting_slide = twelescreen_client.models.greeting_title_slide({
@@ -270,8 +279,6 @@ twelescreen_client.controller = {
   },
 
   show_next_item: function() {
-    // TODO: Move this kind of thing into the objects?
-    //    that.current_slide = that.slogan_slide;
 
     // No slides are showing (except maybe #burn), so must be our first time here.
     if ( ! this.current_slide) {

@@ -50,9 +50,25 @@ twelescreen_client.models.base = function(spec) {
 };
 
 
-/**
- * The base slide class.
+/**********************************************************************
+ * BASE SLIDE CLASS.
+ *
  * Don't use directly; inherit for specific types of slide.
+ * They should all be created something like:
+ *
+ *   var slide = twelescreen_client.models.slide({
+ *     id: 'foo',
+ *     text: 'Hello there',
+ *     duration: 3000
+ *   });
+ *
+ *   // Make the HTML element for it and insert into DOM:
+ *   slide.create_element();
+ *   
+ *   // To make the slide appear:
+ *   slide.transition().done(function(){
+ *     // Transition's finished, do something next.
+ *   });
  */
 twelescreen_client.models.slide = function(spec) {
 	var obj = twelescreen_client.models.base(spec);
@@ -67,6 +83,7 @@ twelescreen_client.models.slide = function(spec) {
     $('body').append(
       $('<div/>').attr('id', obj.get_id()).addClass('slide')
     );
+    // All child classes' create_element() methods should also do this:
     obj.resize();
   };
 
@@ -132,7 +149,8 @@ twelescreen_client.models.slide = function(spec) {
 };
 
 
-/**
+/**********************************************************************
+ * TITLE SLIDE.
  * Full-screen, single piece of text.
  * Parent class of greeting_title_slide and slogan_title_slide.
  */
@@ -149,6 +167,9 @@ twelescreen_client.models.title_slide = function(spec) {
     $('body').append(
       $('<div/>').attr('id', obj.get_id()).addClass('slide slide-title vbox center')
     );
+    if (obj.get_text()) {
+      obj.update_elements_text();
+    };
     obj.resize();
   };
 
@@ -157,7 +178,11 @@ twelescreen_client.models.title_slide = function(spec) {
    */
   obj.update_text = function(text) {
     obj.set_text(text);
-    $('#'+obj.get_id()).html(text);
+    obj.update_elements_text();
+  };
+
+  obj.update_elements_text = function() {
+    $('#'+obj.get_id()).html( obj.get_text() );
   };
 
   obj.transition = function() {
@@ -197,7 +222,8 @@ twelescreen_client.models.title_slide = function(spec) {
 };
 
 
-/**
+/**********************************************************************
+ * GREETING TITLE SLIDE.
  * The 'greeting' that's shown initially, and before each brand new tweet.
  */
 twelescreen_client.models.greeting_title_slide = function(spec) {
@@ -230,8 +256,31 @@ twelescreen_client.models.greeting_title_slide = function(spec) {
   return obj;
 };
 
+/**********************************************************************
+ * BURN TITLE SLIDE.
+ * The (optional) "slide" which contains translucent text.
+ * If present, it is always visible.
+ */
+twelescreen_client.models.burn_title_slide = function(spec) {
+	var obj = twelescreen_client.models.title_slide(spec);
 
-/**
+	obj.object_vars = obj.object_vars.concat( [] );
+
+	obj.construct();
+
+  obj.set_type('burn_title');
+
+  // Uses title_slide's create_element().
+
+  // This slide doesn't do anything, so let's just get rid of these:
+  obj.transtion = function() {};
+  obj.play = function() {};
+
+  return obj;
+};
+
+/**********************************************************************
+ * SLOGAN TITLE SLIDE.
  * The random slogans that are periodically displayed.
  */
 twelescreen_client.models.slogan_title_slide = function(spec) {
@@ -253,6 +302,10 @@ twelescreen_client.models.slogan_title_slide = function(spec) {
 };
 
 
+/**********************************************************************
+ * TWEET SLIDE.
+ * Each one holding a single tweet (and its image if it has one).
+ */
 twelescreen_client.models.tweet_slide = function(spec) {
 	var obj = twelescreen_client.models.slide(spec);
 
