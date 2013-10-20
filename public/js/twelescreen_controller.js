@@ -1,9 +1,9 @@
-var twelescreen_client = {
+var twelescreen = {
   controller: {},
   models: {}
 };
 
-twelescreen_client.controller = {
+twelescreen.controller = {
 
   config: {
     // May be overridden by passed-in config settings:
@@ -148,14 +148,14 @@ twelescreen_client.controller = {
   prepare_screen: function() {
 
     if (this.config.burn_in_text) {
-      this.burn_slide = twelescreen_client.models.burn_title_slide({
+      this.burn_slide = twelescreen.models.burn_title_slide({
         id: 'burn',
         text: this.config.burn_in_text
       });
       this.burn_slide.create_element();
     };
 
-    this.greeting_slide = twelescreen_client.models.greeting_title_slide({
+    this.greeting_slide = twelescreen.models.greeting_title_slide({
       id: 'greeting',
       text: '',
       duration: this.config.greeting_time
@@ -163,7 +163,7 @@ twelescreen_client.controller = {
     this.greeting_slide.create_element();
 
     if (this.config.slogans.length > 0) {
-      this.slogan_slide = twelescreen_client.models.slogan_title_slide({
+      this.slogan_slide = twelescreen.models.slogan_title_slide({
         id: 'slogan',
         text: '',
         duration: this.config.time_per_slide
@@ -699,7 +699,7 @@ twelescreen_client.controller = {
   add_to_tweet_store: function(tweet) {
     // TODO: Get rid of tweet_store and just use tweet_slides ?
     // Make the new slide:
-    var new_tweet_slide = twelescreen_client.models.tweet_slide({
+    var new_tweet_slide = twelescreen.models.tweet_slide({
       id: 'tweet-'+tweet.id,
       tweet: tweet,
       duration: this.config.time_per_slide,

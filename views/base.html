@@ -29,13 +29,13 @@
     <script src="/components/socket.io-client/dist/socket.io.min.js"></script>
   {/eq}
 
-  <script src="/js/twelescreen_client_controller.js"></script>
-  <script src="/js/twelescreen_client_models.js"></script>
+  <script src="/js/twelescreen_controller.js"></script>
+  <script src="/js/twelescreen_models.js"></script>
 
   <script>
     $(document).ready(function() {
 
-      twelescreen_client.controller.init(
+      twelescreen.controller.init(
         '{page}',
         {
           font: '{config.font}'{@eq key=page value="screen"},

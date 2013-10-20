@@ -1,12 +1,12 @@
 /**
  * A base model class. Inherit from this; don't use directly. eg:
  * 
- *   twelescreen_client.models.slide = function(spec) {
+ *   twelescreen.models.slide = function(spec) {
  *     // Add any custom variables to the spec array.
  *     spec.foo = 'bibble';
  *
  *     // Get the parent object.
- *     var obj = twelescreen_client.models.base(spec);
+ *     var obj = twelescreen.models.base(spec);
  *
  *     // List any object variables
  *     obj.object_vars = obj.object_vars.concat(
@@ -20,13 +20,13 @@
  *
  * Then, do something like this to get an object, which will have getter/setters:
  *
- *   var slide = twelescreen_client.models.slide({
+ *   var slide = twelescreen.models.slide({
  *     id: 'my-css-id', text: 'Hello world'
  *   });
  *   console.log( slide.get_text() );
  *   slide.set_text('Goodbye world');
  */
-twelescreen_client.models.base = function(spec) {
+twelescreen.models.base = function(spec) {
   var obj = {};
 
   obj.object_vars = [];
@@ -56,7 +56,7 @@ twelescreen_client.models.base = function(spec) {
  * Don't use directly; inherit for specific types of slide.
  * They should all be created something like:
  *
- *   var slide = twelescreen_client.models.slide({
+ *   var slide = twelescreen.models.slide({
  *     id: 'foo',
  *     text: 'Hello there',
  *     duration: 3000
@@ -70,8 +70,8 @@ twelescreen_client.models.base = function(spec) {
  *     // Transition's finished, do something next.
  *   });
  */
-twelescreen_client.models.slide = function(spec) {
-	var obj = twelescreen_client.models.base(spec);
+twelescreen.models.slide = function(spec) {
+	var obj = twelescreen.models.base(spec);
 
 	obj.object_vars = obj.object_vars.concat( ['id', 'type', 'duration'] );
 
@@ -95,13 +95,13 @@ twelescreen_client.models.slide = function(spec) {
     var deferred = $.Deferred();
 
     $('#'+obj.get_id()).show();
-    var from_slide = twelescreen_client.controller.current_slide 
+    var from_slide = twelescreen.controller.current_slide 
     if (from_slide) {
       $('#'+from_slide.get_id()).hide();
     };
     
     obj.play().done(function() {
-      twelescreen_client.controller.current_slide = obj;
+      twelescreen.controller.current_slide = obj;
       deferred.resolve();
     });
 
@@ -154,8 +154,8 @@ twelescreen_client.models.slide = function(spec) {
  * Full-screen, single piece of text.
  * Parent class of greeting_title_slide and slogan_title_slide.
  */
-twelescreen_client.models.title_slide = function(spec) {
-	var obj = twelescreen_client.models.slide(spec);
+twelescreen.models.title_slide = function(spec) {
+	var obj = twelescreen.models.slide(spec);
 
 	obj.object_vars = obj.object_vars.concat( ['text'] );
 
@@ -190,7 +190,7 @@ twelescreen_client.models.title_slide = function(spec) {
 
     $('#'+obj.get_id()).addClass('is-slide-on');
 
-    var from_slide = twelescreen_client.controller.current_slide
+    var from_slide = twelescreen.controller.current_slide
     if (from_slide) {
       if (from_slide.get_type() == 'tweet') {
         $('#'+from_slide.get_id()).removeClass('is-slide-on').css('z-index', 100);
@@ -201,7 +201,7 @@ twelescreen_client.models.title_slide = function(spec) {
     };
 
     obj.play().done(function() {
-      twelescreen_client.controller.current_slide = obj;
+      twelescreen.controller.current_slide = obj;
       deferred.resolve();
     });
 
@@ -226,8 +226,8 @@ twelescreen_client.models.title_slide = function(spec) {
  * GREETING TITLE SLIDE.
  * The 'greeting' that's shown initially, and before each brand new tweet.
  */
-twelescreen_client.models.greeting_title_slide = function(spec) {
-	var obj = twelescreen_client.models.title_slide(spec);
+twelescreen.models.greeting_title_slide = function(spec) {
+	var obj = twelescreen.models.title_slide(spec);
 
 	obj.object_vars = obj.object_vars.concat( [] );
 
@@ -261,8 +261,8 @@ twelescreen_client.models.greeting_title_slide = function(spec) {
  * The (optional) "slide" which contains translucent text.
  * If present, it is always visible.
  */
-twelescreen_client.models.burn_title_slide = function(spec) {
-	var obj = twelescreen_client.models.title_slide(spec);
+twelescreen.models.burn_title_slide = function(spec) {
+	var obj = twelescreen.models.title_slide(spec);
 
 	obj.object_vars = obj.object_vars.concat( [] );
 
@@ -283,8 +283,8 @@ twelescreen_client.models.burn_title_slide = function(spec) {
  * SLOGAN TITLE SLIDE.
  * The random slogans that are periodically displayed.
  */
-twelescreen_client.models.slogan_title_slide = function(spec) {
-	var obj = twelescreen_client.models.title_slide(spec);
+twelescreen.models.slogan_title_slide = function(spec) {
+	var obj = twelescreen.models.title_slide(spec);
 
 	obj.object_vars = obj.object_vars.concat( [] );
 
@@ -306,8 +306,8 @@ twelescreen_client.models.slogan_title_slide = function(spec) {
  * TWEET SLIDE.
  * Each one holding a single tweet (and its image if it has one).
  */
-twelescreen_client.models.tweet_slide = function(spec) {
-	var obj = twelescreen_client.models.slide(spec);
+twelescreen.models.tweet_slide = function(spec) {
+	var obj = twelescreen.models.slide(spec);
 
   // 'tweet' will be an object with data about the tweet.
   // Keys like 'user', 'text', 'id'.
@@ -357,7 +357,7 @@ twelescreen_client.models.tweet_slide = function(spec) {
 
     $to = $('#'+obj.get_id());
 
-    var from_slide = twelescreen_client.controller.current_slide
+    var from_slide = twelescreen.controller.current_slide
     if (from_slide) {
       $from = $('#'+from_slide.get_id());
 
@@ -384,7 +384,7 @@ twelescreen_client.models.tweet_slide = function(spec) {
     };
 
     obj.play().done(function() {
-      twelescreen_client.controller.current_slide = obj;
+      twelescreen.controller.current_slide = obj;
       deferred.resolve();
     });
 
