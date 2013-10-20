@@ -62,6 +62,12 @@ twelescreen.controller = {
   slogan_slide: null,
 
   /**
+   * We put any greetings in here, in random order, and cycle through them.
+   * It's then refilled when empty.
+   */
+  greeting_queue: [],
+
+  /**
    * We put any slogans in here, in random order, and cycle through them.
    * It's then refilled when empty.
    */
@@ -264,8 +270,11 @@ twelescreen.controller = {
    * Return's whatever random greeting is next to be shown.
    */
   new_greeting_text: function() {
-    var idx = Math.floor(Math.random() * this.config.greetings.length);
-    return this.config.greetings[idx];
+    if (this.greeting_queue.length == 0) {
+      // shuffle() is below in this file...
+      this.greeting_queue = shuffle(this.config.greetings);
+    };
+    return this.greeting_queue.shift();
   },
 
   /**
