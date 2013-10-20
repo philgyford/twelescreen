@@ -291,7 +291,7 @@ twelescreen_client.controller = {
       this.greeting_slide.transition().done(function(){
         // ...then make and show the new tweet slide.
         that.add_to_tweet_store(that.tweet_queue.shift());
-        var tweet_slide = that.tweet_slides[this.current_store_index];
+        var tweet_slide = that.tweet_slides[that.current_store_index];
         tweet_slide.transition().done(function(){
           that.next_tick();
         });
@@ -690,6 +690,7 @@ twelescreen_client.controller = {
 
   // The store of existing tweets that we rotate through.
   add_to_tweet_store: function(tweet) {
+    // TODO: Get rid of tweet_store and just use tweet_slides ?
     // Make the new slide:
     var new_tweet_slide = twelescreen_client.models.tweet_slide({
       id: 'tweet-'+tweet.id,
@@ -698,7 +699,6 @@ twelescreen_client.controller = {
       transition_time: this.config.slide_transition_time
     });
     new_tweet_slide.create_element();
-    new_tweet_slide.resize();
     this.tweet_slides.push(new_tweet_slide);
 
     this.tweet_store.push(tweet);
