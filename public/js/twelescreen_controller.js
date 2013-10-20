@@ -218,6 +218,9 @@ twelescreen.controller = {
     };
   },
 
+  /**
+   * Prepare the socket connection to the back-end.
+   */
   prepare_connection: function() {
     var that = this;
     that.socket = io.connect(window.location.hostname);
@@ -257,29 +260,40 @@ twelescreen.controller = {
     });
   },
 
+  /**
+   * Return's whatever random greeting is next to be shown.
+   */
   new_greeting_text: function() {
     var idx = Math.floor(Math.random() * this.config.greetings.length);
     return this.config.greetings[idx];
   },
 
+  /**
+   * Return's whatever random slogan is next to be shown.
+   */
   new_slogan_text: function() {
     if (this.slogan_queue.length == 0) {
       // shuffle() is below in this file...
       this.slogan_queue = shuffle(this.config.slogans);
     };
-    
     return this.slogan_queue.shift();
   },
 
+  /**
+   * To move on to the next item, assuming we're auto-advancing.
+   */
   next_tick: function() {
-    //this.auto_advance = false;
     if (this.auto_advance) {
       this.show_next_item();
     };
   },
 
+  /**
+   * Show whatever slide's next.
+   * If auto_advance is false, calling this from the console will display
+   * whatever's next.
+   */
   show_next_item: function() {
-
     // No slides are showing (except maybe #burn), so must be our first time here.
     if ( ! this.current_slide) {
       console.log('A first');
@@ -350,178 +364,10 @@ twelescreen.controller = {
     };
   },
 
-  prepare_next_new_tweet_slide: function() {
-    // TODO
-    // Get next tweet from queue.
-    // Add to store (which returns slide).
-
-    return slide;
-  },
-
-  //make_tweet_slide: function(tweet) {
-
-    //return slide;
-  //},
-
-
-  /**
-   * Decides what to show next; a new, queued tweet, or something from the
-   * store. Or maybe a random slogan.
-   */
-  //show_next_item: function() {
-    //if (this.auto_advance) {
-      //if (this.tweet_queue.length > 0) {
-        //// We have a new tweet waiting to be shown.
-        //this.show_new_tweet();
-      //} else {
-        //if (this.config.slogans.length > 0
-            //&& (Math.random() * 100) < this.config.chance_of_slogan
-            //&& $('#slogan').is(':offscreen')) {
-          //this.show_slogan();
-        //} else {
-          //this.show_stored_tweet();
-        //};
-      //};
-    //};
-  //},
-
-  /**
-   * Displays the ATTENTION CITIZENS type greeting.
-   * If `next_tweet` is set (to a tweet object), then that will be shown next.
-   * Otherwise, this is followed by whatever show_next_item() decides.
-   */
-  //show_greeting: function(next_tweet) {
-    //var that = this;
-    //var idx = Math.floor(Math.random() * that.config.greetings.length)
-    //$('#greeting').html(that.config.greetings[idx]);
-    //that.show_slide('greeting');
-    //var ms = that.config.greeting_time / 5;
-    //$('#greeting')
-      //.delay(ms).queueFn(function(){$(this).addClass('is-inverted')})
-      //.delay(ms).queueFn(function(){$(this).removeClass('is-inverted')})
-      //.delay(ms).queueFn(function(){$(this).addClass('is-inverted')})
-      //.delay(ms).queueFn(function(){$(this).removeClass('is-inverted')})
-      //.delay(ms).queueFn(function(){
-        //if (next_tweet) {
-          //that.display_tweet(next_tweet); 
-        //} else {
-          //that.show_next_item();
-        //};
-      //});
-  //},
-
-  //show_slogan: function() {
-    //if (this.config.slogans.length == 0) {
-      //return;
-    //};
-
-    //if (this.slogan_queue.length == 0) {
-      //// shuffle() is below in this file...
-      //this.slogan_queue = shuffle(this.config.slogans);
-    //};
-    
-    //$('#slogan').html(this.slogan_queue.shift());
-    //this.show_slide('slogan');
-    //var that = this;
-    //setTimeout(function(){
-      //that.show_next_item();
-    //}, that.config.time_per_slide);
-  //},
-
-  /**
-   * Show a tweet from the store of existing tweets.
-   */
-  //show_stored_tweet: function() {
-    //if (this.current_store_index == (this.tweet_store.length - 1)) {
-      //this.current_store_index = 0;
-    //} else {
-      //this.current_store_index++;
-    //};
-    //this.display_tweet(this.tweet_store[this.current_store_index]);
-  //},
-
-  /**
-   * Take a tweet from the queue, add it to the store, show the greeting, then
-   * display the tweet.
-   */
-  //show_new_tweet: function() {
-    //this.add_to_tweet_store(tweet);
-    //this.show_greeting(tweet);
-  //},
-
-  /**
-   * Do the actual displaying of a tweet.
-   */
-  //display_tweet: function(tweet) {
-    //if (typeof tweet === 'undefined') {
-      //this.show_alert('tweets-alert', 'No tweets found');
-    //} else {
-      //this.hide_alert('tweets-alert');
-      //if ( ! $('#tweet-'+tweet.id).exists()) {
-        //this.make_tweet_slide(tweet);
-      //};
-      //// If this tweet has an image, and has been seen before, the text panel
-      //// will currently have 0 opacity. So reset it before showing.
-      //$('#tweet-'+tweet.id+' .tweet_message_panel-text').css('opacity', 1);
-      //this.show_slide('tweet-'+tweet.id);
-      //this.current_tweet_id = tweet.id;
-    //};
-    //var that = this;
-    //setTimeout(function(){
-      //if (tweet && $('#tweet-'+tweet.id+' .tweet_message_panel-image').exists()) {
-        //// Hide text to reveal image, wait, then move on.
-        //$('#tweet-'+tweet.id+' .tweet_message_panel-text').animate(
-          //{'opacity': 0},
-          //that.config.slide_transition_time,
-          //function(){
-            //setTimeout(function(){
-              //that.show_next_item();
-            //}, that.config.time_per_slide);
-          //}
-        //);
-      //} else {
-        //// No image on this slide, just move on.
-        //that.show_next_item();
-      //};
-    //}, that.config.time_per_slide);
-  //},
-
-  //make_tweet_slide: function(tweet) {
-    //var id = 'tweet-'+tweet.id;
-
-    //// Make URLs into links.
-    //var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-    //var tweet_text = tweet.text.replace(exp, "<a href='$1'>$1</a>");
-
-    //$('body').append(
-      //$('<div/>').attr('id', id).addClass('slide-tweet').append(
-        //$('<div/>').addClass('tweet_account').html(
-          //'<img src="' + tweet.user.profile_image_url + '" alt="" class="tweet_account_avatar" /><div class="tweet_account_name">' + tweet.user.name + "</div>"
-        //)
-      //).append(
-        //$('<div/>').addClass('tweet_message').html(
-          //'<div class="tweet_message_panel tweet_message_panel-text vbox center"><div class="tweet_message_panel_inner">' + tweet_text + '</div></div>'
-        //)
-      //).addClass('slide')
-    //);
-    //if ('image' in tweet) {
-      //$('#'+id+' .tweet_message').append(
-        //$('<div/>').addClass('tweet_message_panel tweet_message_panel-image vbox center').append(
-          //$('<div/>').addClass('tweet_message_panel_inner').append(
-            //$('<img/>').attr('src', tweet.image.url).data({
-              //// Width and height as data attributes, for reference when resizing.
-              //width: tweet.image.width,
-              //height: tweet.image.height,
-              //orientation: tweet.image.width >= tweet.image.height ? 'landscape' : 'portrait'
-            //})
-          //)
-        //).css('z-index', 100)
-      //);
-    //};
-    //this.size_slide('#tweet-'+tweet.id);
-  //},
-
   size_screen: function() {
+    if (this.burn_slide) {
+      this.burn_slide.resize();
+    };
     if (this.greeting_slide) {
       this.greeting_slide.resize();
     };
@@ -532,153 +378,6 @@ twelescreen.controller = {
       tweet_slide.resize();
     });
   },
-
-  //size_slide: function(selector) {
-    //$slide = $(selector);
-    //$slide.width($(window).width()).height($(window).height());
-
-    //if ($('.tweet_account', $slide).exists()) {
-      //// It's a .slide-tweet.
-      //$('.tweet_account', $slide).fitText(1.5);
-
-      //// Leave space for the account stripe.
-      //var margin_top = Math.floor($('.tweet_account', $slide).height());
-      //var padding_top = Math.floor(margin_top / 8);
-      //var padding_bottom = Math.floor(margin_top / 3);
-      //var message_height = $(window).height() - margin_top - padding_top - padding_bottom;
-      //$('.tweet_message', $slide)
-        //.css({'margin-top': margin_top,
-              //'padding-top': padding_top,
-              //'padding-bottom': padding_bottom})
-        //.height(message_height);
-      //$('.tweet_message_panel').height(message_height);
-
-      //// Make any image the tweet has stretch to fill space.
-      //if ($('.tweet_message_panel-image', $slide).exists()) {
-        //var $img = $('.tweet_message_panel-image img', $slide);
-        //var max_w = $('.tweet_message_panel-image', $slide).width();
-        //var max_h = $('.tweet_message_panel-image', $slide).height() - padding_bottom;
-        //var w, h;
-        //if ($img.data('orientation') == 'landscape') {
-          //w = max_w;
-          //h = Math.floor(($img.data('height') / $img.data('width')) * max_w);
-          //if (h > max_h) {
-            //h = max_h;
-            //w = Math.floor(($img.data('width') / $img.data('height')) * max_h);
-          //};
-        //} else {
-          //h = max_h;
-          //w = Math.floor(($img.data('width') / $img.data('height')) * max_h);
-          //if (w > max_w) {
-            //w = max_w;
-            //h = Math.floor(($img.data('height') / $img.data('width')) * max_w);
-          //};
-        //};
-        //$img.width(w).height(h); 
-      //};
-      //$('.tweet_message_panel-text .tweet_message_panel_inner', $slide).fitTextBlock();
-    //};
-  //},
-
-  /**
-   * In addition to what's done by size_slide().
-   * The #greeting and #burn slides.
-   */
-  //size_slide_title: function() {
-    //// To move the vertically-centered text up a bit.
-    //var padding_bottom = Math.round($('.slide-title').height() / 10);
-    //$('.slide-title')
-      //.css('paddingBottom', padding_bottom)
-      //.height($('.slide-title').height() - padding_bottom)
-      //.fitText(0.7);
-  //},
-
-  //show_slide: function(to_id) {
-    //var from_id = $('.is-slide-on').attr('id');
-    //var $from = $('#'+from_id);
-    //var $to = $('#'+to_id);
-    //var title_ids = ['greeting', 'slogan'];
-
-    //// We have different types of transition for different combinations:
-    //if (typeof from_id === 'undefined' && title_ids.indexOf(to_id) > -1) {
-      //this.transition_nothing_to_title($to); 
-
-    //} else if (typeof from_id === 'undefined' && $to.hasClass('slide-tweet')) {
-      //this.transition_nothing_to_tweet($to); 
-
-    //} else if (title_ids.indexOf(from_id) > -1 && $to.hasClass('slide-tweet')) {
-      //this.transition_title_to_tweet($from, $to); 
-
-    //} else if ($from.hasClass('slide-tweet') && title_ids.indexOf(to_id) > -1) {
-      //this.transition_tweet_to_title($from, $to); 
-
-    //} else if ($from.hasClass('slide-tweet') && $to.hasClass('slide-tweet')) {
-      //this.transition_tweet_to_tweet($from, $to); 
-
-    //} else if (title_ids.indexOf(from_id) > -1 && title_ids.indexOf(to_id) > -1) {
-      //this.transition_title_to_title($from, $to); 
-
-    //} else {
-      //console.log("UNDEFINED TRANSITION, from '#" + from_id + "' to '#" + to_id + "'");
-    //};
-  //},
-
-  /**
-   * Probably the first display of the greeting.
-   */
-  //transition_nothing_to_title: function($to) {
-    //$to.addClass('is-slide-on');
-  //},
-
-  /**
-   * Currently only happens when testing, manually advancing direct to a tweet.
-   */
-  //transition_nothing_to_tweet: function($to) {
-    //$to.addClass('is-slide-on').css({zIndex: 200});
-  //},
-
-  /**
-   * Probably the brand new tweet.
-   */
-  //transition_title_to_tweet: function($from, $to) {
-    //$to.addClass('is-slide-on').css({zIndex: 200});
-    //$from.removeClass('is-slide-on');
-  //},
-
-  /**
-   * eg, from greeting to slogan.
-   */
-  //transition_title_to_title: function($from, $to) {
-    //$to.addClass('is-slide-on');
-    //$from.removeClass('is-slide-on');
-  //},
-
-  /**
-   * Probably when there's a new tweet being announced.
-   */
-  //transition_tweet_to_title: function($from, $to) {
-    //$to.addClass('is-slide-on');
-    //$from.removeClass('is-slide-on').css('z-index', 100);
-  //},
-
-  /**
-   * Standard fade as we cycle through tweets.
-   */
-  //transition_tweet_to_tweet: function($from, $to) {
-    //// Move on stage, behind current slide:
-    //$to.addClass('is-slide-on');
-    //// Make current (front) slide transparent:
-    //$from.animate(
-      //{opacity: 0},
-      //this.config.slide_transition_time,
-      //function(){
-        //// Move old current slide off-stage, put z-index back to default.
-        //$from.removeClass('is-slide-on').css({zIndex: 100, opacity: 1}); 
-        //// Move new current slide forward so we can do all this next time.
-        //$to.css({zIndex: 200});
-      //}
-    //);
-  //},
 
   show_alert: function(id, message) {
     if ($('#'+id).exists()) {
@@ -731,6 +430,12 @@ twelescreen.controller = {
     };
   }
 };
+
+
+/**********************************************************************
+ * THIRD-PARTY PLUGINS AND HANDY CODE FRAGMENTS ETC.
+ */
+
 
 /**
  * Handy exists() function for testing presence of an element.
