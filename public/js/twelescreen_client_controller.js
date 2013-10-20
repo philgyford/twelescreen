@@ -88,8 +88,10 @@ twelescreen_client.controller = {
       init_callback = function(){
         that.prepare_screen();
         that.prepare_connection();
-        that.listen_for_tweets();
-        that.start_rotation();
+        var tweets_loaded_callback = function(){
+          that.next_tick();
+        }; 
+        that.listen_for_tweets(tweets_loaded_callback);
       };
     } else {
       init_callback = function(){
@@ -219,7 +221,14 @@ twelescreen_client.controller = {
     });
   },
 
-  listen_for_tweets: function() {
+  /**
+   * Start listening for tweets coming in.
+   * The first packet should have a type of 'cached'.
+   * When that appears we call whatever function is passed in as
+   * tweets_loaded_callback. ie, we're assuming we now have the initial bunch
+   * of cached tweets, and can start the whole rotation going.
+   */
+  listen_for_tweets: function(tweets_loaded_callback) {
     var that = this;
     // Tweets arrive as an array, with the newest last.
     that.socket.on('messages', function(messages_packet) {
@@ -233,19 +242,9 @@ twelescreen_client.controller = {
           };
         };
       });
-    });
-  },
-
-  /**
-   * Once everything else is prepared, this kicks off the display of tweets.
-   * Shows the greeting and then moves control over to show_next_item().
-   */
-  start_rotation: function() {
-    var that = this;
-    this.greeting_slide.update_text(this.new_greeting_text());
-    this.greeting_slide.transition().done(function(){
-      that.current_slide = that.greeting_slide;
-      that.show_next_item();
+      if (messages_packet.type == 'cached') {
+        tweets_loaded_callback();
+      };
     });
   },
 
@@ -263,70 +262,84 @@ twelescreen_client.controller = {
     return this.slogan_queue.shift();
   },
 
+  next_tick: function() {
+    //this.auto_advance = false;
+    if (this.auto_advance) {
+      this.show_next_item();
+    };
+  },
 
   show_next_item: function() {
-    if (this.auto_advance) {
+    // TODO: Move this kind of thing into the objects?
+    //    that.current_slide = that.slogan_slide;
 
-      // TODO: Have transition()s look at value of current_slide, instead of
-      // using from_slide.
-      // TODO: Move this kind of thing into the objects?
-      //    that.current_slide = that.slogan_slide;
+    // No slides are showing (except maybe #burn), so must be our first time here.
+    if ( ! this.current_slide) {
+      console.log('A first');
+      var that = this;
+      this.greeting_slide.update_text(this.new_greeting_text());
+      this.greeting_slide.transition().done(function(){
+        that.next_tick();
+      });
 
-      // We have a NEW tweet waiting to be shown:
-      if (this.tweet_queue.length > 0) {
-        // Show the greeting first...
-        var that = this;
-        this.greeting_slide.update_text(this.new_greeting_text());
-        this.greeting_slide.transition().done(function(){
-          that.current_slide = that.greeting_slide;
-          // ...then make and show the new tweet slide.
-          that.add_to_tweet_store(that.tweet_queue.shift());
-          var tweet_slide = that.tweet_slides[this.current_store_index];
-          tweet_slide.transition().done(function(){
-            that.current_slide = tweet_slide;
-            that.show_next_item();
-          });
-        });
-
-      // A small chance of a slogan:
-      } else if (this.config.slogans.length > 0
-            && (Math.random() * 100) < this.config.chance_of_slogan
-            && $('#slogan').is(':offscreen')) {
-        var that = this;
-        this.slogan_slide.update_text(this.new_slogan_text());
-        this.slogan_slide.transition().done(function(){
-          that.current_slide = that.slogan_slide;
-          that.show_next_item();
-        });
-
-      // Show the next tweet in our store:
-      } else if (this.tweet_store.length > 0) {
-        this.hide_alert('tweets-alert');
-        if (this.current_store_index == (this.tweet_store.length - 1)) {
-          this.current_store_index = 0;
-        } else {
-          this.current_store_index++;
-        };
-        var tweet_slide = this.tweet_slides[this.current_store_index];
-        // If this tweet has an image, and has been seen before, the text panel
-        // will currently have 0 opacity. So reset it before showing.
-        // TODO: Can we put this in the tweet_slide somewhere? At start of
-        // transition?
-        $(tweet_slide.get_id()+' .tweet_message_panel-text').css('opacity', 1);
-        var that = this;
+    // We have a NEW tweet waiting to be shown:
+    } else if (this.tweet_queue.length > 0) {
+      // Show the greeting first...
+      console.log('B new tweet');
+      var that = this;
+      this.greeting_slide.update_text(this.new_greeting_text());
+      this.greeting_slide.transition().done(function(){
+        // ...then make and show the new tweet slide.
+        that.add_to_tweet_store(that.tweet_queue.shift());
+        var tweet_slide = that.tweet_slides[this.current_store_index];
         tweet_slide.transition().done(function(){
-          that.current_slide = tweet_slide;
-          that.show_next_item();
+          that.next_tick();
         });
+      });
 
-      // No tweets to display!
+    // A small chance of a slogan:
+    // If we have some && it's randomly time && the greeting isn't showing
+    // (because it feels odd having a slogan after the initial greeting)
+    // && we're not already showing a slogan.
+    } else if (this.config.slogans.length > 0
+          && (Math.random() * 100) < this.config.chance_of_slogan
+          && $('#greeting').is(':offscreen')
+          && $('#slogan').is(':offscreen')) {
+      console.log('C slogan');
+      var that = this;
+      this.slogan_slide.update_text(this.new_slogan_text());
+      this.slogan_slide.transition().done(function(){
+        that.next_tick();
+      });
+
+    // Show the next tweet in our store:
+    } else if (this.tweet_store.length > 0) {
+      this.hide_alert('tweets-alert');
+      if (this.current_store_index == (this.tweet_store.length - 1)) {
+        this.current_store_index = 0;
       } else {
-        this.show_alert('tweets-alert', 'No tweets found');
-        var that = this;
-        setTimeout(function(){
-          that.show_next_item();
-        }, that.config.time_per_slide);
+        this.current_store_index++;
       };
+      console.log('D stored tweet');
+      var tweet_slide = this.tweet_slides[this.current_store_index];
+      // If this tweet has an image, and has been seen before, the text panel
+      // will currently have 0 opacity. So reset it before showing.
+      // TODO: Can we put this in the tweet_slide somewhere? At start of
+      // transition?
+      $(tweet_slide.get_id()+' .tweet_message_panel-text').css('opacity', 1);
+      var that = this;
+      tweet_slide.transition().done(function(){
+        that.next_tick();
+      });
+
+    // No tweets to display!
+    } else {
+      console.log('E No tweets');
+      this.show_alert('tweets-alert', 'No tweets found');
+      var that = this;
+      setTimeout(function(){
+        that.next_tick();
+      }, that.config.time_per_slide);
     };
   },
 
