@@ -531,7 +531,7 @@ twelescreen.models.tweet_slide = function(spec) {
     $('body').append(
       $('<div/>').attr('id', obj.get_id()).addClass('slide slide-tweet').append(
         $('<div/>').addClass('tweet_account').html(
-          '<img src="' + tweet.user.profile_image_url + '" alt="" class="tweet_account_avatar" /><div class="tweet_account_name">' + tweet.user.name + "</div>"
+          '<img src="' + tweet.user.profile_image_url + '" alt="" class="tweet_account_avatar" /><div class="tweet_account_name"><a href="https://twitter.com/' + tweet.user.screen_name + '">' + tweet.user.name + "</a></div>"
         )
       ).append(
         $('<div/>').addClass('tweet_message').html(

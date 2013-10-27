@@ -88,6 +88,11 @@ body {
   background: #222;
   text-transform: uppercase;
 }
+  .tweet_account a {
+    color: #FCFCF2;
+    text-decoration: none;
+  }
+
 .tweet_message {
   text-transform: uppercase;
 }

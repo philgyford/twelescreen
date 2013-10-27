@@ -18,9 +18,12 @@ categories:
     theme: default
     number_of_tweets: 10
     show_on_menu: false
-    time_per_slide: 10000
+    time_per_slide: 8000
     slide_transition_time: 1000
     greeting_time: 2000
+    greetings:
+      - Ahoy!
+      - Hello
     screen_names:
       - antimega
       - benterret
