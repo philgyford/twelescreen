@@ -3,10 +3,20 @@ var twelescreen = {
   models: {}
 };
 
+/**
+ * The main driver of the whole thing.
+ * Call twelescreen.controller.init() to get things going.
+ * It will instantiate either the menu or screen page.
+ * Most of the code in here is for fetching and displaying the tweets on the
+ * screen page, with the display done in twelescreen.models.screen_page.
+ */
 twelescreen.controller = {
 
+  /**
+   * Default config values.
+   * May be overridden by passing values into init().
+   */
   config: {
-    // May be overridden by passed-in config settings:
     disconnect_warning: "Connection to server lost",
     category_key: '',
     font: null,
@@ -20,6 +30,18 @@ twelescreen.controller = {
     chance_of_slogan: 5
   },
 
+  /**
+   * Will be one of twelescreen.models.menu_page or
+   * twelescreen.models.screen_page.
+   */
+  page: null,
+
+
+  // All of the variables below are used on the screen page, not the menu page.
+
+  /**
+   * Will be a socket.io connection.
+   */
   socket: null,
 
   /**
@@ -32,6 +54,7 @@ twelescreen.controller = {
    * The tweets that we have in hand to rotate through if we receive no new
    * ones. There should be config.number_of_tweets in here.
    * Newest at end.
+   * Should be in sync with the this.page.get_tweet_slides() array.
    */
   tweet_store: [],
 
@@ -42,27 +65,7 @@ twelescreen.controller = {
   current_store_index: 0,
 
   /**
-   * Will be an array of tweet_slide objects, in the same order as tweet_store.
-   */
-  tweet_slides: [],
-
-  /**
-   * Will be a burn_title_slide object.
-   */
-  burn_slide: null,
-
-  /**
-   * Will be a greeting_title_slide object.
-   */
-  greeting_slide: null,
-
-  /**
-   * Will be a slogan_title_slide object (if we have any slogans).
-   */
-  slogan_slide: null,
-
-  /**
-   * We put any greetings in here, in random order, and cycle through them.
+   * We put any greeting texts in here, in random order, and cycle through them.
    * It's then refilled when empty.
    */
   greeting_queue: [],
@@ -82,13 +85,8 @@ twelescreen.controller = {
   auto_advance: true,
 
   /**
-   * The CSS ID of the currently-displayed tweet_slide.
-   */
-  current_tweet_id: '',
-
-  /**
    * Call this to initialise everything.
-   * page is either 'menu' or 'screen', depending on the type of page.
+   * page is either 'menu' or 'screen'.
    * spec is an object of items that can override this.config settings.
    */
   init: function(page, spec) {
@@ -98,8 +96,11 @@ twelescreen.controller = {
         that = this;
 
     if (page == 'screen') {
+      this.page = twelescreen.models.screen_page({
+        burn_in_text: this.config.burn_in_text
+      });
       init_callback = function(){
-        that.prepare_screen();
+        that.page.init();
         that.prepare_connection();
         var tweets_loaded_callback = function(){
           that.next_tick();
@@ -107,15 +108,21 @@ twelescreen.controller = {
         that.listen_for_tweets(tweets_loaded_callback);
       };
     } else {
+      this.page = twelescreen.models.menu_page({});
       init_callback = function(){
-        that.prepare_menu();
+        that.page.init();
       };
     };
 
     this.prepare_fonts(init_callback);
   },
 
-  prepare_fonts: function(init_callback) {
+  /**
+   * Load the Google WebFont, if any.
+   * When finished, or abandoned, or if we're not loading a font, then
+   * callback will be called.
+   */
+  prepare_fonts: function(callback) {
     var fonts = $.Deferred();
 
     // If we have a font set, then load it...
@@ -147,83 +154,7 @@ twelescreen.controller = {
     };
 
     // Starts the rest of the page-building process.
-    fonts.done(init_callback);
-  },
-
-  /**
-   * Prepares the 'screen' - the page showing tweets.
-   */
-  prepare_screen: function() {
-
-    if (this.config.burn_in_text) {
-      this.burn_slide = twelescreen.models.burn_title_slide({
-        id: 'burn',
-        text: this.config.burn_in_text
-      });
-      this.burn_slide.create_element();
-    };
-
-    this.greeting_slide = twelescreen.models.greeting_title_slide({
-      id: 'greeting',
-      text: '',
-      duration: this.config.greeting_time
-    });
-    this.greeting_slide.create_element();
-
-    if (this.config.slogans.length > 0) {
-      this.slogan_slide = twelescreen.models.slogan_title_slide({
-        id: 'slogan',
-        text: '',
-        duration: this.config.time_per_slide
-      });
-      this.slogan_slide.create_element();
-    };
-
-    // We use this, below, to ensure that we only call the sizing methods after
-    // the window has finished resizing, not multiple times during the process.
-    // From http://stackoverflow.com/a/4298672/250962
-    var debouncer = function debouncer(func , timeout) {
-      var timeoutID, timeout = timeout || 200;
-      return function () {
-        var scope = this, args = arguments;
-        clearTimeout(timeoutID);
-        timeoutID = setTimeout(function() {
-          func.apply( scope, Array.prototype.slice.call(args) );
-        }, timeout);
-      };
-    };
-
-    // See, here:
-    var that = this;
-    $(window).resize(
-      debouncer(function(e) {
-        that.size_screen();
-      })
-    );
-  },
-
-  /**
-   * Prepares the 'menu' - the front page of categories.
-   */
-  prepare_menu: function() {
-    this.size_menu();
-    var that = this;
-    $(window).resize(function(){
-      that.size_menu()
-    });
-  },
-
-  /**
-   * A few things needed for sizing on the menu screen.
-   */
-  size_menu: function() {
-    if ($('.menu').exists()) {
-      if ($('.menu').height() <= $(window).height()) {
-        $('.menu').height($(window).height());
-      } else {
-        $('.menu').height('auto');
-      };
-    };
+    fonts.done(callback);
   },
 
   /**
@@ -233,11 +164,11 @@ twelescreen.controller = {
     var that = this;
     that.socket = io.connect(window.location.hostname);
     that.socket.on('connect', function(){
-      that.hide_alert('connection-alert');
+      that.page.hide_alert('connection-alert');
       that.socket.emit('subscribe', that.config.category_key);
     });
     that.socket.on('disconnect', function(){
-      that.show_alert('connection-alert', that.config.disconnect_warning);
+      that.page.show_alert('connection-alert', that.config.disconnect_warning);
     });
   },
 
@@ -269,6 +200,121 @@ twelescreen.controller = {
   },
 
   /**
+   * To move on to the next item, assuming we're auto-advancing.
+   */
+  next_tick: function() {
+    if (this.auto_advance) {
+      this.show_next_item();
+    };
+  },
+
+  /**
+   * Show whatever slide's next.
+   * This is the main driver of the screen page, showing tweets.
+   * If auto_advance is false, calling this from the console will display
+   * whatever's next.
+   */
+  show_next_item: function() {
+    // No slides are showing (except maybe #burn), so must be our first time here.
+    if ( ! this.current_slide) {
+      var that = this;
+      this.page.get_greeting_slide().update_text(this.new_greeting_text());
+      this.page.get_greeting_slide().transition().done(function(){
+        that.next_tick();
+      });
+
+    // We have a NEW tweet waiting to be shown:
+    } else if (this.tweet_queue.length > 0) {
+      // Show the greeting first...
+      var that = this;
+      this.page.get_greeting_slide().update_text(this.new_greeting_text());
+      this.page.get_greeting_slide().transition().done(function(){
+        // ...then make and show the new tweet slide.
+        that.add_to_tweet_store(that.tweet_queue.shift());
+        var tweet_slide = that.page.get_tweet_slides()[that.current_store_index];
+        tweet_slide.transition().done(function(){
+          that.next_tick();
+        });
+      });
+
+    // A small chance of a slogan:
+    // If we have some && it's randomly time && the greeting isn't showing
+    // (because it feels odd having a slogan after the initial greeting)
+    // && we're not already showing a slogan.
+    } else if (this.config.slogans.length > 0
+          && (Math.random() * 100) < this.config.chance_of_slogan
+          && $('#greeting').is(':offscreen')
+          && $('#slogan').is(':offscreen')) {
+      var that = this;
+      this.page.get_slogan_slide().update_text(this.new_slogan_text());
+      this.page.get_slogan_slide().transition().done(function(){
+        that.next_tick();
+      });
+
+    // Show the next tweet in our store:
+    } else if (this.tweet_store.length > 0) {
+      this.page.hide_alert('tweets-alert');
+      if (this.current_store_index == (this.tweet_store.length - 1)) {
+        this.current_store_index = 0;
+      } else {
+        this.current_store_index++;
+      };
+      var tweet_slide = this.page.get_tweet_slides()[this.current_store_index];
+      var that = this;
+      tweet_slide.transition().done(function(){
+        that.next_tick();
+      });
+
+    // No tweets to display!
+    } else {
+      this.page.show_alert('tweets-alert', 'No tweets found');
+      var that = this;
+      setTimeout(function(){
+        that.next_tick();
+      }, that.config.time_per_slide);
+    };
+  },
+
+  /**
+   * Add this tweet object to the store of existing tweets that we rotate through.
+   */
+  add_to_tweet_store: function(tweet) {
+    // Make the new slide:
+    this.page.add_new_tweet_slide({
+      id: 'tweet-'+tweet.id,
+      tweet: tweet,
+      duration: this.config.time_per_slide,
+      transition_time: this.config.slide_transition_time
+    });
+
+    this.tweet_store.push(tweet);
+    if (this.tweet_store.length > this.config.number_of_tweets) {
+      this.tweet_store.shift();
+      this.page.remove_oldest_tweet_slide();
+    };
+    // This means that we'll loop back round and show tweet index 0 next.
+    this.current_store_index = this.tweet_store.length - 1;
+  },
+
+  /**
+   * Add this tweet object to the queue of new tweets waiting to be shown.
+   */
+  add_to_tweet_queue: function(tweet) {
+    this.tweet_queue.push(tweet);
+  },
+
+  /**
+   * Is this tweet in the category that this page is displaying?
+   */
+  tweet_is_in_this_category: function(tweet) {
+    if (this.config.screen_names.indexOf(tweet.user.screen_name) > -1) {
+      return true;
+    } else {
+      return false;
+    };
+  },
+
+  /**
    * Return's whatever random greeting is next to be shown.
    */
   new_greeting_text: function() {
@@ -288,147 +334,6 @@ twelescreen.controller = {
       this.slogan_queue = shuffle(this.config.slogans);
     };
     return this.slogan_queue.shift();
-  },
-
-  /**
-   * To move on to the next item, assuming we're auto-advancing.
-   */
-  next_tick: function() {
-    if (this.auto_advance) {
-      this.show_next_item();
-    };
-  },
-
-  /**
-   * Show whatever slide's next.
-   * If auto_advance is false, calling this from the console will display
-   * whatever's next.
-   */
-  show_next_item: function() {
-    // No slides are showing (except maybe #burn), so must be our first time here.
-    if ( ! this.current_slide) {
-      var that = this;
-      this.greeting_slide.update_text(this.new_greeting_text());
-      this.greeting_slide.transition().done(function(){
-        that.next_tick();
-      });
-
-    // We have a NEW tweet waiting to be shown:
-    } else if (this.tweet_queue.length > 0) {
-      // Show the greeting first...
-      var that = this;
-      this.greeting_slide.update_text(this.new_greeting_text());
-      this.greeting_slide.transition().done(function(){
-        // ...then make and show the new tweet slide.
-        that.add_to_tweet_store(that.tweet_queue.shift());
-        var tweet_slide = that.tweet_slides[that.current_store_index];
-        tweet_slide.transition().done(function(){
-          that.next_tick();
-        });
-      });
-
-    // A small chance of a slogan:
-    // If we have some && it's randomly time && the greeting isn't showing
-    // (because it feels odd having a slogan after the initial greeting)
-    // && we're not already showing a slogan.
-    } else if (this.config.slogans.length > 0
-          && (Math.random() * 100) < this.config.chance_of_slogan
-          && $('#greeting').is(':offscreen')
-          && $('#slogan').is(':offscreen')) {
-      var that = this;
-      this.slogan_slide.update_text(this.new_slogan_text());
-      this.slogan_slide.transition().done(function(){
-        that.next_tick();
-      });
-
-    // Show the next tweet in our store:
-    } else if (this.tweet_store.length > 0) {
-      this.hide_alert('tweets-alert');
-      if (this.current_store_index == (this.tweet_store.length - 1)) {
-        this.current_store_index = 0;
-      } else {
-        this.current_store_index++;
-      };
-      var tweet_slide = this.tweet_slides[this.current_store_index];
-      var that = this;
-      tweet_slide.transition().done(function(){
-        that.next_tick();
-      });
-
-    // No tweets to display!
-    } else {
-      this.show_alert('tweets-alert', 'No tweets found');
-      var that = this;
-      setTimeout(function(){
-        that.next_tick();
-      }, that.config.time_per_slide);
-    };
-  },
-
-  size_screen: function() {
-    if (this.burn_slide) {
-      this.burn_slide.resize();
-    };
-    if (this.greeting_slide) {
-      this.greeting_slide.resize();
-    };
-    if (this.slogan_slide) {
-      this.slogan_slide.resize();
-    };
-    $.each(this.tweet_slides, function(idx, tweet_slide) {
-      tweet_slide.resize();
-    });
-  },
-
-  show_alert: function(id, message) {
-    if ($('#'+id).exists()) {
-      $('#'+id+' .alert_inner').text(message); 
-    } else {
-      $('body').append(
-        '<div id=' + id + ' class="alert"><div class="alert_inner">' + message + '</div></div>'
-      );
-    };
-    $('#'+id).fitText(4);
-  },
-
-  hide_alert: function(id) {
-    $('#'+id).remove();
-  },
-
-  // The store of existing tweets that we rotate through.
-  add_to_tweet_store: function(tweet) {
-    // TODO: Get rid of tweet_store and just use tweet_slides ?
-    // Make the new slide:
-    var new_tweet_slide = twelescreen.models.tweet_slide({
-      id: 'tweet-'+tweet.id,
-      tweet: tweet,
-      duration: this.config.time_per_slide,
-      transition_time: this.config.slide_transition_time
-    });
-    new_tweet_slide.create_element();
-    this.tweet_slides.push(new_tweet_slide);
-
-    this.tweet_store.push(tweet);
-    if (this.tweet_store.length > this.config.number_of_tweets) {
-      this.tweet_store.shift();
-      var old_tweet_slide = this.tweet_slides.shift();
-      old_tweet_slide.remove();
-    };
-    // This means that we'll loop back round and show tweet index 0 next.
-    this.current_store_index = this.tweet_store.length - 1;
-  },
-
-  // The queue of new tweets to show.
-  add_to_tweet_queue: function(tweet) {
-    this.tweet_queue.push(tweet);
-  },
-
-  tweet_is_in_this_category: function(tweet) {
-    if (this.config.screen_names.indexOf(tweet.user.screen_name) > -1) {
-      return true;
-    } else {
-      return false;
-    };
   }
 };
 

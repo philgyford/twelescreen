@@ -2,8 +2,8 @@ env:
   heroku: false
 categories:
   _defaults:
-    #font: Russo One
-    font: false
+    font: Russo One
+    #font: false
     theme: big_brother
     number_of_tweets: 3
     disconnect_warning: Connection to server lost

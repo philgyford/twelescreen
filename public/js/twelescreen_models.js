@@ -51,7 +51,211 @@ twelescreen.models.base = function(spec) {
 
 
 /**********************************************************************
+ **********************************************************************
+ * BASE PAGE CLASS.
+ **********************************************************************
+ *
+ * Don't use directly; inherit for specific types of page.
+ */
+twelescreen.models.page = function(spec) {
+	var obj = twelescreen.models.base(spec);
+
+	obj.object_vars = obj.object_vars.concat( [] );
+
+	obj.construct();
+
+  /**
+   * Probably should be called by all child screen's init() methods.
+   */
+  obj.base_init = function() {
+    // We use this, below, to ensure that we only call the sizing methods after
+    // the window has finished resizing, not multiple times during the process.
+    // From http://stackoverflow.com/a/4298672/250962
+    var debouncer = function debouncer(func , timeout) {
+      var timeoutID, timeout = timeout || 200;
+      return function () {
+        var scope = this, args = arguments;
+        clearTimeout(timeoutID);
+        timeoutID = setTimeout(function() {
+          func.apply( scope, Array.prototype.slice.call(args) );
+        }, timeout);
+      };
+    };
+
+    // See, here:
+    $(window).resize(
+      debouncer(function(e) {
+        obj.resize();
+      })
+    );
+  };
+
+  /**
+   * init() is called when the controller is ready to display the page (ie,
+   * when fonts have loaded).
+   */
+  obj.init = function() {
+    obj.base_init();
+  };
+
+  obj.resize = function() {};
+
+  obj.show_alert = function(id, message) {
+    if ($('#'+id).exists()) {
+      $('#'+id+' .alert_inner').text(message); 
+    } else {
+      $('body').append(
+        '<div id=' + id + ' class="alert"><div class="alert_inner">' + message + '</div></div>'
+      );
+    };
+    $('#'+id).fitText(4);
+  };
+
+  obj.hide_alert = function(id) {
+    $('#'+id).remove();
+  };
+
+  return obj;
+};
+
+
+/**********************************************************************
+ * MENU PAGE CLASS.
+ * The front page of the site, displaying categories to choose from.
+ */
+twelescreen.models.menu_page = function(spec) {
+	var obj = twelescreen.models.page(spec);
+
+	obj.object_vars = obj.object_vars.concat([]);
+
+	obj.construct();
+
+  obj.init = function() {
+    obj.base_init();
+    obj.resize();
+  };
+
+  obj.resize = function() {
+    if ($('.menu').exists()) {
+      if ($('.menu').height() <= $(window).height()) {
+        $('.menu').height($(window).height());
+      } else {
+        $('.menu').height('auto');
+      };
+    };
+  };
+
+  return obj;
+};
+
+
+/**********************************************************************
+ * SCREEN PAGE CLASS.
+ * The page that shows the tweets.
+ */
+twelescreen.models.screen_page = function(spec) {
+	var obj = twelescreen.models.page(spec);
+
+	obj.object_vars = obj.object_vars.concat([
+    // Will be a string of text to put in 'burn_slide'. 
+    'burn_in_text',
+    // Will be a burn_title_slide object.
+    'burn_slide',
+    // Will be a greeting_title_slide object.
+    'greeting_slide',
+    // Will be a slogan_title_slide object.
+    'slogan_slide',
+    // Will be an array of tweet_slide objects, newest at the end.
+    // In the same order, and in-sync with, twelescreen.controller.tweet_store.
+    'tweet_slides'
+  ]);
+
+	obj.construct();
+
+  /**
+   * Sets up the burn, greeting and slogan slides.
+   */
+  obj.init = function() {
+    obj.base_init();
+
+    obj.set_tweet_slides([]);
+
+    if (obj.get_burn_in_text()) {
+      obj.set_burn_slide(
+        twelescreen.models.burn_title_slide({
+          id: 'burn',
+          text: obj.get_burn_in_text()
+        })
+      );
+      obj.get_burn_slide().create_element();
+    };
+
+    obj.set_greeting_slide(
+      twelescreen.models.greeting_title_slide({
+        id: 'greeting',
+        text: '',
+        duration: twelescreen.controller.config.greeting_time
+      })
+    );
+    obj.get_greeting_slide().create_element();
+
+    if (twelescreen.controller.config.slogans.length > 0) {
+      obj.set_slogan_slide(
+        twelescreen.models.slogan_title_slide({
+          id: 'slogan',
+          text: '',
+          duration: twelescreen.controller.config.time_per_slide
+        })
+      );
+      obj.get_slogan_slide().create_element();
+    };
+  };
+
+  /**
+   * Resizes all of the slides on the page, visible or not.
+   */
+  obj.resize = function() {
+    if (obj.get_burn_slide()) {
+      obj.get_burn_slide().resize();
+    };
+    if (obj.get_greeting_slide()) {
+      obj.get_greeting_slide().resize();
+    };
+    if (obj.get_slogan_slide()) {
+      obj.get_slogan_slide().resize();
+    };
+    $.each(obj.get_tweet_slides(), function(idx, tweet_slide) {
+      tweet_slide.resize();
+    });
+  };
+
+  /**
+   * Add a new tweet_slide object to this page's list of them.
+   * tweet_slide_spec should have id, tweet, duration and transition_time keys.
+   */
+  obj.add_new_tweet_slide = function(tweet_slide_spec) {
+    var new_tweet_slide = twelescreen.models.tweet_slide(tweet_slide_spec);
+    new_tweet_slide.create_element();
+    var tweet_slides = obj.get_tweet_slides();
+    tweet_slides.push(new_tweet_slide);
+    obj.set_tweet_slides(tweet_slides);
+  };
+
+  obj.remove_oldest_tweet_slide = function() {
+    var tweet_slides = obj.get_tweet_slides();
+    var old_tweet_slide = tweet_slides.shift();
+    old_tweet_slide.remove();
+    obj.set_tweet_slides(tweet_slides);
+  };
+
+  return obj;
+};
+
+
+/**********************************************************************
+ **********************************************************************
  * BASE SLIDE CLASS.
+ **********************************************************************
  *
  * Don't use directly; inherit for specific types of slide.
  * They should all be created something like:
