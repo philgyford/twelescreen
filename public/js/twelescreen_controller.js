@@ -85,6 +85,12 @@ twelescreen.controller = {
   auto_advance: true,
 
   /**
+   * Set to true to output some logging in the console to help see what's
+   * going on.
+   */
+  logging: false,
+
+  /**
    * Call this to initialise everything.
    * page is either 'menu' or 'screen'.
    * spec is an object of items that can override this.config settings.
@@ -96,10 +102,12 @@ twelescreen.controller = {
         that = this;
 
     if (page == 'screen') {
+      this.log("Displaying screen page");
       this.page = twelescreen.models.screen_page({
         burn_in_text: this.config.burn_in_text
       });
       init_callback = function(){
+        that.log("Initialising page");
         that.page.init();
         that.prepare_connection();
         var tweets_loaded_callback = function(){
@@ -108,8 +116,10 @@ twelescreen.controller = {
         that.listen_for_tweets(tweets_loaded_callback);
       };
     } else {
+      this.log("Displaying menu page");
       this.page = twelescreen.models.menu_page({});
       init_callback = function(){
+        that.log("Initialising page");
         that.page.init();
       };
     };
@@ -124,6 +134,7 @@ twelescreen.controller = {
    */
   prepare_fonts: function(callback) {
     var fonts = $.Deferred();
+    var that = this;
 
     // If we have a font set, then load it...
     // Assuming the WebFont JS is also working.
@@ -132,7 +143,10 @@ twelescreen.controller = {
         google: {
           families: [this.config.font]
         },
-        active: function() { fonts.resolve(); },
+        active: function() {
+          that.log("Font loaded");
+          fonts.resolve();
+        },
         inactive: function() {
           console.log("WebFonts failed to load.");
           fonts.resolve();
@@ -162,6 +176,7 @@ twelescreen.controller = {
    */
   prepare_connection: function() {
     var that = this;
+    that.log("Preparing connection");
     that.socket = io.connect(window.location.hostname);
     that.socket.on('connect', function(){
       that.page.hide_alert('connection-alert');
@@ -181,14 +196,17 @@ twelescreen.controller = {
    */
   listen_for_tweets: function(tweets_loaded_callback) {
     var that = this;
+    that.log("Listening for tweets");
     // Tweets arrive as an array, with the newest last.
     that.socket.on('messages', function(messages_packet) {
       $.each(messages_packet.tweets, function(idx, tweet) {
         if (that.tweet_is_in_this_category(tweet)) {
           if (messages_packet.type == 'cached') {
+            that.log("Cached tweet received: "+tweet.text);
             that.add_to_tweet_store(tweet);
           } else {
             // type == 'fresh'
+            that.log("New tweet received: "+tweet.text);
             that.add_to_tweet_queue(tweet);
           };
         };
@@ -217,6 +235,7 @@ twelescreen.controller = {
   show_next_item: function() {
     // No slides are showing (except maybe #burn), so must be our first time here.
     if ( ! this.current_slide) {
+      this.log("First Greeting slide");
       var that = this;
       this.page.get_greeting_slide().update_text(this.new_greeting_text());
       this.page.get_greeting_slide().transition().done(function(){
@@ -225,11 +244,13 @@ twelescreen.controller = {
 
     // We have a NEW tweet waiting to be shown:
     } else if (this.tweet_queue.length > 0) {
+      this.log("Display: Greeting slide for new Tweet");
       // Show the greeting first...
       var that = this;
       this.page.get_greeting_slide().update_text(this.new_greeting_text());
       this.page.get_greeting_slide().transition().done(function(){
         // ...then make and show the new tweet slide.
+        that.log("Display: Tweet slide for new Tweet");
         that.add_to_tweet_store(that.tweet_queue.shift());
         var tweet_slide = that.page.get_tweet_slides()[that.current_store_index];
         tweet_slide.transition().done(function(){
@@ -245,6 +266,7 @@ twelescreen.controller = {
           && (Math.random() * 100) < this.config.chance_of_slogan
           && $('#greeting').is(':offscreen')
           && $('#slogan').is(':offscreen')) {
+      this.log("Display: Slogan slide");
       var that = this;
       this.page.get_slogan_slide().update_text(this.new_slogan_text());
       this.page.get_slogan_slide().transition().done(function(){
@@ -253,6 +275,7 @@ twelescreen.controller = {
 
     // Show the next tweet in our store:
     } else if (this.tweet_store.length > 0) {
+      this.log("Display: Tweet slide with stored Tweet");
       this.page.hide_alert('tweets-alert');
       if (this.current_store_index == (this.tweet_store.length - 1)) {
         this.current_store_index = 0;
@@ -267,6 +290,7 @@ twelescreen.controller = {
 
     // No tweets to display!
     } else {
+      this.log("Display: No tweets found!");
       this.page.show_alert('tweets-alert', 'No tweets found');
       var that = this;
       setTimeout(function(){
@@ -307,7 +331,7 @@ twelescreen.controller = {
    * Is this tweet in the category that this page is displaying?
    */
   tweet_is_in_this_category: function(tweet) {
-    if (this.config.screen_names.indexOf(tweet.user.screen_name) > -1) {
+    if (this.config.screen_names.indexOf(tweet.user.screen_name.toLowerCase()) > -1) {
       return true;
     } else {
       return false;
@@ -334,6 +358,12 @@ twelescreen.controller = {
       this.slogan_queue = shuffle(this.config.slogans);
     };
     return this.slogan_queue.shift();
+  },
+
+  log: function(s) {
+    if (this.logging) {
+      console.log(s);
+    };
   }
 };
 
