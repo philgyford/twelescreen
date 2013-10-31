@@ -131,7 +131,7 @@ module.exports = function(settings, twitter, io, _) {
           streamer.add_tweet_to_cache(tweet);
           // Get all the categories this Tweet's account is in
           // and send the tweet to all clients in that category's sockets 'room'.
-          settings.screen_name_to_category[tweet.user.screen_name].forEach(
+          settings.screen_name_to_category[tweet.user.screen_name.toLowerCase()].forEach(
           function(category) {
             io.sockets.in(category).emit('messages',
               {type: 'fresh', tweets: [streamer.shrink_tweet(tweet)] }
