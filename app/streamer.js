@@ -205,7 +205,7 @@ module.exports = function(settings, twitter, io, _) {
     if (tweet.retweeted_status === undefined) {
       // For each category this twitter account is associated with, add to its
       // cache.
-      settings.screen_name_to_category[tweet.user.screen_name].forEach(
+      settings.screen_name_to_category[tweet.user.screen_name.toLowerCase()].forEach(
         function(category){
           if (category in streamer.cache) {
             streamer.cache[category].push(shrunk_tweet); 

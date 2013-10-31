@@ -66,19 +66,23 @@ module.exports = function(_) {
 
   /**
    * Will be an array of all the twitter account screen_names for all of the
-   * categories. like: ['ukhomeoffice', 'dhsgov']
+   * categories. like: ['ukhomeoffice', 'dhsgov'] (All lowercased.)
    */
   settings.watched_screen_names = _.uniq(
-        _.map(settings.categories, function(v, k, l) { return v.screen_names; })
+    _.map(settings.categories, function(v, k, l) {
+      return _.map(v.screen_names, function(name) { return name.toLowerCase(); })
+    })
   );
 
   /**
    * Will map Twitter screen_names to all the categories they're in.
    * Like: {'ukhomeoffice': ['uk'], 'dhsgov': ['us']}
+   * All screen_names are lowercased.
    */
   settings.screen_name_to_category = {};
   _.each(settings.categories, function(category_data, category, l) {
     _.each(category_data.screen_names, function(screen_name) {
+      screen_name = screen_name.toLowerCase();
       if (screen_name in screen_name_to_category) {
         screen_name_to_category[screen_name].push(category);
       } else {
