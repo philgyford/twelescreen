@@ -98,6 +98,10 @@ twelescreen.controller = {
   init: function(page, spec) {
     $.extend(this.config, spec);
 
+    // Normalise the screen names to lower case for better comparisons.
+    this.config.screen_names = this.config.screen_names.map(
+                                          function(n){ return n.toLowerCase(); });
+
     var init_callback,
         that = this;
 
