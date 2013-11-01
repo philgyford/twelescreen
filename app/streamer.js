@@ -125,18 +125,21 @@ module.exports = function(settings, twitter, io, _) {
       // We have a connection. Now watch the 'tweets' event for incoming tweets.
       stream.on('data', function(tweet) {
 
-        // Make sure it was a valid tweet, and also not a reply, and also
-        // not a retweet.
+        // Make sure it was a valid tweet, and also not a reply, and not a retweet.
         if (tweet.text !== undefined && tweet.in_reply_to_user_id === null && tweet.retweeted_status === undefined) {
-          streamer.add_tweet_to_cache(tweet);
-          // Get all the categories this Tweet's account is in
-          // and send the tweet to all clients in that category's sockets 'room'.
-          settings.screen_name_to_category[tweet.user.screen_name.toLowerCase()].forEach(
-          function(category) {
-            io.sockets.in(category).emit('messages',
-              {type: 'fresh', tweets: [streamer.shrink_tweet(tweet)] }
-            );
-          });
+          // Get all the categories this Tweet's account is in.
+          var categories = settings.screen_name_to_category[tweet.user.screen_name.toLowerCase()];
+          // categories *should* always be an array. But occasionally Twitter
+          // seems to send us a tweet by someone we don't follow. So:
+          if (categories) {
+            streamer.add_tweet_to_cache(tweet);
+            // Send the tweet to all clients in that category's sockets 'room'.
+            categories.forEach(function(category) {
+              io.sockets.in(category).emit('messages',
+                {type: 'fresh', tweets: [streamer.shrink_tweet(tweet)] }
+              );
+            });
+          };
         }
       });
       console.log('Streamer (3/3 continuing): Listening for new Tweets');
@@ -203,10 +206,13 @@ module.exports = function(settings, twitter, io, _) {
     var shrunk_tweet = streamer.shrink_tweet(tweet);  
     // We want to ignore any retweets of the the accounts we follow:
     if (tweet.retweeted_status === undefined) {
-      // For each category this twitter account is associated with, add to its
-      // cache.
-      settings.screen_name_to_category[tweet.user.screen_name.toLowerCase()].forEach(
-        function(category){
+      // Get all the categories this Tweet's account is in.
+      var categories = settings.screen_name_to_category[tweet.user.screen_name.toLowerCase()];
+      // categories *should* always be an array. But occasionally Twitter
+      // seems to send us a tweet by someone we don't follow. So:
+      if (categories) {
+        // For each category this twitter account is associated with, add to cache.
+        categories.forEach(function(category){
           if (category in streamer.cache) {
             streamer.cache[category].push(shrunk_tweet); 
           } else {
@@ -217,8 +223,8 @@ module.exports = function(settings, twitter, io, _) {
           // Remove any superfluous items from start.
           streamer.cache[category].splice(0,
             (streamer.cache[category] - settings.categories[category].number_of_tweets));
-        }
-      );
+        });
+      };
     };
   };
 
