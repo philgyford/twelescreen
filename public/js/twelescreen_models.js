@@ -10,7 +10,7 @@
  *
  *     // List any object variables
  *     obj.object_vars = obj.object_vars.concat(
- *       ['id', 'text']
+ *       ['id', 'text', 'foo']
  *     );
  *
  *     obj.construct();
@@ -364,7 +364,8 @@ twelescreen.models.slide = function(spec) {
 twelescreen.models.title_slide = function(spec) {
 	var obj = twelescreen.models.slide(spec);
 
-	obj.object_vars = obj.object_vars.concat( ['text'] );
+  // Child classes can set their own fit_text_size to use a different one.
+	obj.object_vars = obj.object_vars.concat( ['text', 'fit_text_size'] );
 
 	obj.construct();
 
@@ -419,11 +420,31 @@ twelescreen.models.title_slide = function(spec) {
     var $slide = $('#'+obj.get_id());
     // To move the vertically-centered text up a bit.
     var padding_bottom = Math.round($slide.height() / 10);
+    // Use default fitText() ratio of 0.7 unless the class has set one.
+    var fit_text_size = obj.get_fit_text_size() || 0.7;
     $slide
       .css('paddingBottom', padding_bottom)
       .height($slide.height() - padding_bottom)
-      .fitText(0.7);
+      .fitText(fit_text_size);
   };
+
+  return obj;
+};
+
+
+/**********************************************************************
+ * LOADING TITLE SLIDE.
+ * Shown by twelescreen.controller but destroyed as soon as fonts
+ * and tweets etc are loaded.
+ */
+twelescreen.models.loading_title_slide = function(spec) {
+	var obj = twelescreen.models.title_slide(spec);
+
+	obj.object_vars = obj.object_vars.concat( [] );
+
+	obj.construct();
+
+  obj.set_type('loading_title');
 
   return obj;
 };

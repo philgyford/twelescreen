@@ -5,6 +5,11 @@ body {
   color: #ddd;
 }
 
+#loading {
+  color: #ddd;
+  background: #000 url(img/loading.gif) 50% 50% no-repeat;
+}
+
 /*************************************************
  * Styles for the index page.
  */

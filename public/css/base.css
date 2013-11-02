@@ -60,6 +60,14 @@ body {
   color: #000;
 }
 
+/* Shown unless JavaScript is enabled. */
+#jsnotice {
+  display: none;
+}
+.no-js #jsnotice {
+  display: block;
+}
+
 /* Centering styles from http://infrequently.org/2009/08/css-3-progress/ */
 .hbox {
   display: -webkit-box;

@@ -5,6 +5,11 @@ body {
   text-transform: uppercase;
 }
 
+#loading {
+  color: #EDED39;
+  background: #222 url(img/loading.gif) 50% 50% no-repeat;
+}
+
 /*************************************************
  * Styles for the index page.
  */
