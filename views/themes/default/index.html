@@ -3,16 +3,16 @@
 {<content}
 
   <div class="menu">
-    <header class="menu-header">
-      <div class="menu-header-inner">
+    <header class="menu_header">
+      <div class="menu_header_inner">
         <h1>Twelescreen</h1>
       </div>
     </header>
 
-    <section class="menu-body vbox center">
-      <div class="menu-body-inner">
-        <div class="menu-body-intro">
-          <div class="menu-body-intro-inner">
+    <section class="menu_body vbox center">
+      <div class="menu_body_inner">
+        <div class="menu_body_intro">
+          <div class="menu_body_intro_inner">
           {?config.menu.intro_text}
             {config.menu.intro_text}
           {/config.menu.intro_text}
@@ -24,9 +24,9 @@
             {?show_on_menu}
             <li id="category-{key}" class="category">
               <a href="/{key}/">
-                <span class="category-title">{title}</span>
-                <span class="category-screennames">{#screen_names}
-                  <span class="category-screenname">@{.}{@sep}, {/sep}</span>{/screen_names}</span>
+                <span class="category_title">{title}</span>
+                <span class="category_screennames">{#screen_names}
+                  <span class="category_screenname">@{.}{@sep}, {/sep}</span>{/screen_names}</span>
               </a>
             </li>
             {/show_on_menu}
@@ -36,8 +36,8 @@
       </div>
     </section> <!-- .menu-body -->
 
-    <section class="menu-outro vbox center">
-      <div class="menu-outro-inner">
+    <section class="menu_outro vbox center">
+      <div class="menu_outro_inner">
         {?config.menu.outro_text}
           {config.menu.outro_text}
         {:else}
@@ -46,8 +46,8 @@
       </div>
     </section>
 
-    <footer class="menu-footer vbox center">
-      <div class="menu-footer-inner">
+    <footer class="menu_footer vbox center">
+      <div class="menu_footer_inner">
         <a href="https://github.com/philgyford/twelescreen">More about Twelescreen</a>
       </div>
     </footer>

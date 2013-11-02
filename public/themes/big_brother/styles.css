@@ -17,13 +17,13 @@ body {
   color: #FCFCF2;
   text-decoration: none;
 }
-.menu-header {
+.menu_header {
 }
-  .menu-header-inner {
+  .menu_header_inner {
     background: #222;
   }
 
-.menu-body {
+.menu_body {
 }
   .category {
   background: #222;
@@ -42,17 +42,17 @@ body {
     }
     .category a:hover {
     }
-      .category-title {
+      .category_title {
       }
-      .category-screennames {
+      .category_screennames {
         display: none;
       } 
-.menu-footer {
+.menu_footer {
   background: #222;
 }
-  .menu-footer a {
+  .menu_footer a {
   }
-  .menu-footer a:hover {
+  .menu_footer a:hover {
   }
 
 /*************************************************

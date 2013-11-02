@@ -16,14 +16,14 @@ body {
 .menu a {
   text-decoration: none;
 }
-.menu-header {
+.menu_header {
   color: #aaa;
 }
-  .menu-header-inner {
+  .menu_header_inner {
     background: #222;
   }
 
-.menu-body {
+.menu_body {
 }
   .category {
   }
@@ -33,20 +33,20 @@ body {
     .category a:hover {
       background: #555;
     }
-      .category-title {
+      .category_title {
         color: #eee;
       }
-      .category-screennames {
+      .category_screennames {
         color: #aaa;
       } 
-.menu-footer {
+.menu_footer {
   background: #222;
 }
-  .menu-footer a {
+  .menu_footer a {
     color: #eee;
     text-decoration: underline;
   }
-  .menu-footer a:hover {
+  .menu_footer a:hover {
     color: #fff;
   }
 

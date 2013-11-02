@@ -142,7 +142,7 @@ twelescreen.models.menu_page = function(spec) {
       $('.menu').height($(window).height());
       // But if there's not enough space for the contents of .menu-body,
       // set the outer block to auto height, and expand off the page.
-      if ($('.menu-body').height() < $('.menu-body-inner').outerHeight(true)) {
+      if ($('.menu_body').height() < $('.menu_body_inner').outerHeight(true)) {
         $('.menu').height('auto');
       };
     };
@@ -373,7 +373,7 @@ twelescreen.models.title_slide = function(spec) {
 
   obj.create_element = function() {
     $('body').append(
-      $('<div/>').attr('id', obj.get_id()).addClass('slide slide-title vbox center')
+      $('<div/>').attr('id', obj.get_id()).addClass('slide slide_title vbox center')
     );
     if (obj.get_text()) {
       obj.update_elements_text();
