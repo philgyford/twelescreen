@@ -137,9 +137,12 @@ twelescreen.models.menu_page = function(spec) {
 
   obj.resize = function() {
     if ($('.menu').exists()) {
-      if ($('.menu').height() <= $(window).height()) {
-        $('.menu').height($(window).height());
-      } else {
+      // Set the outer block to the height of the window, so that our
+      // %-heighted contents fill the space.
+      $('.menu').height($(window).height());
+      // But if there's not enough space for the contents of .menu-body,
+      // set the outer block to auto height, and expand off the page.
+      if ($('.menu-body').height() < $('.menu-body-inner').outerHeight(true)) {
         $('.menu').height('auto');
       };
     };

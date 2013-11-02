@@ -11,6 +11,14 @@
 
     <section class="menu-body vbox center">
       <div class="menu-body-inner">
+        <div class="menu-body-intro">
+          <div class="menu-body-intro-inner">
+          {?config.menu.intro_text}
+            {config.menu.intro_text}
+          {/config.menu.intro_text}
+          </div>
+        </div>
+
         <ul class="categories">
           {#config.categories_list}
             {?show_on_menu}
@@ -24,10 +32,21 @@
             {/show_on_menu}
           {/config.categories_list}
         </ul>
+
       </div>
     </section> <!-- .menu-body -->
 
-    <footer class="menu-footer">
+    <section class="menu-outro vbox center">
+      <div class="menu-outro-inner">
+        {?config.menu.outro_text}
+          {config.menu.outro_text}
+        {:else}
+          &nbsp;
+        {/config.menu.outro_text}
+      </div>
+    </section>
+
+    <footer class="menu-footer vbox center">
       <div class="menu-footer-inner">
         <a href="https://github.com/philgyford/twelescreen">More about Twelescreen</a>
       </div>

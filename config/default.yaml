@@ -1,5 +1,10 @@
 env:
   heroku: false
+menu:
+  font: Russo One
+  theme: big_brother
+  intro_text: "Select your nationality"
+  outro_text: "By reading this you accept all terms and conditions of use"
 categories:
   _defaults:
     font: Russo One
@@ -33,6 +38,8 @@ categories:
       - barackobama
       - CDCemergency
       - deptofdefense
+      - FBIPressOffice
+      - FBIMostWanted
       - readygov
       - tsablogteam
       - usairforce
@@ -40,7 +47,7 @@ categories:
       - uscis
       - usnavy
       - whitehouse
-    burn_in_text: If you see something, say something
+    burn_in_text: Yes we can
     greetings:
       - Attention<br>folks!
     slogans:
@@ -53,12 +60,16 @@ categories:
   uk:
     title: United Kingdom
     screen_names:
+      - britisharmy
       - david_cameron
       - DefenceHQ
       - dwppressoffice
       - hmrcgovuk
       - mojgovuk
+      - NCA_UK
       - number10gov
+      - royalairforceuk
+      - royalnavy
       - transportgovuk
       - ukhomeoffice
     burn_in_text: Go home or face arrest

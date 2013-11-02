@@ -14,6 +14,9 @@ body {
 .menu-header {
   color: #aaa;
 }
+  .menu-header-inner {
+    background: #222;
+  }
 
 .menu-body {
 }
@@ -32,6 +35,7 @@ body {
         color: #aaa;
       } 
 .menu-footer {
+  background: #222;
 }
   .menu-footer a {
     color: #eee;

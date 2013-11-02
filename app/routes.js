@@ -23,11 +23,10 @@ module.exports = function(app, settings, fs, path, _) {
         // Normal menu page.
         var config = {
           categories_list: settings.categories_list,
-          google_analytics_id: settings.google_analytics_id
-        };
-        config.theme = settings.category_defaults.theme;
-        if (settings.category_defaults.font) {
-          config.font = settings.category_defaults.font;
+          google_analytics_id: settings.google_analytics_id,
+          menu: settings.menu,
+          theme: settings.menu.theme,
+          font: settings.menu.font
         };
 
         // Work out which template to use.

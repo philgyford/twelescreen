@@ -2,6 +2,7 @@ body {
   font-family: 'Russo One', Helvetica, Arial, sans-serif;
   background: #CC2211;
   color: #FCFCF2;
+  text-transform: uppercase;
 }
 
 /*************************************************
@@ -77,7 +78,6 @@ body {
 .alert {
   background: #FCFCF2;
   color: #222;
-  text-transform: uppercase;
   padding-top: 0.3em;
   padding-bottom: 0.2em;
   border-top: 2px solid #000;
@@ -86,7 +86,6 @@ body {
 .tweet_account {
   color: #FCFCF2;
   background: #222;
-  text-transform: uppercase;
 }
   .tweet_account a {
     color: #FCFCF2;
@@ -94,7 +93,6 @@ body {
   }
 
 .tweet_message {
-  text-transform: uppercase;
 }
   .tweet_message a {
     text-transform: none;

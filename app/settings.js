@@ -11,7 +11,7 @@ module.exports = function(_) {
 
   var config = require('config');
 
-  _.each(['env', 'google_analytics_id', 'categories', 'twitter'], function(key) {
+  _.each(['env', 'google_analytics_id', 'categories', 'menu', 'twitter'], function(key) {
     // Mirror all of our settings from config for slightly easier access.
     if (_.has(config, key) && config[key] != null) {
       settings[key] = config[key];
@@ -31,17 +31,21 @@ module.exports = function(_) {
           _.defaults(settings.categories[cat_key], settings.categories._defaults);
         };
       });
+      // We don't need the defaults now they're copied to the real categories.
+      delete settings.categories._defaults;
     };
-  });
 
-  // We don't need the defaults now they're copied to all the real categories.
-  // But we keep a record of them, for use on the index page.
-  if (_.has(settings.categories, '_defaults')) {
-    settings.category_defaults = settings.categories._defaults;
-    delete settings.categories._defaults;
-  } else {
-    settings.category_defaults = {theme: 'default'}; 
-  };
+    // Set any required menu settings with defaults.
+    if (key == 'menu') {
+      if ( ! ('font' in settings.menu)) {
+        settings.menu.font = false;
+      };
+      if ( ! ('theme' in settings.menu)) {
+        settings.menu.theme = 'default';
+      };
+    };
+
+  });
 
   /**
    * Will be an array of valid category keys, like: ['uk', 'us'].
