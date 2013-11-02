@@ -60,12 +60,9 @@ body {
   color: #000;
 }
 
-/* Shown unless JavaScript is enabled. */
-#jsnotice {
-  display: none;
-}
-.no-js #jsnotice {
-  display: block;
+#jsnotice h1,
+#jsnotice p {
+  margin: 1em 10px;
 }
 
 /* Centering styles from http://infrequently.org/2009/08/css-3-progress/ */

@@ -9,19 +9,17 @@
   {:else}
     <link rel="stylesheet" href="/themes/default/styles.css">
   {/config.theme}
-  <script>
-    // Remove no-js class:
-    document.body.className = "page-{page}";
-  </script>
 </head>
 
-<body class="page-{page} no-js"{?config.category_key} id="category-{config.category_key}"{/config.category_key}>
+<body class="page-{page}"{?config.category_key} id="category-{config.category_key}"{/config.category_key}>
 
-  <div id="jsnotice">
-    <h1>Twelescreen is a big screen for Twitter</h1>
-    <p>This site requires JavaScript to work.</p>
-    <p><a href="https://github.com/philgyford/twelescreen/blob/master/README.md#">More information about Twelescreen.</a></p>
-  </div>
+  <noscript>
+    <div id="jsnotice">
+      <h1>Twelescreen is a big screen for Twitter</h1>
+      <p>This site requires JavaScript to work.</p>
+      <p><a href="https://github.com/philgyford/twelescreen/blob/master/README.md#">More information about Twelescreen.</a></p>
+    </div>
+  </noscript>
 
   {+content}
 
