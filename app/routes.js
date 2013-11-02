@@ -3,6 +3,17 @@ module.exports = function(app, settings, fs, path, _) {
   var routes = this;
 
   /**
+   * Redirect from URLs like '/rig' to '/rig/'.
+   */
+  app.use(function(req, res, next) {
+    if (req.url.substr(-1) != '/') {
+      res.redirect(301, req.url + '/');
+    } else {
+      next();
+    };
+  });
+
+  /**
    * A request for the front page of the site.
    */
   app.get('/', function(req, res) {
