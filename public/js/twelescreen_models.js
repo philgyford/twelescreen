@@ -426,8 +426,8 @@ twelescreen.models.title_slide = function(spec) {
   obj.resize_extra = function() {
     var $slide = $('#'+obj.get_id());
 
-    // Use default fitText() ratio of 0.7 unless the class has set one.
-    var fit_text_size = obj.get_fit_text_size() || 0.7;
+    // Use default fitText() ratio of 1 unless the class has set one.
+    var fit_text_size = obj.get_fit_text_size() || 1;
     $slide.fitText(fit_text_size);
 
     if ($('html').hasClass('lt-ie10')) {
