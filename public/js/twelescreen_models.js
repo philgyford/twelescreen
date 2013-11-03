@@ -373,7 +373,9 @@ twelescreen.models.title_slide = function(spec) {
 
   obj.create_element = function() {
     $('body').append(
-      $('<div/>').attr('id', obj.get_id()).addClass('slide slide_title vbox center')
+      $('<div/>').attr('id', obj.get_id()).addClass('slide slide-title vbox hbox').append(
+        $('<div/>').addClass('slide_inner')
+      )
     );
     if (obj.get_text()) {
       obj.update_elements_text();
@@ -390,7 +392,7 @@ twelescreen.models.title_slide = function(spec) {
   };
 
   obj.update_elements_text = function() {
-    $('#'+obj.get_id()).html( obj.get_text() );
+    $('#'+obj.get_id()+' .slide_inner').html( obj.get_text() );
   };
 
   obj.transition = function() {
@@ -419,7 +421,7 @@ twelescreen.models.title_slide = function(spec) {
   obj.resize_extra = function() {
     var $slide = $('#'+obj.get_id());
     // To move the vertically-centered text up a bit.
-    var padding_bottom = Math.round($slide.height() / 10);
+    var padding_bottom = Math.round($slide.height() / 12);
     // Use default fitText() ratio of 0.7 unless the class has set one.
     var fit_text_size = obj.get_fit_text_size() || 0.7;
     $slide
@@ -559,13 +561,13 @@ twelescreen.models.tweet_slide = function(spec) {
         )
       ).append(
         $('<div/>').addClass('tweet_message').html(
-          '<div class="tweet_message_panel tweet_message_panel-text vbox center"><div class="tweet_message_panel_inner">' + tweet_text + '</div></div>'
+          '<div class="tweet_message_panel tweet_message_panel-text vbox"><div class="tweet_message_panel_inner">' + tweet_text + '</div></div>'
         )
       ).addClass('slide')
     );
     if ('image' in tweet) {
       $('.tweet_message', $('#'+obj.get_id())).append(
-        $('<div/>').addClass('tweet_message_panel tweet_message_panel-image vbox center').append(
+        $('<div/>').addClass('tweet_message_panel tweet_message_panel-image vbox hbox').append(
           $('<div/>').addClass('tweet_message_panel_inner').append(
             $('<img/>').attr('src', tweet.image.url).data({
               // Width and height as data attributes, for reference when resizing.

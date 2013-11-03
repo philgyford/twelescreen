@@ -65,46 +65,41 @@ body {
   margin: 1em 10px;
 }
 
-/* Centering styles from http://infrequently.org/2009/08/css-3-progress/ */
-.hbox {
-  display: -webkit-box;
-  -webkit-box-orient: horizontal;
-  -webkit-box-align: stretch;
-  display: -moz-box;
-  -moz-box-orient: horizontal;
-  -moz-box-align: stretch;
-  display: box;
-  box-orient: horizontal;
-  box-align: stretch;
-}
-.hbox > * {
-  -webkit-box-flex: 0;
-  -moz-box-flex: 0;
-  box-flex: 0;
-  display: block;
-}
+/**
+ * A block element inside will be vertically centered. The .vbox element should
+ * have a height set.
+ */
 .vbox {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-box-align: stretch;
-  display: -moz-box;
-  -moz-box-orient: vertical;
-  -moz-box-align: stretch;
-  display: box;
-  box-orient: vertical;
-  box-align: stretch;
-}
-.vbox > * {
-  -webkit-box-flex: 0;
-  -moz-box-flex: 0;
-  box-flex: 0;
-  display: block;
-}
-.center {
+  display: -webkit-box; /* OLD: Safari, iOS, Android, older WebKit.  */
+  display: -moz-box;    /* OLD: Firefox (buggy) */ 
+  display: -ms-flexbox; /* MID: IE 10 */
+  display: -webkit-flex;/* NEW, Chrome 21–28, Safari 6.1+ */
+  display: flex;        /* NEW: IE11, Chrome 29+, Opera 12.1+, Firefox 22+ */
+
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+} 
+
+/**
+ * A block element inside will be horizontally centered.
+ */
+.hbox {
+  display: -webkit-box; /* OLD: Safari, iOS, Android, older WebKit.  */
+  display: -moz-box;    /* OLD: Firefox (buggy) */ 
+  display: -ms-flexbox; /* MID: IE 10 */
+  display: -webkit-flex;/* NEW, Chrome 21–28, Safari 6.1+ */
+  display: flex;        /* NEW: IE11, Chrome 29+, Opera 12.1+, Firefox 22+ */
+
   -webkit-box-pack: center;
-  -moz-box-pack: center;
-  box-pack: center;
+  -moz-box-pack: center; 
+  -ms-flex-pack: center; 
+  -webkit-justify-content: center;
+  justify-content: center;
 }
+
 
 /*************************************************
  * Styles for the index page.
@@ -140,6 +135,7 @@ body {
 }
   .menu_body_inner {
     padding-bottom: 2em;
+    width: 96%;
   }
     .menu_body_intro {
       text-align: center;
@@ -154,7 +150,7 @@ body {
     }
 
     .categories {
-      width: 96%;
+      width: 100%;
       margin: 0 auto; 
     }
       .category {
@@ -236,9 +232,11 @@ body {
 .is-slide-on {
   left: 0;
 }
-.slide_title {
+.slide-title .slide_inner {
   text-align: center;
-  text-transform: uppercase;
+  padding-left: 3%;
+  padding-right: 3%;
+  width: 94%;
 }
 
 #burn {
