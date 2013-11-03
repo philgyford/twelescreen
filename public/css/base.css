@@ -100,6 +100,15 @@ body {
   justify-content: center;
 }
 
+/**
+ * A fix for IE9 etc for some situations oh I don't know I'm tired of IE now.
+ */
+.lt-ie10 .hbox > * {
+  margin-left: auto;
+  margin-right: auto;
+	text-align: center;
+}
+
 
 /*************************************************
  * Styles for the index page.

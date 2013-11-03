@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<!--[if lt IE 10]>      <html class="lt-ie10"> <![endif]-->
+<!--[if gt IE 9]><!--> <html> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title>{?config.title}{config.title} {/config.title}Twelescreen</title>
@@ -49,15 +50,15 @@
           font: '{config.font}'{@eq key=page value="screen"},
             category_key: '{config.category_key}',
             title: "{config.title}",
-            screen_names: [{#config.screen_names}'{.}',{/config.screen_names}],
+            screen_names: [{#config.screen_names}'{.}'{@sep},{/sep}{/config.screen_names}],
             burn_in_text: "{config.burn_in_text|s}",
             disconnect_warning: "{config.disconnect_warning|s}",
             number_of_tweets: {config.number_of_tweets},
             time_per_slide: {config.time_per_slide},
             slide_transition_time: {config.slide_transition_time},
             greeting_time: {config.greeting_time},
-            greetings: [{#config.greetings}"{.|s}",{/config.greetings}],
-            slogans: [{#config.slogans}"{.|s}",{/config.slogans}]
+            greetings: [{#config.greetings}"{.|s}"{@sep},{/sep}{/config.greetings}],
+            slogans: [{#config.slogans}"{.|s}"{@sep},{/sep}{/config.slogans}]
           {/eq}
         }
       );

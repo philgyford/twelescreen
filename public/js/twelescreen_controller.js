@@ -88,7 +88,7 @@ twelescreen.controller = {
    * When set to false you can call twelescreen.controller.show_next_item()
    * in the console to manually advance to whatever slide is next.
    */
-  auto_advance: true,
+  auto_advance: false,
 
   /**
    * Set to true to output some logging in the console to help see what's
