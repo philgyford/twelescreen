@@ -1,18 +1,21 @@
 body {
   font-family: 'Russo One', Helvetica, Arial, sans-serif;
-  background: #CC2211;
+  background: #222;
   color: #FCFCF2;
   text-transform: uppercase;
 }
 
 #loading {
   color: #EDED39;
-  background: #222 url(img/loading.gif) 50% 52% no-repeat;
+  background: #222 url(img/loading.gif) 50% 54% no-repeat;
 }
 
 /*************************************************
  * Styles for the index page.
  */
+.menu {
+  background: #CC2211;
+}
 .menu a {
   color: #FCFCF2;
   text-decoration: none;
@@ -26,7 +29,7 @@ body {
 .menu_body {
 }
   .category {
-  background: #222;
+    background: #222;
   }
     .category a {
       text-align: center;

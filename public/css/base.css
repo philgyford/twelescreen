@@ -64,6 +64,9 @@ body {
 #jsnotice p {
   margin: 1em 10px;
 }
+.no-js #loading {
+  display: none;
+}
 
 /**
  * A block element inside will be vertically centered. The .vbox element should
@@ -109,6 +112,15 @@ body {
 	text-align: center;
 }
 
+
+/**
+ * Styles for our 'fake' .title_slide, which won't have JS sizing applied.
+ */
+#loading {
+  width: 100%;
+  height: 100%;
+  font-size: 2em;
+}
 
 /*************************************************
  * Styles for the index page.
@@ -250,7 +262,7 @@ body {
 
 #burn {
   z-index: 2000;
-  /* Hidden by default. Set it to 0 in a theme to have it display. */
+  /* Hidden by default. Set it to 0px in a theme to have it display. */
   left: -5000px;
   background: none;
   zoom: 1;

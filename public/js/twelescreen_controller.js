@@ -77,12 +77,6 @@ twelescreen.controller = {
   slogan_queue: [],
 
   /**
-   * Will be a twelescreen.models.loading_title_slide object until fonts and/or
-   * tweets have loaded.
-   */
-  loading_slide: null,
-
-  /**
    * Should generally always be set to true.
    * Useful to be able to turn this off for debugging.
    * When set to false you can call twelescreen.controller.show_next_item()
@@ -108,12 +102,9 @@ twelescreen.controller = {
     this.config.screen_names = this.config.screen_names.map(
                                           function(n){ return n.toLowerCase(); });
 
-    this.make_loading_slide();
-
     var init_callback,
         that = this;
 
-    $('#loading').width($(window).width()).height($(window).height());
     if (page == 'screen') {
       this.log("Displaying screen page");
       this.page = twelescreen.models.screen_page({
@@ -124,7 +115,7 @@ twelescreen.controller = {
         that.page.init();
         that.prepare_connection();
         var tweets_loaded_callback = function(){
-          that.destroy_loading_slide();
+          $('#loading').remove();
           that.next_tick();
         }; 
         that.listen_for_tweets(tweets_loaded_callback);
@@ -134,31 +125,12 @@ twelescreen.controller = {
       this.page = twelescreen.models.menu_page({});
       init_callback = function(){
         that.log("Initialising page");
-        that.destroy_loading_slide();
+        $('#loading').remove();
         that.page.init();
       };
     };
 
     this.prepare_fonts(init_callback);
-  },
-
-  /**
-   * Shown until we successfully loads fonts and/or tweets.
-   */
-  make_loading_slide: function() {
-    this.loading_slide = twelescreen.models.loading_title_slide({
-      id: 'loading',
-      text: "Loading Twelescreen",
-      // Smaller text size than the default for loading screen:
-      fit_text_size: 3
-    });
-    this.loading_slide.create_element();
-    this.loading_slide.transition();
-  },
-
-  destroy_loading_slide: function() {
-    this.loading_slide.remove();
-    this.loading_slide = null;
   },
 
   /**

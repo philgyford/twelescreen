@@ -452,24 +452,6 @@ twelescreen.models.title_slide = function(spec) {
 
 
 /**********************************************************************
- * LOADING TITLE SLIDE.
- * Shown by twelescreen.controller but destroyed as soon as fonts
- * and tweets etc are loaded.
- */
-twelescreen.models.loading_title_slide = function(spec) {
-	var obj = twelescreen.models.title_slide(spec);
-
-	obj.object_vars = obj.object_vars.concat( [] );
-
-	obj.construct();
-
-  obj.set_type('loading_title');
-
-  return obj;
-};
-
-
-/**********************************************************************
  * GREETING TITLE SLIDE.
  * The 'greeting' that's shown initially, and before each brand new tweet.
  */
