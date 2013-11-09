@@ -389,9 +389,9 @@ twelescreen.models.title_slide = function(spec) {
   obj.update_text = function(text) {
     obj.set_text(text);
     obj.update_elements_text();
-    if ($('html').hasClass('lt-ie10')) {
-      // Because older IEs require some manual positioning that is affected by
-      // different amounts of text.
+    if ( ! $('html').hasClass('flexbox')) {
+      // Because browsers without CSS flexbox require some manual positioning
+      // that is affected by different amounts of text.
       obj.resize_extra();
     };
   };
@@ -430,20 +430,21 @@ twelescreen.models.title_slide = function(spec) {
     var fit_text_size = obj.get_fit_text_size() || 1;
     $slide.fitText(fit_text_size);
 
-    if ($('html').hasClass('lt-ie10')) {
-      // Older IEs. Need to manually give .slide_inner a top margin, rather than
-      // relying on the CSS flexbox stuff.
-      // Also, adding bottom padding to $slide seems to leave a gap at bottom.
-      $('.slide_inner', $slide).css('marginTop',
-          ($slide.outerHeight() - $('.slide_inner', $slide).height()) / 2.2
-        );
-    } else {
+    if ($('html').hasClass('flexbox')) {
       // All modern browsers.
       // To move the vertically-centered text up a bit.
       var padding_bottom = Math.round($slide.height() / 12);
       $slide
         .css('paddingBottom', padding_bottom)
         .height($slide.height() - padding_bottom);
+
+    } else {
+      // Older browsers. Need to manually give .slide_inner a top margin, rather
+      // than relying on the CSS flexbox stuff.
+      // Also, adding bottom padding to $slide seems to leave a gap at bottom.
+      $('.slide_inner', $slide).css('marginTop',
+          ($slide.outerHeight() - $('.slide_inner', $slide).height()) / 2.2
+        );
     };
   };
 
@@ -686,9 +687,9 @@ twelescreen.models.tweet_slide = function(spec) {
 
     $('.tweet_message_panel-text .tweet_message_panel_inner', $slide).fitTextBlock();
 
-    if ($('html').hasClass('lt-ie10')) {
-      // Older IEs. Need to manually give _inner a top margin, rather than
-      // relying on the CSS flexbox stuff.
+    if ( ! $('html').hasClass('flexbox')) {
+      // Need to manually give _inner a top margin, rather than relying on the
+      // CSS flexbox stuff.
       $('.tweet_message_panel_inner', $slide).css('marginTop',
         (
           $('.tweet_message_panel', $slide).outerHeight() - $('.tweet_message_panel_inner', $slide).height()

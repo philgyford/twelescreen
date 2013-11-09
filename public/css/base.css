@@ -53,6 +53,12 @@ table {
 }
 /* END CSS RESET */
 
+/**
+ * For older IEs
+ */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
 
 body {
   text-rendering: optimizeLegibility;

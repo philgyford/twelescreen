@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<!--[if lt IE 10]>      <html class="no-js lt-ie10"> <![endif]-->
-<!--[if gt IE 9]><!--> <html class="no-js"> <!--<![endif]-->
+<html class="no-js">
 <head>
   <meta charset="utf-8">
   <title>{?config.title}{config.title} {/config.title}Twelescreen</title>
@@ -10,6 +9,9 @@
   {:else}
     <link rel="stylesheet" href="/themes/default/styles.css">
   {/config.theme}
+
+  <!-- A custom build. -->
+  <script src="/js/modernizr.min.js"></script>
 </head>
 
 <body class="page-{page}"{?config.category_key} id="category-{config.category_key}"{/config.category_key}>
@@ -49,8 +51,6 @@
 
   <script>
     $(document).ready(function() {
-      $('html').removeClass('no-js');
-
       twelescreen.controller.init(
         '{page}',
         {
