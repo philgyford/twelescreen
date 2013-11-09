@@ -13,22 +13,11 @@ var twelescreen = {
 twelescreen.controller = {
 
   /**
-   * Default config values.
-   * May be overridden by passing values into init().
+   * There are no default config values set here.
+   * We assume the back-end has set all required settings.
+   * The config values will be set by the object passed into init().
    */
-  config: {
-    disconnect_warning: "Connection to server lost",
-    category_key: '',
-    font: null,
-    screen_names: [],
-    greetings: ["Hello there"],
-    slogans: [],
-    number_of_tweets: 5,
-    time_per_slide: 5000,
-    slide_transition_time: 400, 
-    greeting_time: 5000,
-    chance_of_slogan: 5
-  },
+  config: {},
 
   /**
    * Will be one of twelescreen.models.menu_page or
@@ -99,8 +88,10 @@ twelescreen.controller = {
     $.extend(this.config, spec);
 
     // Normalise the screen names to lower case for better comparisons.
-    this.config.screen_names = this.config.screen_names.map(
+    if ('screen_names' in this.config) {
+      this.config.screen_names = this.config.screen_names.map(
                                           function(n){ return n.toLowerCase(); });
+    };
 
     var init_callback,
         that = this;
@@ -292,7 +283,7 @@ twelescreen.controller = {
       var that = this;
       setTimeout(function(){
         that.next_tick();
-      }, that.config.time_per_slide);
+      }, that.config.slide_wait_time);
     };
   },
 
@@ -304,7 +295,7 @@ twelescreen.controller = {
     this.page.add_new_tweet_slide({
       id: 'tweet-'+tweet.id,
       tweet: tweet,
-      duration: this.config.time_per_slide,
+      duration: this.config.slide_wait_time,
       transition_time: this.config.slide_transition_time
     });
 

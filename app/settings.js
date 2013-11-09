@@ -11,41 +11,79 @@ module.exports = function(_) {
 
   var config = require('config');
 
-  _.each(['env', 'google_analytics_id', 'categories', 'menu', 'twitter'], function(key) {
-    // Mirror all of our settings from config for slightly easier access.
+  var default_config = {
+    env: {
+      heroku: false
+    },
+    menu: {
+      font: '',
+      theme: 'default',
+      intro_text: 'Select your Twelescreen',
+      outro_text: ''
+    },
+    categories: {
+      _defaults: {
+        font: '',
+        theme: 'default',
+        number_of_tweets: 10,
+        disconnect_warning: 'Connection to server lost',
+        slide_wait_time: 8000,
+        slide_transition_time: 1000,
+        greeting_time: 2000,
+        chance_of_slogan: 5,
+        show_on_menu: true,
+        burn_in_text: '',
+        greetings: ['Attention'],
+        screen_names: [],
+        slogans: []
+        // title - If not present, we use the category's key.
+      }
+    },
+    google_analytics_id: '',
+    twitter: {}
+  };
+
+  _.each(_.keys(default_config), function(key) {
+    // All the user's settings will be in config.
+    // We mirror them into settings, for slightly easier access.
+    // (Otherwise we'd have to use settings.config everywhere else.)
     if (_.has(config, key) && config[key] != null) {
       settings[key] = config[key];
-    } else if (_.indexOf(['env', 'google_analytics_id'], key) >= 0) {
-      // Default value for these:
-      settings[key] = false;
-    } else {
-      // Default value for everything else:
-      settings[key] = {};
     };
 
-    // Add any default category values to each of the category settings, where
-    // the category doesn't have a matching setting.
     if (key == 'categories' && '_defaults' in settings.categories) {
+      // In case the user didn't set a categories._defaults:
+      if ( ! settings.categories._defaults) {
+        settings.categories._defaults = {};
+      };
+
+      // If the user's _defaults is missing anything, use the system defaults.
+      _.defaults(settings.categories._defaults, default_config.categories._defaults);
+
+      // For each of the user's categories, set any missing properties with the
+      // default values.
       _.each(settings.categories, function(cat_settings, cat_key) {
         if (cat_key != '_defaults') {
           _.defaults(settings.categories[cat_key], settings.categories._defaults);
+
+          // If no title is set for this category, use the category's key.
+          if ( ! _.has(settings.categories[cat_key], 'title')
+              || ! settings.categories[cat_key].title) {
+            settings.categories[cat_key].title = cat_key;
+          };
         };
       });
-      // We don't need the defaults now they're copied to the real categories.
+
+      // We don't need the user's category defaults now they're copied to the real
+      // categories.
       delete settings.categories._defaults;
-    };
 
-    // Set any required menu settings with defaults.
-    if (key == 'menu') {
-      if ( ! ('font' in settings.menu)) {
-        settings.menu.font = false;
-      };
-      if ( ! ('theme' in settings.menu)) {
-        settings.menu.theme = 'default';
-      };
+    } else {
+      // All the other non-category settings are much simpler.
+      _.defaults(settings[key], default_config[key]);
     };
-
   });
+
 
   /**
    * Will be an array of valid category keys, like: ['uk', 'us'].

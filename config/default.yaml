@@ -10,15 +10,14 @@ categories:
     font: Russo One
     theme: big_brother
     number_of_tweets: 12
-    disconnect_warning: Connection to server lost
-    time_per_slide: 8000
+    slide_wait_time: 8000
     slide_transition_time: 1000
     greeting_time: 2000
     chance_of_slogan: 5
     show_on_menu: true
   rig:
     title: RIG
-    font: false
+    font: '' 
     theme: default
     show_on_menu: false
     greetings:
@@ -73,7 +72,7 @@ categories:
       - royalnavy
       - transportgovuk
       - ukhomeoffice
-    burn_in_text: Go home or face arrest
+    burn_in_text: Go home<br>or<br>face arrest
     greetings:
       - Attention<br>subjects!
     slogans:
