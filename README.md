@@ -2,7 +2,6 @@
 
 ## TO DO
 
-* Put jQuery and underscore into bower_components?
 
 Work in progress.
 
@@ -24,6 +23,25 @@ You can use https://github.com/creationix/nvm to install and manage different ve
 Managing the server-side components. These are listed in `package.json` and get installed in `node_modules/`.
 
 Install NPM. https://github.com/isaacs/npm
+
+### NVM
+
+	$ nvm use 0.10.12
+
+### Grunt
+
+Install Grunt globally:
+
+	$ npm install -g grunt-cli
+
+Run this to concatenate and minify JavaScript files:
+
+	$ grunt
+
+Run this to have Grunt watch the JavaScript files and automatically concatenate and minify them whenever they change:
+
+	% grunt watch
+
 
 
 ### Bower
