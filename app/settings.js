@@ -92,6 +92,11 @@ module.exports = function(_) {
     };
   });
 
+  // If the Google Analytics ID is set in ENV variable, use that instead:
+  if (process.env.GOOGLE_ANALYTICS_ID) {
+    settings.google_analytics_id = process.env.GOOGLE_ANALYTICS_ID;
+  };
+
   // If the Twitter keys are set in ENV variables, use those instead.
   if (process.env.TWITTER_CONSUMER_KEY) {
     settings.twitter.consumer_key = process.env.TWITTER_CONSUMER_KEY;
