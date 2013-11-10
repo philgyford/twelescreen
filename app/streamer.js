@@ -26,6 +26,10 @@ module.exports = function(settings, twitter, io, _) {
    * First get existing tweets, then start listening for new ones.
    */
   streamer.start = function() {
+    if ( ! _.has(settings, 'twitter') || ! _.has(settings.twitter, 'consumer_key')) {
+      console.log("ERROR: No Twitter API credentials found.");
+      process.exit(1);
+    };
     streamer.twitter = new twitter({
       consumer_key: settings.twitter.consumer_key,
       consumer_secret: settings.twitter.consumer_secret,
