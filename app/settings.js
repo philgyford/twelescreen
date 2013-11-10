@@ -40,7 +40,6 @@ module.exports = function(_) {
     twitter: {}
   };
 
-  console.log('ENVIRONMENT: '+process.env.NODE_ENV);
   // We'll replace any missing settings from the user's config with the default.
   _.each(_.keys(default_config), function(key) {
     // All the user's settings will be in config.
