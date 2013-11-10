@@ -1,5 +1,3 @@
-env:
-  heroku: false
 menu:
   font: Russo One
   theme: big_brother
