@@ -23,12 +23,18 @@ app.set('port', process.env.PORT || 3000);
 app.engine('html', consolidate.dust);
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname, '/views'));
-app.use(express.logger('dev'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+if (process.env.NODE_ENV == 'development') {
+  app.use(express.logger('dev'));
+} else {
+  app.use(express.logger('default,'));
+};
+
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public')));
 
 
 // We're using bower components so add it to the path to make things easier.
