@@ -50,7 +50,7 @@ require(path.resolve('app','routes'))(app, settings, fs, path, _);
 var io = socket.listen(server);
 
 // Set the sockets.io configuration.
-if (settings.env.heroku == true) {
+if (process.env.USE_XHR_POLLING == 'true') {
 	io.configure(function() {
 		io.set('transports', ['xhr-polling']);
 		io.set('polling duration', 10);
