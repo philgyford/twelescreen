@@ -40,10 +40,6 @@ module.exports = function(_) {
     twitter: {}
   };
 
-  console.log(config);
-  console.log(config.categories);
-
-
   // We'll replace any missing settings from the user's config with the default.
   _.each(_.keys(default_config), function(key) {
     // All the user's settings will be in config.
