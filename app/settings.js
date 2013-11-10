@@ -12,9 +12,6 @@ module.exports = function(_) {
   var config = require('config');
 
   var default_config = {
-    env: {
-      heroku: false
-    },
     menu: {
       font: '',
       theme: 'default',
@@ -43,9 +40,10 @@ module.exports = function(_) {
     twitter: {}
   };
 
+  // We'll replace any missing settings from the user's config with the default.
   _.each(_.keys(default_config), function(key) {
     // All the user's settings will be in config.
-    // We mirror them into settings, for slightly easier access.
+    // We first mirror them into settings, for slightly easier access.
     // (Otherwise we'd have to use settings.config everywhere else.)
     if (_.has(config, key) && config[key] != null) {
       settings[key] = config[key];
@@ -79,7 +77,17 @@ module.exports = function(_) {
       delete settings.categories._defaults;
 
     } else {
-      // All the other non-category settings are much simpler.
+      // All the other non-category settings are simpler.
+      if ( ! _.has(settings, key)) {
+        if (typeof default_config[key] == 'object') {
+          // 'menu' or 'twitter'.
+          settings[key] = {};
+        } else {
+          // 'google_analytics_id'.
+          settings[key] = '';
+        };
+      };
+      // Now copy the defaults in, if needed.
       _.defaults(settings[key], default_config[key]);
     };
   });
