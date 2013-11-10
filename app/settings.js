@@ -84,6 +84,13 @@ module.exports = function(_) {
     };
   });
 
+  // If the Twitter keys are set in ENV variables, use those instead.
+  if (process.env.TWITTER_CONSUMER_KEY) {
+    settings.twitter.consumer_key = process.env.TWITTER_CONSUMER_KEY;
+    settings.twitter.consumer_secret = process.env.TWITTER_CONSUMER_SECRET;
+    settings.twitter.access_token_key = process.env.TWITTER_ACCESS_TOKEN_KEY;
+    settings.twitter.access_token_secret = process.env.TWITTER_ACCESS_TOKEN_SECRET;
+  };
 
   /**
    * Will be an array of valid category keys, like: ['uk', 'us'].
