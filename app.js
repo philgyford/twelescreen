@@ -3,6 +3,7 @@
  * Run with `node app.js`.
  */
 
+console.log('===================================================');
 console.log('Twelescreen starting, using Node '+ process.version);
 
 var express = require('express'),

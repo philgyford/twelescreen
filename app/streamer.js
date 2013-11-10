@@ -143,6 +143,7 @@ module.exports = function(settings, twitter, io, _) {
         }
       });
       console.log('Streamer (3/3 continuing): Listening for new Tweets');
+      console.log('===================================================');
     });
   };
 
