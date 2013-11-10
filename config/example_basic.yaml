@@ -1,0 +1,38 @@
+twitter:
+  consumer_key: yourkeyhere
+  consumer_secret: yoursecrethere
+  access_token_key: yourkeyhere
+  access_token_secret: yoursecrethere
+categories:
+  news:
+    title: News
+    screen_names:
+      - bbcnews
+      - bbcworld
+      - nytimes
+      - cnn
+      - cnnbrk
+      - itn
+      - reuters
+      - cnni
+      - ajenglish
+    greetings:
+      - BREAKING
+      - Here is the news…
+  bbcradio:
+    title: BBC Radio
+    screen_names:
+      - bbcr1
+      - 1xtra
+      - bbcasiannetwork
+      - bbcradio3
+      - bbcradio4
+      - bbc5live
+      - bbc6music
+    slogans:
+      - Inform, educate and entertain
+      - Nation shall speak peace unto nation
+    greetings:
+      - Tune in!
+      - Listen up!
+
