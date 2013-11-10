@@ -40,6 +40,7 @@ module.exports = function(_) {
     twitter: {}
   };
 
+  console.log('ENVIRONMENT: '+process.env.NODE_ENV);
   // We'll replace any missing settings from the user's config with the default.
   _.each(_.keys(default_config), function(key) {
     // All the user's settings will be in config.
@@ -49,32 +50,38 @@ module.exports = function(_) {
       settings[key] = config[key];
     };
 
-    if (key == 'categories' && '_defaults' in settings.categories) {
-      // In case the user didn't set a categories._defaults:
-      if ( ! settings.categories._defaults) {
-        settings.categories._defaults = {};
+    if (key == 'categories') {
+      if ( ! _.has(settings, 'categories')) {
+        settings.categories = {};
       };
 
-      // If the user's _defaults is missing anything, use the system defaults.
-      _.defaults(settings.categories._defaults, default_config.categories._defaults);
-
-      // For each of the user's categories, set any missing properties with the
-      // default values.
-      _.each(settings.categories, function(cat_settings, cat_key) {
-        if (cat_key != '_defaults') {
-          _.defaults(settings.categories[cat_key], settings.categories._defaults);
-
-          // If no title is set for this category, use the category's key.
-          if ( ! _.has(settings.categories[cat_key], 'title')
-              || ! settings.categories[cat_key].title) {
-            settings.categories[cat_key].title = cat_key;
-          };
+      if ('_defaults' in settings.categories) {
+        // In case the user didn't set a categories._defaults:
+        if ( ! settings.categories._defaults) {
+          settings.categories._defaults = {};
         };
-      });
 
-      // We don't need the user's category defaults now they're copied to the real
-      // categories.
-      delete settings.categories._defaults;
+        // If the user's _defaults is missing anything, use the system defaults.
+        _.defaults(settings.categories._defaults, default_config.categories._defaults);
+
+        // For each of the user's categories, set any missing properties with the
+        // default values.
+        _.each(settings.categories, function(cat_settings, cat_key) {
+          if (cat_key != '_defaults') {
+            _.defaults(settings.categories[cat_key], settings.categories._defaults);
+
+            // If no title is set for this category, use the category's key.
+            if ( ! _.has(settings.categories[cat_key], 'title')
+                || ! settings.categories[cat_key].title) {
+              settings.categories[cat_key].title = cat_key;
+            };
+          };
+        });
+
+        // We don't need the user's category defaults now they're copied to the real
+        // categories.
+        delete settings.categories._defaults;
+      };
 
     } else {
       // All the other non-category settings are simpler.
