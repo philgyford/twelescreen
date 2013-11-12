@@ -1,8 +1,8 @@
 menu:
   font: Russo One
   theme: big_brother
-  intro_text: "Select your nationality"
-  outro_text: "By reading this you accept all terms and conditions of use"
+  intro_text: Select your nationality
+  outro_text: By reading this you accept all terms and conditions of use
 categories:
   _defaults:
     font: Russo One

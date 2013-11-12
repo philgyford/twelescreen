@@ -5,7 +5,7 @@ twitter:
   access_token_secret: yoursecrethere
 categories:
   news:
-    title: News
+    title: News headlines
     screen_names:
       - bbcnews
       - bbcworld
