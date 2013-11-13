@@ -1038,9 +1038,15 @@ twelescreen.models.tweet_slide = function(spec) {
   obj.create_element = function() {
     var tweet = obj.get_tweet();
 
-    // Make URLs into links.
+    // Match URLs:
     var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-    var tweet_text = tweet.text.replace(exp, "<a href='$1'>$1</a>");
+    var urls = tweet.text.match(exp);
+    // Remove all URLs:
+    var tweet_text = tweet.text.replace(exp, '');
+    // If there are URL(s), wrap all the text in the first one.
+    if (urls !== null) {
+      tweet_text = '<a href="' + urls[0] + '">' + tweet_text + '</a>';
+    };
 
     $('body').append(
       $('<div/>').attr('id', obj.get_id()).addClass('slide slide-tweet').append(

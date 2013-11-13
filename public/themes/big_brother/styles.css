@@ -103,7 +103,6 @@ body {
 .tweet_message {
 }
   .tweet_message a {
-    text-transform: none;
     color: #FCFCF2;
     text-decoration: none;
   }
