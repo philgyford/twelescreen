@@ -328,7 +328,7 @@ Here is each of the category options in more detail:
 * `slogans`  
   Optional  
   Type: array of strings  
-  Default: []  (empty array)
+  Default: []  \(empty array)  
   Examples: ["I've made&lt;br>a huge&lt;br>mistake", "Come on!"]  
   If a slogan is due to be shown (see `chance_of_slogan` for more information) then a random slogan is chosen from this array. For slogans to be shown there must be slogans defined *and* `chance_of_slogan` must be greater than 0. Each slogan can contain HTML.
 
