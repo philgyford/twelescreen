@@ -10,6 +10,8 @@ Twelescreen runs on Node.js and will display a rotating slideshow of the most re
 
 [Twelescreen.com](http://www.twelescreen.com/) shows an example of Twelescreen in action, with the included "Big Brother" theme. [Twelescreen.com/rig/](http://www.twelescreen.com/rig/) is an example of the "Default" theme.
 
+Questions or comments? Either [open an issue on GitHub](https://github.com/philgyford/twelescreen/issues) or [email Phil Gyford](phil@gyford.com).
+
 
 ###################################################################################
 ## Features:
@@ -330,6 +332,8 @@ Here is each of the category options in more detail:
   This is the only option for categories that must be specified; there is no system default. It should be an array of Twitter screen names -- the short handles, rather than longer full names. "philgyford" rather than "Phil Gyford". Order is irrelevant and case is ignored.
 
   In theory a total of 5,000 Twitter accounts can be followed across all categories, as per [the Twitter documentation](https://dev.twitter.com/docs/api/1.1/post/statuses/filter) but I've never tried more than a couple of dozen.
+
+  You should be able to see Tweets from protected accounts if the Twitter account you used to create the Twitter app is allowed to see them. Just make sure you're not displaying your Twelescreen in a publicly-visible place!
 
 
 ###################################################################################
