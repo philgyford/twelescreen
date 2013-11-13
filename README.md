@@ -52,25 +52,29 @@ This might be enough to get Twelescreen up and running, depending on your set-up
 
 5. Run the app with:
    
-       $ NODE_ENV=production node app.js
+   ```
+   $ NODE_ENV=production node app.js
+   ```
    
    or push it to your chosen host. If you're using Heroku, set the `USE_XHR_POLLING` environment variable to `true` (see below for more details).
    
    If you're running it locally, you should see output something like this:
 
-       ===================================================
-       Twelescreen starting, using Node v0.10.12
-          info  - socket.io started
-       Streamer (1/3 start):  Fetching Twitter user IDs
-       Express server listening on port 3000
-       Streamer (1/3 finish): Fetching Twitter user IDs
-       Streamer (2/3 start):  Caching existing Tweets
-       Streamer (2/3 finish): Caching existing Tweets
-       Streamer (3/3 start):      Listening for new Tweets
-       Streamer (3/3 continuing): Listening for new Tweets
-       ===================================================
+   ```
+   ===================================================
+   Twelescreen starting, using Node v0.10.12
+   info  - socket.io started
+   Streamer (1/3 start):  Fetching Twitter user IDs
+   Express server listening on port 3000
+   Streamer (1/3 finish): Fetching Twitter user IDs
+   Streamer (2/3 start):  Caching existing Tweets
+   Streamer (2/3 finish): Caching existing Tweets
+   Streamer (3/3 start):      Listening for new Tweets
+   Streamer (3/3 continuing): Listening for new Tweets
+   ===================================================
+   ```
     
-    From this point the server is ready for requests.
+   From this point the server is ready for requests.
 
 6. If you can view your new Twelescreen, start fiddling with the options, as described below...
 
