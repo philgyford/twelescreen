@@ -1,14 +1,15 @@
 # Twelescreen
 
-> The voice came from an oblong metal plaque like a dulled mirror which formed part of the surface of the right-hand wall. Winston turned a switch and the voice sank somewhat, though the words were still distinguishable. The instrument (the telescreen, it was called) could be dimmed, but there was no way of shutting it off completely.
+https://github.com/philgyford/twelescreen/
+
+> The voice came from an oblong metal plaque like a dulled mirror which formed part of the surface of the right-hand wall. Winston turned a switch and the voice sank somewhat, though the words were still distinguishable. The instrument (the telescreen, it was called) could be dimmed, but there was no way of shutting it off completely.  
 > _1984_, George Orwell
 
-Twelescreen is a self-hosted, one-Tweet-at-a-time, full-screen, Twitter display.
-https://github.com/philgyford/twelescreen/ Unlike _1984_'s telescreens it doesn't speak.
+Twelescreen is a self-hosted, one-Tweet-at-a-time, full-screen, Twitter display. Unlike _1984_'s telescreens it doesn't speak or watch your every move, yet.
 
-Twelescreen runs on [Node.js](http://nodejs.org/) and will display a rotating slideshow of the most recent Tweets from your chosen lists of Twitter accounts. It can handle multiple lists of accounts, each with their own URL. Custom themes (HTML/CSS templates) and settings can be applied to all lists or individual ones.
+Twelescreen runs on [Node.js](http://nodejs.org/) and displays a slideshow of the most recent Tweets from your chosen lists of Twitter accounts. It can handle multiple lists of accounts, each with their own URL. Custom themes (HTML/CSS templates) and settings can be applied to all lists or individual ones.
 
-[Twelescreen.com](http://www.twelescreen.com/) shows an example of Twelescreen in action, with the included "Big Brother" theme. [Twelescreen.com/rig/](http://www.twelescreen.com/rig/) is an example of the "Default" theme.
+[Twelescreen.com](http://www.twelescreen.com/) shows an example of Twelescreen in action, using the included "Big Brother" theme. [Twelescreen.com/rig/](http://www.twelescreen.com/rig/) is an example of the simpler "Default" theme.
 
 Questions or comments? Either [open an issue on GitHub](https://github.com/philgyford/twelescreen/issues) or [email Phil Gyford](phil@gyford.com).
 
