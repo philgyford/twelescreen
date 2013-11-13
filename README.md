@@ -55,6 +55,22 @@ This might be enough to get Twelescreen up and running, depending on your set-up
        $ NODE_ENV=production node app.js
    
    or push it to your chosen host. If you're using Heroku, set the `USE_XHR_POLLING` environment variable to `true` (see below for more details).
+   
+   If you're running it locally, you should see output something like this:
+
+       ===================================================
+       Twelescreen starting, using Node v0.10.12
+          info  - socket.io started
+       Streamer (1/3 start):  Fetching Twitter user IDs
+       Express server listening on port 3000
+       Streamer (1/3 finish): Fetching Twitter user IDs
+       Streamer (2/3 start):  Caching existing Tweets
+       Streamer (2/3 finish): Caching existing Tweets
+       Streamer (3/3 start):      Listening for new Tweets
+       Streamer (3/3 continuing): Listening for new Tweets
+       ===================================================
+    
+    From this point the server is ready for requests.
 
 6. If you can view your new Twelescreen, start fiddling with the options, as described below...
 
@@ -328,7 +344,7 @@ Here is each of the category options in more detail:
 * `slogans`  
   Optional  
   Type: array of strings  
-  Default: []  \(empty array)  
+  Default: [] \(empty array)  
   Examples: ["I've made&lt;br>a huge&lt;br>mistake", "Come on!"]  
   If a slogan is due to be shown (see `chance_of_slogan` for more information) then a random slogan is chosen from this array. For slogans to be shown there must be slogans defined *and* `chance_of_slogan` must be greater than 0. Each slogan can contain HTML.
 
