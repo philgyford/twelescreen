@@ -62,6 +62,30 @@ categories:
       - You’ve had your debate
       - Go home or face arrest
       - Hardworking families
+  fi:
+    title: Finland
+    screen_names:
+      - alexstubb
+      - DefenceFinland
+      - FinGovernment
+      - lvmfi
+      - okmfi
+      - Statsradet
+      - STM_Uutiset
+      - teamfinlandfi
+      - TPkanslia
+      - Ulkoministerio
+      - Valtioneuvosto
+      - VMuutiset
+      - ymparisto
+    burn_in_text: Think Finland
+    greetings:
+      - Tervetuloa<br>kansalaiset!
+    slogans:
+      - Connecting People
+      - Visit Finland Breathe
+      - FINNLAND. COOL.
+      - Lend us your problems. We will solve them with interest.
   rig:
     title: RIG
     font: '' 
