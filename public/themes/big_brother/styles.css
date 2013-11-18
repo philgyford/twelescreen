@@ -37,6 +37,9 @@ body {
       background-position: 50% 20px;
       background-repeat: no-repeat;
     }
+    .menu #category-fi a {
+      background-image: url(img/fi.png);
+    }
     .menu #category-us a {
       background-image: url(img/us.png);
     }
