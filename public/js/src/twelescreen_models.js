@@ -553,14 +553,15 @@ twelescreen.models.tweet_slide = function(spec) {
     // Match URLs:
     var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
     var urls = tweet.text.match(exp);
+    var tweet_text;
     // Does the tweet text contain only a URL?
-    if (urls !== null && tweet.text == urls[0]) {
-        // If so, keep it:
-         var tweet_text = tweet.text;
-      } else {
-        // Otherwise remove all URLs:
-        var tweet_text = tweet.text.replace(exp, '');
-    }
+    if (urls !== null && tweet.text.trim() == urls[0]) {
+       // If so, keep it:
+       tweet_text = '<span class="url">' + tweet.text.trim() + '</span>';
+    } else {
+      // Otherwise remove all URLs:
+      tweet_text = tweet.text.replace(exp, '');
+    };
     // If there are URL(s), wrap all the text in the first one.
     if (urls !== null) {
       tweet_text = '<a href="' + urls[0] + '">' + tweet_text + '</a>';

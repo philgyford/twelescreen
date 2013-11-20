@@ -109,6 +109,9 @@ body {
     color: #FCFCF2;
     text-decoration: none;
   }
+  .tweet_message .url {
+    text-transform: none;
+  }
   .tweet_message_panel {
     background: #CC2211;
   }
