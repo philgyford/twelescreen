@@ -502,5 +502,6 @@ Run this to have Grunt watch the JavaScript files and automatically concatenate 
 ##################################################################################
 ## Credits
 
-Phil Gyford, phil@gyford.com
+* [Phil Gyford](https://github.com/philgyford), phil@gyford.com
+* [hugovk](https://github.com/hugovk) for Finland and more.
 
