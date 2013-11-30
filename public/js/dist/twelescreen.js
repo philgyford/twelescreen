@@ -486,7 +486,7 @@ twelescreen.controller = {
   }
 };
 
-;/**
+/**
  * A base model class. Inherit from this; don't use directly. eg:
  * 
  *   twelescreen.models.slide = function(spec) {
