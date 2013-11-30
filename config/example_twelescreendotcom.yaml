@@ -37,6 +37,27 @@ categories:
       - Visit Finland Breathe
       - FINNLAND. COOL.
       - Lend us your problems. We will solve them with interest.
+  lt:
+    title: Lithuania
+    screen_names:
+      - AButkevicius
+      - Grybauskaite_LT
+      - LRSeimas
+      - Vyriausybe
+      - LinkeviciusL
+      - V_Andriukaitis
+      - AndriusKubilius
+      - MayorZuokas
+      - liberalai
+      - tslkd
+      - RolandasPaksas
+    burn_in_text: Drąsi Šalis
+    greetings:
+      - Dėmesio,<br>piliečiai!
+    slogans:
+      - Už Lietuvą, vyrai!
+      - A country as ambitious as you are.
+      - The center of Europe.
   us:
     title: United States
     screen_names:

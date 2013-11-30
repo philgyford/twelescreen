@@ -37,15 +37,10 @@ body {
       background-position: 50% 20px;
       background-repeat: no-repeat;
     }
-    .menu #category-fi a {
-      background-image: url(img/fi.png);
-    }
-    .menu #category-us a {
-      background-image: url(img/us.png);
-    }
-    .menu #category-uk a {
-      background-image: url(img/uk.png);
-    }
+    .menu #category-fi a { background-image: url(img/fi.png); }
+    .menu #category-lt a { background-image: url(img/lt.png); }
+    .menu #category-us a { background-image: url(img/us.png); }
+    .menu #category-uk a { background-image: url(img/uk.png); }
     .category a:hover {
     }
       .category_title {
