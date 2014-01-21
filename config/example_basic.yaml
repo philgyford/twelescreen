@@ -4,6 +4,8 @@ twitter:
   access_token_key: yourkeyhere
   access_token_secret: yoursecrethere
 categories:
+  _defaults:
+    theme: default
   news:
     title: News headlines
     screen_names:
