@@ -1,0 +1,102 @@
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  background: #fff1e0;
+  color: #505050;
+}
+
+#loading {
+  background: #fff1e0 url(img/loading.gif) 50% 58% no-repeat;
+  color: #505050;
+}
+
+a {
+  color: #2e6e9e;
+}
+
+/*************************************************
+ * Styles for the index page.
+ */
+.menu a {
+  text-decoration: none;
+}
+.menu_header {
+  color: #000;
+  background: #f6e9d8;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+  .menu_header_inner {
+    background: #f6e9d8;
+  }
+
+.menu_body {
+}
+  .category {
+  }
+	.category a {
+	  background: #a7a59b;
+	}
+	.category a:hover {
+	  background: #74736c;
+	}
+	  .category_title {
+      color: #fff;
+      font-family: Georgia, 'Times New Roman', serif;
+	  }
+	  .category_screennames {
+      color: #fff;
+	  }
+.menu_footer {
+  background: #f6e9d8;
+}
+  .menu_footer a:hover {
+    text-decoration: underline;
+  }
+
+/*************************************************
+ * Styles for the screen page.
+ */
+
+.slide {
+  background: #fff1e0;
+}
+#greeting {
+  background: #fff1e0;
+  color: #000;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+#greeting.is-inverted {
+  background: #505050;
+  color: #fff1e0;
+}
+
+#slogan {
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #000;
+  background: #f6e9d8;
+}
+
+.alert {
+  background: #505050;
+  color: #fff1e0;
+  border-top: 2px solid #505050;
+}
+
+.tweet_account {
+  color: #000;
+  background: #f6e9d8;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+  .tweet_account a {
+    color: #000;
+    text-decoration: none;
+  }
+
+.tweet_message {
+}
+  .tweet_message a {
+    color: #505050;
+    text-decoration: none;
+  }
+  .tweet_message_panel {
+    background: #fff1e0;
+  }
