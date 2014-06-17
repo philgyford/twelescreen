@@ -45,6 +45,9 @@ a {
 	  .category_screennames {
       color: #fff;
 	  }
+.menu_outro_inner {
+  visibility: hidden;
+}
 .menu_footer {
   background: #f6e9d8;
 }
