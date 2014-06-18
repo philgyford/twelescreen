@@ -43,7 +43,7 @@ a {
       font-family: Georgia, 'Times New Roman', serif;
 	  }
 	  .category_screennames {
-      color: #fff;
+		  display: none;
 	  }
 .menu_footer {
   background: #f6e9d8;
