@@ -64,6 +64,7 @@ module.exports = function(settings, twitter, io, _) {
    */
   streamer.get_user_ids = function() {
     console.log('Streamer (1/3 start):  Fetching Twitter user IDs');
+
     streamer.twitter.lookupUser(settings.watched_screen_names, function(err, users) {
       if (err) {
         console.log("Streamer: Error fetching user IDs: "+err);
@@ -240,12 +241,12 @@ module.exports = function(settings, twitter, io, _) {
    */
   streamer.shrink_tweet = function(tweet) {
 
-  // Replace t.co URLs with expanded_urls in the tweet text
-  var urls = tweet.entities.urls;
-  var arrayLength = urls.length;
-  for (var i = 0; i < arrayLength; i++) {
-    tweet.text = tweet.text.replace(urls[i]['url'], urls[i]['expanded_url']);
-  }
+    // Replace t.co URLs with expanded_urls in the tweet text
+    var urls = tweet.entities.urls;
+    var arrayLength = urls.length;
+    for (var i = 0; i < arrayLength; i++) {
+      tweet.text = tweet.text.replace(urls[i]['url'], urls[i]['expanded_url']);
+    }
 
     var shrunk = {
       // A subset of the usual data, with the same keys and structure:
