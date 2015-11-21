@@ -239,6 +239,14 @@ module.exports = function(settings, twitter, io, _) {
    * tweet is the full array of Tweet data fetched from Twitter.
    */
   streamer.shrink_tweet = function(tweet) {
+
+  // Replace t.co URLs with expanded_urls in the tweet text
+  var urls = tweet.entities.urls;
+  var arrayLength = urls.length;
+  for (var i = 0; i < arrayLength; i++) {
+    tweet.text = tweet.text.replace(urls[i]['url'], urls[i]['expanded_url']);
+  }
+
     var shrunk = {
       // A subset of the usual data, with the same keys and structure:
       id: tweet.id,
