@@ -239,6 +239,10 @@ module.exports = function(settings, twitter, io, _) {
    * tweet is the full array of Tweet data fetched from Twitter.
    */
   streamer.shrink_tweet = function(tweet) {
+
+    // The 48x48px normal size is too small, use the bigger 73x73px one
+    var img = tweet.user.profile_image_url.replace("_normal", "_bigger");
+
     var shrunk = {
       // A subset of the usual data, with the same keys and structure:
       id: tweet.id,
@@ -249,7 +253,7 @@ module.exports = function(settings, twitter, io, _) {
         //profile_background_color: tweet.user.profile_background_color,
         //profile_background_image_url:
         //tweet.user.profile_background_image_url,
-        profile_image_url: tweet.user.profile_image_url,
+        profile_image_url: img,
         screen_name: tweet.user.screen_name
       },
       // Custom keys:
