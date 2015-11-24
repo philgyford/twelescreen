@@ -34,7 +34,7 @@ module.exports = function(settings, twitter, io, _) {
       consumer_key: settings.twitter.consumer_key,
       consumer_secret: settings.twitter.consumer_secret,
       access_token_key: settings.twitter.access_token_key,
-      access_token_secret: settings.twitter.access_token_secret 
+      access_token_secret: settings.twitter.access_token_secret
     });
 
     // These methods are kind of dependent on each other, so we only run them
@@ -57,7 +57,7 @@ module.exports = function(settings, twitter, io, _) {
     };
   };
 
-      
+
   /**
    * Get all the Twitter user IDs from the screen_names we have in config.
    * We need the user IDs, not screen_names, for streaming.
@@ -69,12 +69,12 @@ module.exports = function(settings, twitter, io, _) {
         console.log("Streamer: Error fetching user IDs: "+err);
       } else {
         users.forEach(function(user){
-          settings.watched_ids.push(user.id); 
+          settings.watched_ids.push(user.id);
         });
         // On to the next method...
         console.log('Streamer (1/3 finish): Fetching Twitter user IDs');
         streamer.next_in_queue();
-      }; 
+      };
     });
   };
 
@@ -91,12 +91,12 @@ module.exports = function(settings, twitter, io, _) {
       // Note: The 'count' doesn't include retweets and replies, so we'll
       // probably get less than that many tweets returned.
       streamer.twitter.getUserTimeline({
-        user_id: id, 
+        user_id: id,
         trim_user: false, exclude_replies: true,
         contributor_details: true, include_rts: false, count: 200
       }, function(err, tweets) {
         if (err) {
-          console.log("Streamer: Error fetching tweets for user id '"+id+"': "+err); 
+          console.log("Streamer: Error fetching tweets for user id '"+id+"': "+err);
         } else {
           tweets.forEach(function(tweet){
             streamer.add_tweet_to_cache(tweet);
@@ -122,7 +122,7 @@ module.exports = function(settings, twitter, io, _) {
     console.log('Streamer (3/3 start):      Listening for new Tweets');
     streamer.prepare_for_clients();
 
-    // Tell the twitter API to filter on the watched_ids. 
+    // Tell the twitter API to filter on the watched_ids.
     streamer.twitter.stream(
       'statuses/filter', {follow: settings.watched_ids}, function(stream) {
 
@@ -157,7 +157,7 @@ module.exports = function(settings, twitter, io, _) {
    * We only send them the most recent tweets for their category/room.
    */
   streamer.prepare_for_clients = function() {
-    io.sockets.on('connection', function(client) { 
+    io.sockets.on('connection', function(client) {
       console.log('Connected client:', client.id);
       client.on('subscribe', function(room) {
         if (_.indexOf(settings.valid_categories, room) >= 0) {
@@ -208,7 +208,7 @@ module.exports = function(settings, twitter, io, _) {
    * `tweet` is a full array of data about a tweet.
    */
   streamer.add_tweet_to_cache = function(tweet) {
-    var shrunk_tweet = streamer.shrink_tweet(tweet);  
+    var shrunk_tweet = streamer.shrink_tweet(tweet);
     // We want to ignore any retweets of the the accounts we follow:
     if (tweet.retweeted_status === undefined) {
       // Get all the categories this Tweet's account is in.
@@ -219,7 +219,7 @@ module.exports = function(settings, twitter, io, _) {
         // For each category this twitter account is associated with, add to cache.
         categories.forEach(function(category){
           if (category in streamer.cache) {
-            streamer.cache[category].push(shrunk_tweet); 
+            streamer.cache[category].push(shrunk_tweet);
           } else {
             streamer.cache[category] = [shrunk_tweet];
           };
@@ -239,6 +239,10 @@ module.exports = function(settings, twitter, io, _) {
    * tweet is the full array of Tweet data fetched from Twitter.
    */
   streamer.shrink_tweet = function(tweet) {
+
+    // The 48x48px normal size is too small, use the bigger 73x73px one
+    var img = tweet.user.profile_image_url.replace("_normal", "_bigger");
+
     var shrunk = {
       // A subset of the usual data, with the same keys and structure:
       id: tweet.id,
@@ -249,7 +253,7 @@ module.exports = function(settings, twitter, io, _) {
         //profile_background_color: tweet.user.profile_background_color,
         //profile_background_image_url:
         //tweet.user.profile_background_image_url,
-        profile_image_url: tweet.user.profile_image_url,
+        profile_image_url: img,
         screen_name: tweet.user.screen_name
       },
       // Custom keys:
