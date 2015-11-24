@@ -74,7 +74,7 @@ This might be enough to get Twelescreen up and running, depending on your set-up
    ===================================================
    ```
     
-   From this point the server is ready for requests.
+   From this point the server is ready for requests. If running locally, you can see it at http://127.0.0.1:3000/
 
 6. If you can view your new Twelescreen, start fiddling with the options, as described below...
 
