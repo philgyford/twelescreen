@@ -240,8 +240,8 @@ module.exports = function(settings, twitter, io, _) {
    */
   streamer.shrink_tweet = function(tweet) {
 
-    // The 48x48px normal size is too small, use the bigger 73x73px one
-    var img = tweet.user.profile_image_url.replace("_normal", "_bigger");
+    // The 48x48px normal size is too small, use the larger original one
+    var img = tweet.user.profile_image_url.replace("_normal", "");
 
     var shrunk = {
       // A subset of the usual data, with the same keys and structure:
