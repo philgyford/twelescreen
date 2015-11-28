@@ -65,17 +65,34 @@ module.exports = function(settings, twitter, io, _) {
   streamer.get_user_ids = function() {
     console.log('Streamer (1/3 start):  Fetching Twitter user IDs');
 
-    streamer.twitter.lookupUser(settings.watched_screen_names, function(err, users) {
-      if (err) {
-        console.log("Streamer: Error fetching user IDs: "+err);
-      } else {
-        users.forEach(function(user){
-          settings.watched_ids.push(user.id);
-        });
-        // On to the next method...
-        console.log('Streamer (1/3 finish): Fetching Twitter user IDs');
-        streamer.next_in_queue();
-      };
+    // twitter.lookupUser (users/lookup) is limited to 100 at a time:
+    // https://dev.twitter.com/rest/reference/get/users/lookup
+    // So let's get the list of names, and send them in batches of 100.
+
+    // Flatten the array of arrays
+    var names = [].concat.apply([], settings.watched_screen_names);
+
+    // Split flat array into 100-name chunks
+    var hundreds = [], size = 100;
+    while (names.length > 0)
+      hundreds.push(names.splice(0, size));
+
+    // Look up 100 at a time
+    hundreds.forEach(function(hundred) {
+
+      streamer.twitter.lookupUser(hundred, function(err, users) {
+        if (err) {
+          console.log("Streamer: Error fetching user IDs: "+err);
+        } else {
+          users.forEach(function(user){
+            settings.watched_ids.push(user.id);
+          });
+          // On to the next method...
+          console.log('Streamer (1/3 finish): Fetching Twitter user IDs');
+          streamer.next_in_queue();
+        };
+      });
+
     });
   };
 
