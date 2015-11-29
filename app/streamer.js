@@ -254,7 +254,7 @@ module.exports = function(settings, twitter, io, _) {
     var shrunk = {
       // A subset of the usual data, with the same keys and structure:
       id: tweet.id,
-      text: tweet.text,
+      text: tweet.text.replace(/\n/g, '<br>'),
       user: {
         id: tweet.user.id,
         name: tweet.user.name,
