@@ -73,18 +73,34 @@ categories:
   us:
     title: United States
     screen_names:
-      - barackobama
+      - realDonaldTrump
+      - AIRNow
       - CDCemergency
+      - CDCgov
+      - CustomsBorder
       - deptofdefense
-      - FBIPressOffice
+      - DHSgov
+      - FBI
       - FBIMostWanted
+      - fema
+      - NTASAlerts
+      - POTUS
+      - PressSec
       - readygov
+      - SecretService
+      - StateDept
       - tsa
       - tsablogteam
+      - US_FDA
+      - us_navyseals
+      - USAgov
       - usairforce
       - usarmy
       - uscis
+      - usfire
+      - USMC
       - usnavy
+      - VP
       - whitehouse
     burn_in_text: Yes we can
     greetings:
