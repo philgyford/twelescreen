@@ -13,7 +13,7 @@
     "url": "https://github.com/philgyford/twelescreen/issues"
   },
   "scripts": {
-    "postinstall": "bower install && grunt build",
+    "postinstall": "bower install",
     "start": "node ./app.js"
   },
   "repository": {
