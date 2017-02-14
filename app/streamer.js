@@ -63,18 +63,21 @@ module.exports = function(settings, twitter, io, _) {
    * We need the user IDs, not screen_names, for streaming.
    */
   streamer.get_user_ids = function() {
-    console.log('Streamer (1/3 start):  Fetching Twitter user IDs');
+    console.log(
+          'Streamer: 1/3 Fetching Twitter user IDs             [starting]');
 
     streamer.twitter.lookupUser(settings.watched_screen_names, function(err, users) {
       if (err) {
         console.log("Streamer: Error fetching user IDs: "+err);
       } else {
         users.forEach(function(user){
-          settings.watched_ids.push(user.id);
-          settings.watched_id_to_screen_name[String(user.id)] = user.screen_name;
+          // Use id_str because id isn't always accurate in JavaScript:
+          settings.watched_ids.push(user.id_str);
+          settings.watched_id_to_screen_name[user.id_str] = user.screen_name;
         });
         // On to the next method...
-        console.log('Streamer (1/3 finish): Fetching Twitter user IDs');
+        console.log(
+            '                                                    [finished]');
         streamer.next_in_queue();
       };
     });
@@ -86,30 +89,60 @@ module.exports = function(settings, twitter, io, _) {
    * to display from the start.
    */
   streamer.cache_previous_tweets = function() {
-    console.log('Streamer (2/3 start):  Caching existing Tweets');
+    console.log(
+          'Streamer: 2/3 Caching existing Tweets               [starting]');
 
-    var id_count = 1;
+    var id_count = 0;
+    var has_timed_out = false;
+
+    // Sometimes things get stuck; we haven't finished fetching all the
+    // twitter timelines, there are no errors, and the final timelines are
+    // never returned.
+    // So, we set a timer so that we will eventually move on to the next
+    // method whether the timelines have all been fetched or not.
+    var timer = setTimeout(function() {
+      has_timed_out = true; // So we don't call do this again.
+      console.log(
+            '                                            [stuck, moving on]');
+      streamer.next_in_queue();
+    }, 40000);  // 40 seconds is usually enough for the twelescreen.com list.
+
+    // The id passed in is a string:
     settings.watched_ids.forEach(function(id) {
+
       // Note: The 'count' doesn't include retweets and replies, so we'll
       // probably get less than that many tweets returned.
-      streamer.twitter.getUserTimeline({
+      var options = {
         user_id: id,
-        trim_user: false, exclude_replies: true,
-        contributor_details: true, include_rts: false, count: 200
-      }, function(err, tweets) {
+        trim_user: false,
+        exclude_replies: true,
+        contributor_details: true,
+        include_rts: false,
+        count: 200
+      }; 
+
+      streamer.twitter.getUserTimeline(options, function(err, tweets) {
+        id_count++;
+
         if (err) {
-          var screen_name = settings.watched_id_to_screen_name[String(id)];
-          console.log("Streamer: Error fetching tweets for user '"+screen_name+"': "+err);
+          var screen_name = settings.watched_id_to_screen_name[id];
+          console.log(
+            "Streamer: Error fetching tweets for user '"+screen_name+"': "+err);
         } else {
           tweets.forEach(function(tweet){
             streamer.add_tweet_to_cache(tweet);
           });
-          // On to the next method...
+
           if (id_count == settings.watched_ids.length) {
-            console.log('Streamer (2/3 finish): Caching existing Tweets');
-            streamer.next_in_queue();
-          } else {
-            id_count++;
+            // We've fetched them all!
+            if (! has_timed_out) {
+              // Assuming we haven't already given up and done this in the
+              // timer setTimeout() above.
+              clearTimeout(timer);
+              // Move on to the next method:
+              console.log('                                                    [finished]');
+              streamer.next_in_queue();
+            };
           };
         };
       })
@@ -122,7 +155,8 @@ module.exports = function(settings, twitter, io, _) {
    * When one comes in, sends it to the front end.
    */
   streamer.start_streaming = function() {
-    console.log('Streamer (3/3 start):      Listening for new Tweets');
+    console.log(
+          'Streamer: 3/3 Listening for new Tweets              [starting]');
     streamer.prepare_for_clients();
 
     // Tell the twitter API to filter on the watched_ids.
@@ -149,8 +183,10 @@ module.exports = function(settings, twitter, io, _) {
           };
         }
       });
-      console.log('Streamer (3/3 continuing): Listening for new Tweets');
-      console.log('===================================================');
+        console.log(
+            '                                                    [finished]');
+      console.log(
+            '==============================================================');
     });
   };
 
@@ -255,10 +291,10 @@ module.exports = function(settings, twitter, io, _) {
 
     var shrunk = {
       // A subset of the usual data, with the same keys and structure:
-      id: tweet.id,
+      id: tweet.id_str,
       text: tweet.text.replace(/\n/g, '<br>'),
       user: {
-        id: tweet.user.id,
+        id: tweet.user.id_str,
         name: tweet.user.name,
         //profile_background_color: tweet.user.profile_background_color,
         //profile_background_image_url:

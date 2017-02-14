@@ -3,7 +3,7 @@
  * Run with `node app.js`.
  */
 
-console.log('===================================================');
+console.log('==============================================================');
 console.log('Twelescreen starting, using Node '+ process.version);
 
 var express = require('express'),
@@ -60,12 +60,13 @@ if (process.env.USE_XHR_POLLING == 'true') {
 	});
 };
 
-// Start fetching Tweets from Twitter.
-var streamer = require(path.resolve('app','streamer'))(settings, twitter, io, _);
-streamer.start();
-
-//Create the server
+// Create the server
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+// Start fetching Tweets from Twitter.
+var streamer = require(
+                    path.resolve('app','streamer'))(settings, twitter, io, _);
+streamer.start();
 
