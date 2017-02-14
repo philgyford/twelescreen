@@ -10,7 +10,8 @@ module.exports = function(grunt) {
         separator: ';'
       },
       dist: {
-        src: ['bower_components/jquery/dist/jquery.min.js',
+        src: ['public/js/modernizr.min.js',
+              'bower_components/jquery/dist/jquery.min.js',
               'bower_components/socket.io-client/dist/socket.io.min.js',
               'public/js/src/plugins.js',
               'public/js/src/twelescreen_controller.js',
