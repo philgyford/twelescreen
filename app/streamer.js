@@ -118,6 +118,7 @@ module.exports = function(settings, twitter, io, _) {
         exclude_replies: true,
         contributor_details: true,
         include_rts: false,
+        tweet_mode: 'extended',
         count: 200
       }; 
 
@@ -284,15 +285,22 @@ module.exports = function(settings, twitter, io, _) {
 
     // Replace t.co URLs with expanded_urls in the tweet text
     var urls = tweet.entities.urls;
-    var arrayLength = urls.length;
-    for (var i = 0; i < arrayLength; i++) {
-      tweet.text = tweet.text.replace(urls[i]['url'], urls[i]['expanded_url']);
-    }
+    for (var i = 0; i < urls.length; i++) {
+      tweet.full_text = tweet.full_text.replace(
+                                      urls[i]['url'], urls[i]['expanded_url']);
+    };
+    if (tweet.extended_entities) {
+      // Remove any t.co URLs that link to media entities
+      var media = tweet.extended_entities.media;
+      for (var i = 0; i < media.length; i++) {
+        tweet.full_text = tweet.full_text.replace(media[i]['url'], '');
+      };
+    };
 
     var shrunk = {
       // A subset of the usual data, with the same keys and structure:
       id: tweet.id_str,
-      text: tweet.text.replace(/\n/g, '<br>'),
+      text: tweet.full_text.replace(/\n/g, '<br>'),
       user: {
         id: tweet.user.id_str,
         name: tweet.user.name,
@@ -307,11 +315,11 @@ module.exports = function(settings, twitter, io, _) {
       time: (new Date(tweet.created_at).getTime()) / 1000
     };
     // Custom, optional keys.
-    if ('media' in tweet.entities && tweet.entities.media[0].type == 'photo') {
+    if (tweet.extended_entities && 'media' in tweet.extended_entities && tweet.extended_entities.media[0].type == 'photo') {
       shrunk.image = {
-        url: tweet.entities.media[0].media_url + ':large',
-        width: tweet.entities.media[0].sizes.large.w,
-        height: tweet.entities.media[0].sizes.large.h
+        url: tweet.extended_entities.media[0].media_url + ':large',
+        width: tweet.extended_entities.media[0].sizes.large.w,
+        height: tweet.extended_entities.media[0].sizes.large.h
       };
     };
     return shrunk;
