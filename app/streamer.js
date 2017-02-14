@@ -71,6 +71,7 @@ module.exports = function(settings, twitter, io, _) {
       } else {
         users.forEach(function(user){
           settings.watched_ids.push(user.id);
+          settings.watched_id_to_screen_name[String(user.id)] = user.screen_name;
         });
         // On to the next method...
         console.log('Streamer (1/3 finish): Fetching Twitter user IDs');
@@ -97,7 +98,8 @@ module.exports = function(settings, twitter, io, _) {
         contributor_details: true, include_rts: false, count: 200
       }, function(err, tweets) {
         if (err) {
-          console.log("Streamer: Error fetching tweets for user id '"+id+"': "+err);
+          var screen_name = settings.watched_id_to_screen_name[String(id)];
+          console.log("Streamer: Error fetching tweets for user '"+screen_name+"': "+err);
         } else {
           tweets.forEach(function(tweet){
             streamer.add_tweet_to_cache(tweet);
