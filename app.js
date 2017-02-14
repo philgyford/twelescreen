@@ -14,7 +14,11 @@ var express = require('express'),
 		_ = require('underscore'),
 		dust = require('dustjs-linkedin'),
 		path = require('path'),
-    fs = require('fs');
+    fs = require('fs'),
+    morgan = require ('morgan'),
+    bodyParser = require('body-parser'),
+    methodOverride = require('method-override'),
+    errorhandler = require('errorhandler');
 
 var settings = require(path.resolve('app','settings'))(_);
 
@@ -27,14 +31,13 @@ app.set('views', path.join(__dirname, '/views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 if (process.env.NODE_ENV == 'development') {
-  app.use(express.logger('dev'));
+  app.use(morgan('dev'));
 } else {
-  app.use(express.logger('default,'));
+  app.use(morgan('common'));
 };
 
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(app.router);
+app.use(bodyParser.json());
+app.use(methodOverride());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 
 
@@ -42,7 +45,7 @@ app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use('/components', express.static(path.join(__dirname, 'bower_components')));
 
 if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+  app.use(errorhandler());
 }
 
 require(path.resolve('app','routes'))(app, settings, fs, path, _);
