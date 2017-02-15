@@ -17,7 +17,6 @@ var express = require('express'),
     fs = require('fs'),
     morgan = require ('morgan'),
     bodyParser = require('body-parser'),
-    methodOverride = require('method-override'),
     errorhandler = require('errorhandler');
 
 var settings = require(path.resolve('app','settings'))(_);
@@ -37,7 +36,6 @@ if (process.env.NODE_ENV == 'development') {
 };
 
 app.use(bodyParser.json());
-app.use(methodOverride());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 
 

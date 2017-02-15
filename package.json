@@ -1,6 +1,6 @@
 {
   "name": "twelescreen",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A fullscreen, one-Tweet-at-a-time Twitter display.",
   "author": "Phil Gyford <phil@gyford.com> (http://www.gyford.com/)",
   "license": "BSD-3-Clause",
@@ -21,8 +21,7 @@
     "url": "https://github.com/philgyford/twelescreen.git"
   },
   "engines": {
-    "node": "~6.9.5",
-    "npm": "~3.10.10"
+    "node": "~6.9.5"
   },
   "dependencies": {
     "body-parser": "~1.16.1",
@@ -34,7 +33,6 @@
     "errorhandler": "~1.5.0",
     "express": "~4.14.1",
     "js-yaml": "~3.8.1",
-    "method-override": "~0.1.0",
     "morgan": "~1.8.1",
     "ntwitter": "0.5.x",
     "socket.io": "~1.7.2",
