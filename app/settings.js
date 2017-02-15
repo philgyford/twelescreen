@@ -158,9 +158,12 @@ module.exports = function(_) {
   });
 
   /**
-   * Will be populated by streamer.get_user_ids().
+   * Will both be populated by streamer.get_user_ids().
    */
+  // IDs as strings, eg '822215673812119553'.
   settings.watched_ids = [];
+  // Keys are string IDs, ie: {'822215673812119600': 'WhiteHouse'} :
+  settings.watched_id_to_screen_name = {};
 
   settings.max_number_of_tweets = _.max(settings.categories,
       function(category){ return category.number_of_tweets; })['number_of_tweets']

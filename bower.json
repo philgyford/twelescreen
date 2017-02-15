@@ -1,8 +1,8 @@
 {
-  "name": "Twelescreen",
-  "version": "0.0.1",
+  "name": "twelescreen",
+  "version": "1.0.0",
   "dependencies": {
-    "jquery": "1.10.x",
-    "socket.io-client": "0.9.x"
+    "jquery": "~3.1.1",
+    "socket.io-client": "~1.7.2"
   }
 }

@@ -10,7 +10,10 @@ module.exports = function(grunt) {
         separator: ';'
       },
       dist: {
-        src: ['public/js/src/plugins.js',
+        src: ['public/js/modernizr.min.js',
+              'bower_components/jquery/dist/jquery.min.js',
+              'bower_components/socket.io-client/dist/socket.io.min.js',
+              'public/js/src/plugins.js',
               'public/js/src/twelescreen_controller.js',
               'public/js/src/twelescreen_models.js'],
         dest: 'public/js/dist/<%= pkg.name %>.js'

@@ -165,7 +165,9 @@ twelescreen.controller = {
   prepare_connection: function() {
     var that = this;
     that.log("Preparing connection");
-    that.socket = io.connect(window.location.hostname);
+    that.socket = io.connect(window.location.hostname + (
+                    window.location.port ? ':' + window.location.port: ''
+                  ));
     that.socket.on('connect', function(){
       that.page.hide_alert('connection-alert');
       that.socket.emit('subscribe', that.config.category_key);
