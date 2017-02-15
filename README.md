@@ -36,6 +36,9 @@ Questions or comments? Either [open an issue on GitHub](https://github.com/philg
     * List of slogan messages.
     * Chance of a slogan appearing.
 
+If you'd like Twelescreen to run as a screensaver on a Mac, then try using
+[WebViewScreenSaver](https://github.com/liquidx/webviewscreensaver/).
+
 
 ###################################################################################
 ## Quick start
