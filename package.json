@@ -1,6 +1,6 @@
 {
   "name": "twelescreen",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "A fullscreen, one-Tweet-at-a-time Twitter display.",
   "author": "Phil Gyford <phil@gyford.com> (http://www.gyford.com/)",
   "license": "BSD-3-Clause",
