@@ -282,25 +282,26 @@ module.exports = function(settings, twitter, io, _) {
 
     // The 48x48px normal size is too small, use the larger original one
     var img = tweet.user.profile_image_url.replace("_normal", "");
+    var text = tweet.full_text ? tweet.full_text : tweet.text;
+    
 
     // Replace t.co URLs with expanded_urls in the tweet text
     var urls = tweet.entities.urls;
     for (var i = 0; i < urls.length; i++) {
-      tweet.full_text = tweet.full_text.replace(
-                                      urls[i]['url'], urls[i]['expanded_url']);
+      text = text.replace(urls[i]['url'], urls[i]['expanded_url']);
     };
     if (tweet.extended_entities) {
       // Remove any t.co URLs that link to media entities
       var media = tweet.extended_entities.media;
       for (var i = 0; i < media.length; i++) {
-        tweet.full_text = tweet.full_text.replace(media[i]['url'], '');
+        text = text.replace(media[i]['url'], '');
       };
     };
 
     var shrunk = {
       // A subset of the usual data, with the same keys and structure:
       id: tweet.id_str,
-      text: tweet.full_text.replace(/\n/g, '<br>'),
+      text: text.replace(/\n/g, '<br>'),
       user: {
         id: tweet.user.id_str,
         name: tweet.user.name,
