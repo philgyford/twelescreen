@@ -58,7 +58,7 @@ This might be enough to get Twelescreen up and running, depending on your set-up
    $ NODE_ENV=development node app.js
    ```
    
-   or push it to your chosen host. If you're using Heroku, set the `USE_XHR_POLLING` environment variable to `true` (see below for more details).
+   or push it to your chosen host.
    
    If you're running it locally, you should see output something like this:
 
@@ -162,10 +162,6 @@ The environment variables are:
     GOOGLE_ANALYTICS_ID
 
 As described above, the `NODE_ENV` environment variable can also be set, with our example to either `development` or `production`.
-
-There is one more environment variable which has no config file version, `USE_XHR_POLLING`. This should be set to `true` if running Twelescreen on Heroku, which [has problems with socket.io](https://github.com/joyent/node/wiki/Socket.IO-and-Heroku):
-
-    $ heroku config:add USE_XHR_POLLING=true
 
 
 ###################################################################################

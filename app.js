@@ -52,14 +52,6 @@ require(path.resolve('app','routes'))(app, settings, fs, path, _);
 
 var io = socket.listen(server);
 
-// Set the sockets.io configuration.
-if (process.env.USE_XHR_POLLING == 'true') {
-	io.configure(function() {
-		io.set('transports', ['xhr-polling']);
-		io.set('polling duration', 10);
-	});
-};
-
 // Create the server
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
