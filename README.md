@@ -46,11 +46,13 @@ This might be enough to get Twelescreen up and running, depending on your set-up
 
 2. Get the Twelescreen code [from GitHub](https://github.com/philgyford/twelescreen/).
 
-3. Copy `config/example_basic.yaml` to `config/development.yaml`. (You could also use `config/production.yaml` instead, and use `production` instead of `development` for the `NODE_ENV` below.)
+3. Run `npm install` to install the required packages (see below).
 
-4. [Create a new Twitter app](https://apps.twitter.com/app/new). Get the four required authorisation tokens and either add them to `config/development.yaml` or set them as environment variables (see the next section for instructions on either method).
+4. Copy `config/example_basic.yaml` to `config/development.yaml`. (You could also use `config/production.yaml` instead, and use `production` instead of `development` for the `NODE_ENV` below.)
 
-5. Run the app with:
+5. [Create a new Twitter app](https://apps.twitter.com/app/new). Get the four required authorisation tokens and either add them to `config/development.yaml` or set them as environment variables (see the next section for instructions on either method).
+
+6. Run the app with:
    
    ```
    $ NODE_ENV=development node app.js
@@ -76,7 +78,7 @@ This might be enough to get Twelescreen up and running, depending on your set-up
     
    From this point the server is ready for requests. If running locally, you can see it at http://127.0.0.1:3000/
 
-6. If you can view your new Twelescreen, start fiddling with the options, as described below...
+7. If you can view your new Twelescreen, start fiddling with the options, as described below...
 
 
 ###################################################################################
@@ -94,7 +96,19 @@ or
 
 if you want to explicitly set the environment (eg `production` or `development`) at runtime.
 
-Before running the code you will need to set up a new Twitter application, make a config file, and possibly set environment variables.
+Before running the code you will need to set up a new Twitter application, make a config file, install the Node modules, and possibly set environment variables.
+
+### Install Node modules
+
+[NPM](https://github.com/isaacs/npm) is used to manage Node packages. NPM can install the packages required for Twelescreen from the `package.json` file (although all currently required packages are included in the Twelescreen repository). They get installed in the `node_modules/` directory. You would do this from within the `twelescreen/` directory:
+
+    $ npm install
+
+*NOTE:* This should also install bower and, after all the Node packages are installed, run `bower install` (see below).
+
+Installing new packages and having them added to `package.json` is done with:
+
+    $ npm install [package-name] --save
 
 ### Twitter application
 
@@ -456,35 +470,11 @@ The template for the screen page (that displays the slideshow of Tweets) is not 
 
 This section is as much for the author as anyone else, because he will forget all of this very quickly.
 
-The Twelescreen server runs on [Node.js](http://nodejs.org/) which can be a pain to get up and running from scratch if you're unfamiliar with it. If running this locally you'll need to install Node itself. If you just want to run Twelescreen, and test configurations or write custom themes, that might be enough. ([NVM](https://github.com/creationix/nvm) can be useful if you end up needing different versions of Node for different projects.)
+The Twelescreen server runs on [Node.js](http://nodejs.org/). If running this locally you'll need to install Node itself. If you just want to run Twelescreen, and test configurations or write custom themes, that might be enough. ([NVM](https://github.com/creationix/nvm) can be useful if you end up needing different versions of Node for different projects.)
 
-If you're going to do any development on the code you'll also need NPM, Bower and Grunt.
+Instructions for installing all required Node modules, using npm, are above.
 
-### NPM
-
-[NPM](https://github.com/isaacs/npm) is used to manage Node packages. NPM can install the packages required for Twelescreen from the `package.json` file (although all currently required packages are included in the Twelescreen repository). They get installed in the `node_modules/` directory. You would do this from within the `twelescreen/` directory:
-
-    $ npm install
-
-*NOTE:* This will also run `bower install` (see below) after all the Node packages are installed.
-
-Installing new packages and having them added to `package.json` is done with:
-
-    $ npm install [package-name] --save
-
-### Bower
-
-[Bower](https://github.com/bower/bower) is used to manage the front-end third-party JavaScript libraries (although, again, those required for Twelescreen are already included in this repository). It reads the requirements from `bower.json` and installs files in the `bower_components/` directory. Install Bower with:
-
-    $ npm install -g bower
-
-Install required packages from within the `twelescreen/` directory using:
-
-    $ bower install
-
-Installing new packages like this will list them in `bower.json`:
-
-    $ bower install [package-name] --save
+If you're going to do any development on the front-end JavaScript you'll also need Bower and Grunt. Bower, and the required packages, should be installed when installing the Node modules with npm. They will be saved in the `bower_components` directory.
 
 ### Grunt
 
@@ -492,7 +482,7 @@ Installing new packages like this will list them in `bower.json`:
 
     $ npm install -g grunt-cli
 
-Run this from within the `twelescreen/` directory to concatenate and minify JavaScript files. It uses the setings in `Gruntfile.js` which currently takes some files from within `public/js/src/` and puts the result in `public/js/dist/`:
+Run this from within the `twelescreen/` directory to concatenate and minify JavaScript files. It uses the settings in `Gruntfile.js` which takes various JavaScript files and puts the resulting single file in `public/js/dist/`:
 
     $ grunt
 
