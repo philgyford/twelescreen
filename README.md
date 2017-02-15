@@ -63,6 +63,7 @@ This might be enough to get Twelescreen up and running, depending on your set-up
    ```
    ==============================================================
    Twelescreen starting, using Node v6.9.5
+   NODE_ENV is development
    Streamer: 1/3 Fetching Twitter user IDs             [starting]
    Express server listening on port 3000
                                                        [finished]

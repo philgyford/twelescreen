@@ -5,6 +5,8 @@
 
 console.log('==============================================================');
 console.log('Twelescreen starting, using Node '+ process.version);
+console.log(
+  'NODE_ENV is ' + (process.env.NODE_ENV ? process.env.NODE_ENV : '[none]'));
 
 var express = require('express'),
 		consolidate = require('consolidate'),
