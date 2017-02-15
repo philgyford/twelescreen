@@ -294,20 +294,38 @@ module.exports = function(settings, twitter, io, _) {
 
     // The 48x48px normal size is too small, use the larger original one
     var img = tweet.user.profile_image_url.replace("_normal", "");
-    var text = tweet.full_text ? tweet.full_text : tweet.text;
-    
+    var text = '';
+
+    if ('extended_tweet' in tweet) {
+      // A tweet from the Stream API:
+      text = tweet.extended_tweet.full_text;
+    } else if ('full_text' in tweet) {
+      // A tweet from the Rest API (ie, when we cache the initial tweets):
+      text = tweet.full_text;
+    } else if ('text' in tweet) {
+      // Just in case.
+      text = tweet.text;
+    };
 
     // Replace t.co URLs with expanded_urls in the tweet text
     var urls = tweet.entities.urls;
     for (var i = 0; i < urls.length; i++) {
       text = text.replace(urls[i]['url'], urls[i]['expanded_url']);
     };
-    if (tweet.extended_entities) {
-      // Remove any t.co URLs that link to media entities
-      var media = tweet.extended_entities.media;
-      for (var i = 0; i < media.length; i++) {
-        text = text.replace(media[i]['url'], '');
-      };
+
+    var media = [];
+    if ('extended_tweet' in tweet
+      && 'extended_entities' in tweet.extended_tweet
+    ) {
+      // A tweet from the Stream API:
+      media = tweet.extended_tweet.extended_entities.media;
+    } else if ('extended_entities' in tweet) {
+      // A tweet from the Rest API (ie, when we cache the initial tweets):
+      media = tweet.extended_entities.media;
+    };
+    // Remove any t.co URLs that link to media entities
+    for (var i = 0; i < media.length; i++) {
+      text = text.replace(media[i]['url'], '');
     };
 
     var shrunk = {
