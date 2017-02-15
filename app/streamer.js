@@ -239,7 +239,16 @@ module.exports = function(settings, twitter, io, _) {
    */
   streamer.cache_for_category = function(category, limit) {
     if (limit) {
-      return streamer.cache[category].slice(-limit);
+      if (category in streamer.cache
+        && Object.keys(streamer.cache[category]).length
+      ) {
+        return streamer.cache[category].slice(-limit);
+      } else {
+        // On a rare occasion something may have gone wrong and we fetched
+        // no tweets for a category. Indeed, the category might not exist.
+        // So we should return an empty array.
+        return [];
+      };
     } else {
       return streamer.cache[category];
     };
