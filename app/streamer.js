@@ -167,8 +167,11 @@ module.exports = function(settings, twitter, io, _) {
       // We have a connection. Now watch the 'tweets' event for incoming tweets.
       stream.on('data', function(tweet) {
 
-        // Make sure it was a valid tweet, and also not a reply, and not a retweet.
-        if (tweet.text !== undefined && tweet.in_reply_to_user_id === null && tweet.retweeted_status === undefined) {
+        // Make sure it was a valid tweet, and not a reply, and not a retweet.
+        if (tweet.text !== undefined
+            && tweet.in_reply_to_user_id === null
+            && tweet.retweeted_status === undefined
+        ) {
           // Get all the categories this Tweet's account is in.
           var categories = settings.screen_name_to_category[tweet.user.screen_name.toLowerCase()];
           // categories *should* always be an array. But occasionally Twitter
@@ -316,7 +319,10 @@ module.exports = function(settings, twitter, io, _) {
       time: (new Date(tweet.created_at).getTime()) / 1000
     };
     // Custom, optional keys.
-    if (tweet.extended_entities && 'media' in tweet.extended_entities && tweet.extended_entities.media[0].type == 'photo') {
+    if (tweet.extended_entities
+        && 'media' in tweet.extended_entities
+        && tweet.extended_entities.media[0].type == 'photo'
+    ) {
       shrunk.image = {
         url: tweet.extended_entities.media[0].media_url + ':large',
         width: tweet.extended_entities.media[0].sizes.large.w,
