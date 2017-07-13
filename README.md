@@ -14,7 +14,8 @@ Twelescreen runs on [Node.js](http://nodejs.org/) and displays a slideshow of th
 Questions or comments? Either [open an issue on GitHub](https://github.com/philgyford/twelescreen/issues) or [email Phil Gyford](phil@gyford.com).
 
 
-###################################################################################
+----
+
 ## Features:
 
 * Many categories of Twitter accounts can be created. Each category has its own URL.
@@ -39,9 +40,9 @@ Questions or comments? Either [open an issue on GitHub](https://github.com/philg
 If you'd like Twelescreen to run as a screensaver on a Mac, then try using
 [WebViewScreenSaver](https://github.com/liquidx/webviewscreensaver/).
 
+----
 
-###################################################################################
-## Quick start
+## Quick start
 
 This might be enough to get Twelescreen up and running, depending on your set-up and knowledge. A more detailed description follows in the next section.
 
@@ -84,7 +85,8 @@ This might be enough to get Twelescreen up and running, depending on your set-up
 7. If you can view your new Twelescreen, start fiddling with the options, as described below...
 
 
-###################################################################################
+----
+
 ## Installation
 
 If you're unfamiliar with Node, the section at the end of this document, "Local development" may be helpful for some basic pointers. This "Installation" section assumes you have Node up and running, either locally or on a server you can push the code to.
@@ -166,8 +168,8 @@ The environment variables are:
 
 As described above, the `NODE_ENV` environment variable can also be set, with our example to either `development` or `production`.
 
+----
 
-###################################################################################
 ## Configuration options
 
 Twelescreen is extremely configurable, both on a global level and a per-category level. See the example files for, well, examples.
@@ -382,9 +384,9 @@ Here is each of the category options in more detail:
 
   You should be able to see Tweets from protected accounts if the Twitter account you used to create the Twitter app is allowed to see them. Just make sure you're not displaying your Twelescreen in a publicly-visible place!
 
+----
 
-###################################################################################
-## Themes
+## Themes
 
 A theme consists of a CSS file and, optionally, a custom HTML template for the menu page.
 
@@ -398,7 +400,7 @@ By default, as seen on [Twelescreen.com/rig/](http://www.twelescreen.com/rig/), 
 
 So, the simplest way to make a new theme is to create a new directory in `public/themes/` with the name of your theme (containing no spaces). Copy one of the other themes' `styles.css` files into your new theme directory and change that for your new theme. Then assign your menu page and/or category page(s) your new theme name in the options (see above).
 
-### Custom menu page template
+### Custom menu page template
 
 If you want to create a custom menu page, more complex than can be achieved with CSS alone, you can create a new template for your theme. This should be at `views/themes/[theme_name]/index.html`. Copy the file from `views/themes/default/index.html` and use that as the basis of your new template.
 
@@ -463,8 +465,8 @@ Then `config.categories_list` would be like:
 
 The template for the screen page (that displays the slideshow of Tweets) is not customisable because all content is generated dynamically.
 
+----
 
-##################################################################################
 ## Local development 
 
 This section is as much for the author as anyone else, because he will forget all of this very quickly.
@@ -489,8 +491,8 @@ Run this to have Grunt watch the JavaScript files and automatically concatenate 
 
     $ grunt watch
 
+----
 
-##################################################################################
 ## Credits
 
 * [Phil Gyford](https://github.com/philgyford), phil@gyford.com
