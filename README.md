@@ -9,7 +9,7 @@ Twelescreen is a self-hosted, one-Tweet-at-a-time, full-screen, Twitter display.
 
 Twelescreen runs on [Node.js](http://nodejs.org/) and displays a slideshow of the most recent Tweets from your chosen lists of Twitter accounts. It can handle multiple lists of accounts, each with their own URL. Custom themes (HTML/CSS templates) and settings can be applied to all lists or individual ones.
 
-[twelescreen.herokuapp.com](http://twelescreen.herokuapp.com/) shows an example of Twelescreen in action, using the included "Big Brother" theme. [twelescreen.herokuapp.com/rig/](http://twelescreen.herokuapp.com/rig/) is an example of the simpler "Default" theme.
+[twelescreen.herokuapp.com](https://twelescreen.herokuapp.com/) shows an example of Twelescreen in action, using the included "Big Brother" theme. [twelescreen.herokuapp.com/rig/](https://twelescreen.herokuapp.com/rig/) is an example of the simpler "Default" theme.
 
 Questions or comments? Either [open an issue on GitHub](https://github.com/philgyford/twelescreen/issues) or [email Phil Gyford](phil@gyford.com).
 
@@ -57,13 +57,13 @@ This might be enough to get Twelescreen up and running, depending on your set-up
 5. [Create a new Twitter app](https://apps.twitter.com/app/new). Get the four required authorisation tokens and either add them to `config/development.yaml` or set them as environment variables (see the next section for instructions on either method).
 
 6. Run the app with:
-   
+
    ```
    $ NODE_ENV=development node app.js
    ```
-   
+
    or push it to your chosen host.
-   
+
    If you're running it locally, you should see output something like this:
 
    ```
@@ -79,7 +79,7 @@ This might be enough to get Twelescreen up and running, depending on your set-up
                                                        [finished]
    ==============================================================
    ```
-    
+
    From this point the server is ready for requests. If running locally, you can see it at http://127.0.0.1:3000/
 
 7. If you can view your new Twelescreen, start fiddling with the options, as described below...
@@ -95,7 +95,7 @@ The server is run with:
 
     $ node app.js
 
-or 
+or
 
     $ NODE_ENV=[environment] node app.js
 
@@ -467,7 +467,7 @@ The template for the screen page (that displays the slideshow of Tweets) is not 
 
 ----
 
-## Local development 
+## Local development
 
 This section is as much for the author as anyone else, because he will forget all of this very quickly.
 
@@ -497,4 +497,3 @@ Run this to have Grunt watch the JavaScript files and automatically concatenate 
 
 * [Phil Gyford](https://github.com/philgyford), phil@gyford.com
 * [hugovk](https://github.com/hugovk) for Finland and more.
-
