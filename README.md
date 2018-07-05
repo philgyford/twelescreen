@@ -9,7 +9,7 @@ Twelescreen is a self-hosted, one-Tweet-at-a-time, full-screen, Twitter display.
 
 Twelescreen runs on [Node.js](http://nodejs.org/) and displays a slideshow of the most recent Tweets from your chosen lists of Twitter accounts. It can handle multiple lists of accounts, each with their own URL. Custom themes (HTML/CSS templates) and settings can be applied to all lists or individual ones.
 
-[Twelescreen.com](http://www.twelescreen.com/) shows an example of Twelescreen in action, using the included "Big Brother" theme. [Twelescreen.com/rig/](http://www.twelescreen.com/rig/) is an example of the simpler "Default" theme.
+[twelescreen.herokuapp.com](http://twelescreen.herokuapp.com/) shows an example of Twelescreen in action, using the included "Big Brother" theme. [twelescreen.herokuapp.com/rig/](http://twelescreen.herokuapp.com/rig/) is an example of the simpler "Default" theme.
 
 Questions or comments? Either [open an issue on GitHub](https://github.com/philgyford/twelescreen/issues) or [email Phil Gyford](phil@gyford.com).
 
