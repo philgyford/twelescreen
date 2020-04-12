@@ -25,25 +25,25 @@
   },
   "dependencies": {
     "body-parser": "~1.16.1",
-    "bower": "~1.8.0",
+    "bower": "^1.8.8",
     "config": "~1.25.1",
     "consolidate": "~0.14.5",
     "cron": "~1.2.1",
-    "dustjs-helpers": "~1.7.3",
+    "dustjs-helpers": "^1.7.4",
     "dustjs-linkedin": "~2.7.5",
-    "errorhandler": "~1.5.0",
+    "errorhandler": "^1.5.1",
     "express": "~4.14.1",
-    "js-yaml": "~3.8.1",
+    "js-yaml": "^3.8.4",
     "morgan": "~1.9.1",
     "ntwitter": "0.5.x",
-    "socket.io": "~1.7.2",
-    "stylus": "~0.54.5",
+    "socket.io": "^1.7.4",
+    "stylus": "^0.54.7",
     "underscore": "~1.8.3"
   },
   "devDependencies": {
-    "grunt": "~1.0.1",
-    "grunt-contrib-uglify": "~2.1.0",
+    "grunt": "^1.0.4",
     "grunt-contrib-concat": "~1.0.1",
-    "grunt-contrib-watch": "~1.0.0"
+    "grunt-contrib-uglify": "~2.1.0",
+    "grunt-contrib-watch": "^1.0.1"
   }
 }
