@@ -33,7 +33,6 @@ categories:
       - lvmfi
       - okmfi
       - Puolustusvoimat
-      - Statsradet
       - STM_Uutiset
       - teamfinlandfi
       - TPkanslia
@@ -113,11 +112,12 @@ categories:
       - Lock her up
       - Deplorables Unite
       - Buy American And Hire American
+      - There was no collusion
+      - There’s blame on both sides
+      - I expect loyalty
   uk:
     title: United Kingdom
     screen_names:
-      - theresa_may
-      - PHammondMP
       - britisharmy
       - DefenceHQ
       - dwppressoffice
@@ -130,6 +130,11 @@ categories:
       - royalnavy
       - transportgovuk
       - ukhomeoffice
+      - dhscgovuk
+      - phe_uk
+      - govuk
+      - BorisJohnson
+      - Patel4Witham
     burn_in_text: Go home<br>or<br>face arrest
     greetings:
       - Attention<br>subjects!
@@ -142,9 +147,11 @@ categories:
       - The shared society
       - You’ve had your debate
       - Go home or face arrest
+      - Get Brexit Done
+      - Stay home, save lives
   rig:
     title: RIG
-    font: '' 
+    font: ''
     theme: default
     show_on_menu: false
     greetings:
